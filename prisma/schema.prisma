@@ -1,0 +1,114 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Event {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  status      EventStatus @default(DRAFT)
+  startDate   DateTime
+  endDate     DateTime
+  location    String
+  imageUrl    String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  translations EventTranslation[]
+  registrations Registration[]
+
+  @@map("events")
+}
+
+model EventTranslation {
+  id          String   @id @default(cuid())
+  eventId     String
+  locale      Locale
+  title       String
+  description String   @db.Text
+  agenda      String?  @db.Text
+
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@unique([eventId, locale])
+  @@map("event_translations")
+}
+
+model Registration {
+  id          String   @id @default(cuid())
+  eventId     String
+  firstName   String
+  lastName    String
+  email       String
+  country     String
+  organization String?
+  position    String?
+  dietaryNeeds String?
+  status      RegistrationStatus @default(PENDING)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@map("registrations")
+}
+
+model Document {
+  id          String   @id @default(cuid())
+  eventId     String?
+  category    DocumentCategory
+  fileUrl     String
+  fileSize    Int
+  mimeType    String
+  isPublic    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  translations DocumentTranslation[]
+
+  @@map("documents")
+}
+
+model DocumentTranslation {
+  id         String @id @default(cuid())
+  documentId String
+  locale     Locale
+  title      String
+
+  document Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  @@unique([documentId, locale])
+  @@map("document_translations")
+}
+
+enum Locale {
+  en
+  ru
+  tr
+}
+
+enum EventStatus {
+  DRAFT
+  PUBLISHED
+  CANCELLED
+  COMPLETED
+}
+
+enum RegistrationStatus {
+  PENDING
+  CONFIRMED
+  REJECTED
+  WAITLISTED
+}
+
+enum DocumentCategory {
+  AGENDA
+  MINUTES
+  RESOLUTION
+  REPORT
+  PRESS_RELEASE
+  OTHER
+}

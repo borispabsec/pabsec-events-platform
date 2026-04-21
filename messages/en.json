@@ -1,0 +1,71 @@
+{
+  "nav": {
+    "home": "Home",
+    "events": "Events",
+    "documents": "Documents",
+    "about": "About PABSEC",
+    "contact": "Contact"
+  },
+  "home": {
+    "hero_title": "Parliamentary Assembly of the Black Sea Economic Cooperation",
+    "hero_subtitle": "Fostering cooperation among the parliaments of BSEC member states",
+    "upcoming_events": "Upcoming Events",
+    "view_all_events": "View All Events",
+    "latest_documents": "Latest Documents",
+    "view_all_documents": "View All Documents"
+  },
+  "events": {
+    "title": "Events",
+    "subtitle": "Meetings, assemblies and conferences of PABSEC",
+    "register": "Register",
+    "registration_closed": "Registration Closed",
+    "status": {
+      "DRAFT": "Draft",
+      "PUBLISHED": "Published",
+      "CANCELLED": "Cancelled",
+      "COMPLETED": "Completed"
+    },
+    "location": "Location",
+    "dates": "Dates",
+    "agenda": "Agenda",
+    "no_events": "No events found."
+  },
+  "registration": {
+    "title": "Event Registration",
+    "first_name": "First Name",
+    "last_name": "Last Name",
+    "email": "Email Address",
+    "country": "Country",
+    "organization": "Organization",
+    "position": "Position / Title",
+    "dietary_needs": "Dietary Requirements",
+    "submit": "Submit Registration",
+    "success": "Your registration has been submitted successfully.",
+    "status": {
+      "PENDING": "Pending",
+      "CONFIRMED": "Confirmed",
+      "REJECTED": "Rejected",
+      "WAITLISTED": "Waitlisted"
+    }
+  },
+  "documents": {
+    "title": "Documents",
+    "categories": {
+      "AGENDA": "Agenda",
+      "MINUTES": "Minutes",
+      "RESOLUTION": "Resolution",
+      "REPORT": "Report",
+      "PRESS_RELEASE": "Press Release",
+      "OTHER": "Other"
+    },
+    "download": "Download",
+    "no_documents": "No documents available."
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Something went wrong.",
+    "back": "Back",
+    "read_more": "Read More",
+    "language": "Language"
+  }
+}

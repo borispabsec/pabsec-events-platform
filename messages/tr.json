@@ -1,0 +1,71 @@
+{
+  "nav": {
+    "home": "Ana Sayfa",
+    "events": "Etkinlikler",
+    "documents": "Belgeler",
+    "about": "PABSEC Hakkında",
+    "contact": "İletişim"
+  },
+  "home": {
+    "hero_title": "Karadeniz Ekonomik İşbirliği Parlamenter Asamblesi",
+    "hero_subtitle": "KEİ üye devletleri parlamentoları arasında işbirliğini güçlendirme",
+    "upcoming_events": "Yaklaşan Etkinlikler",
+    "view_all_events": "Tüm Etkinlikleri Görüntüle",
+    "latest_documents": "Son Belgeler",
+    "view_all_documents": "Tüm Belgeleri Görüntüle"
+  },
+  "events": {
+    "title": "Etkinlikler",
+    "subtitle": "PABSEC toplantıları, asambleler ve konferanslar",
+    "register": "Kayıt Ol",
+    "registration_closed": "Kayıt Kapalı",
+    "status": {
+      "DRAFT": "Taslak",
+      "PUBLISHED": "Yayınlandı",
+      "CANCELLED": "İptal Edildi",
+      "COMPLETED": "Tamamlandı"
+    },
+    "location": "Konum",
+    "dates": "Tarihler",
+    "agenda": "Gündem",
+    "no_events": "Etkinlik bulunamadı."
+  },
+  "registration": {
+    "title": "Etkinlik Kaydı",
+    "first_name": "Ad",
+    "last_name": "Soyad",
+    "email": "E-posta Adresi",
+    "country": "Ülke",
+    "organization": "Kurum",
+    "position": "Pozisyon / Unvan",
+    "dietary_needs": "Diyet Gereksinimleri",
+    "submit": "Kaydı Gönder",
+    "success": "Kaydınız başarıyla alındı.",
+    "status": {
+      "PENDING": "Beklemede",
+      "CONFIRMED": "Onaylandı",
+      "REJECTED": "Reddedildi",
+      "WAITLISTED": "Bekleme Listesinde"
+    }
+  },
+  "documents": {
+    "title": "Belgeler",
+    "categories": {
+      "AGENDA": "Gündem",
+      "MINUTES": "Tutanaklar",
+      "RESOLUTION": "Karar",
+      "REPORT": "Rapor",
+      "PRESS_RELEASE": "Basın Açıklaması",
+      "OTHER": "Diğer"
+    },
+    "download": "İndir",
+    "no_documents": "Belge bulunamadı."
+  },
+  "common": {
+    "loading": "Yükleniyor...",
+    "error": "Bir şeyler yanlış gitti.",
+    "back": "Geri",
+    "read_more": "Devamını Oku",
+    "language": "Dil"
+  }
+}
