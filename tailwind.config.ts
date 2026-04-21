@@ -9,21 +9,27 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        brand: {
-          50: "#eff6ff",
-          100: "#dbeafe",
-          200: "#bfdbfe",
-          300: "#93c5fd",
-          400: "#60a5fa",
-          500: "#3b82f6",
-          600: "#1d4ed8",
-          700: "#1e40af",
-          800: "#1e3a8a",
-          900: "#172554",
+        navy: {
+          DEFAULT: "#0B1E3D",
+          light: "#132848",
+          dark:  "#070F20",
+        },
+        pabsec: {
+          DEFAULT: "#1A5FA8",
+          dark:    "#154d8a",
+          light:   "#2472bf",
+        },
+        gold: {
+          DEFAULT: "#C9A84C",
+          light:   "#e0c070",
+          dark:    "#a88630",
         },
       },
       fontFamily: {
         sans: ["var(--font-inter)", "system-ui", "sans-serif"],
+      },
+      backgroundImage: {
+        "hero-gradient": "linear-gradient(135deg, #070F20 0%, #0B1E3D 50%, #132848 100%)",
       },
     },
   },

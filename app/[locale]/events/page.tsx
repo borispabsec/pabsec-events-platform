@@ -6,26 +6,33 @@ import { EventCard } from "@/components/events/event-card";
 export async function generateMetadata({
   params,
 }: {
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
-  const t = await getTranslations({ locale: params.locale, namespace: "events" });
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "events" });
   return { title: `${t("title")} – PABSEC` };
 }
 
 export default async function EventsPage({
   params,
 }: {
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }) {
-  const t = await getTranslations({ locale: params.locale, namespace: "events" });
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "events" });
 
-  const events = await db.event.findMany({
-    where: { status: "PUBLISHED" },
-    include: {
-      translations: { where: { locale: params.locale as "en" | "ru" | "tr" } },
-    },
-    orderBy: { startDate: "desc" },
-  });
+  let events: Awaited<ReturnType<typeof db.event.findMany>> = [];
+  try {
+    events = await db.event.findMany({
+      where: { status: "PUBLISHED" },
+      include: {
+        translations: { where: { locale: locale as "en" | "ru" | "tr" } },
+      },
+      orderBy: { startDate: "desc" },
+    });
+  } catch {
+    // DB not yet available — show empty state
+  }
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-12">
@@ -37,7 +44,7 @@ export default async function EventsPage({
       ) : (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {events.map((event) => (
-            <EventCard key={event.id} event={event} locale={params.locale} />
+            <EventCard key={event.id} event={event} locale={locale} />
           ))}
         </div>
       )}

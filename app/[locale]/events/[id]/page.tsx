@@ -4,25 +4,29 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { db } from "@/lib/db";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { formatDateRange } from "@/lib/utils";
 import { RegistrationForm } from "@/components/events/registration-form";
 
 async function getEvent(id: string, locale: string) {
-  return db.event.findFirst({
-    where: { OR: [{ id }, { slug: id }], status: "PUBLISHED" },
-    include: {
-      translations: { where: { locale: locale as "en" | "ru" | "tr" } },
-    },
-  });
+  try {
+    return db.event.findFirst({
+      where: { OR: [{ id }, { slug: id }], status: "PUBLISHED" },
+      include: {
+        translations: { where: { locale: locale as "en" | "ru" | "tr" } },
+      },
+    });
+  } catch {
+    return null;
+  }
 }
 
 export async function generateMetadata({
   params,
 }: {
-  params: { locale: string; id: string };
+  params: Promise<{ locale: string; id: string }>;
 }): Promise<Metadata> {
-  const event = await getEvent(params.id, params.locale);
+  const { locale, id } = await params;
+  const event = await getEvent(id, locale);
   if (!event) return { title: "Event not found – PABSEC" };
   const translation = event.translations[0];
   return { title: `${translation?.title ?? event.slug} – PABSEC` };
@@ -31,11 +35,12 @@ export async function generateMetadata({
 export default async function EventDetailPage({
   params,
 }: {
-  params: { locale: string; id: string };
+  params: Promise<{ locale: string; id: string }>;
 }) {
+  const { locale, id } = await params;
   const [event, t] = await Promise.all([
-    getEvent(params.id, params.locale),
-    getTranslations({ locale: params.locale, namespace: "events" }),
+    getEvent(id, locale),
+    getTranslations({ locale, namespace: "events" }),
   ]);
 
   if (!event) notFound();
@@ -46,8 +51,8 @@ export default async function EventDetailPage({
   return (
     <div className="max-w-4xl mx-auto px-4 py-12">
       <Link
-        href={`/${params.locale}/events`}
-        className="text-brand-600 hover:underline text-sm mb-6 inline-block"
+        href={`/${locale}/events`}
+        className="text-pabsec hover:underline text-sm mb-6 inline-block"
       >
         ← {t("title")}
       </Link>
@@ -65,7 +70,7 @@ export default async function EventDetailPage({
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8 text-sm text-gray-600">
         <div>
           <span className="font-semibold text-gray-900">{t("dates")}: </span>
-          {formatDateRange(event.startDate, event.endDate, params.locale)}
+          {formatDateRange(event.startDate, event.endDate, locale)}
         </div>
         <div>
           <span className="font-semibold text-gray-900">{t("location")}: </span>
@@ -89,7 +94,7 @@ export default async function EventDetailPage({
       {isUpcoming && (
         <div className="border-t pt-8">
           <h2 className="text-xl font-bold mb-6">{t("register")}</h2>
-          <RegistrationForm eventId={event.id} locale={params.locale} />
+          <RegistrationForm eventId={event.id} locale={locale} />
         </div>
       )}
     </div>
