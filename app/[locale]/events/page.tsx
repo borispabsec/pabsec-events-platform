@@ -21,7 +21,10 @@ export default async function EventsPage({
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "events" });
 
-  let events: Awaited<ReturnType<typeof db.event.findMany>> = [];
+  type EventWithTranslations = Awaited<
+    ReturnType<typeof db.event.findMany<{ include: { translations: true } }>>
+  >[number];
+  let events: EventWithTranslations[] = [];
   try {
     events = await db.event.findMany({
       where: { status: "PUBLISHED" },
