@@ -1,0 +1,1 @@
+-- PABSEC database schema
