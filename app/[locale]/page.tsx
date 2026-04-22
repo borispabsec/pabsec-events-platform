@@ -75,12 +75,6 @@ const MEMBER_STATES = [
   "Romania", "Russia", "Serbia", "Türkiye", "Ukraine",
 ];
 
-const HERO_STATS = [
-  { value: "13",   label: "Member States" },
-  { value: "1993", label: "Established" },
-  { value: "67th", label: "Assembly" },
-];
-
 const PAST_ASSEMBLIES = [
   {
     session: "66th",
@@ -113,108 +107,8 @@ export default async function HomePage({
   return (
     <div className="font-sans">
 
-      {/* ── 1. HERO TEXT ──────────────────────────────────────────────────── */}
-      <section
-        className="relative overflow-hidden"
-        style={{ background: "linear-gradient(150deg, #070F20 0%, #0B1E3D 60%, #0d2346 100%)" }}
-      >
-        {/* Decorative radial glows */}
-        <div
-          className="absolute top-0 right-0 w-[700px] h-[700px] rounded-full pointer-events-none"
-          style={{ background: "radial-gradient(circle, rgba(26,95,168,0.12) 0%, transparent 65%)" }}
-        />
-        <div
-          className="absolute bottom-0 left-[-80px] w-[500px] h-[500px] rounded-full pointer-events-none"
-          style={{ background: "radial-gradient(circle, rgba(201,168,76,0.07) 0%, transparent 65%)" }}
-        />
-        {/* Subtle grid overlay */}
-        <div
-          className="absolute inset-0 pointer-events-none opacity-[0.025]"
-          style={{
-            backgroundImage:
-              "linear-gradient(rgba(255,255,255,0.8) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.8) 1px, transparent 1px)",
-            backgroundSize: "80px 80px",
-          }}
-        />
-
-        <div className="relative z-10 w-full max-w-7xl mx-auto px-6 pt-20 pb-14">
-          <div className="animate-fade-in-up">
-            {/* Small lowercase label */}
-            <p
-              className="text-sm font-light mb-5 tracking-wide"
-              style={{ color: "rgba(201,168,76,0.70)" }}
-            >
-              Official Digital Gateway for
-            </p>
-
-            {/* Main heading */}
-            <h1
-              className="text-white font-bold leading-[1.06] tracking-tight mb-6"
-              style={{ fontSize: "clamp(2.4rem, 5vw, 4.2rem)" }}
-            >
-              PABSEC{" "}
-              <em className="not-italic" style={{ color: "#C9A84C" }}>Events</em>
-            </h1>
-
-            <p
-              className="text-[16px] leading-relaxed mb-10 max-w-[560px]"
-              style={{ color: "rgba(255,255,255,0.48)" }}
-            >
-              The permanent registration and information platform for General Assemblies,
-              Committee Meetings, and official events of the Parliamentary Assembly
-              of the Black Sea Economic Cooperation.
-            </p>
-
-            {/* CTAs */}
-            <div className="flex flex-wrap gap-4 mb-14">
-              <Link
-                href={`/${locale}/events`}
-                className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-xl font-semibold text-sm text-navy transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:brightness-110"
-                style={{ background: "#C9A84C" }}
-              >
-                View All Events
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                    d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                </svg>
-              </Link>
-              <a
-                href="#resources"
-                className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl font-semibold text-sm transition-all duration-200 hover:bg-white/10"
-                style={{ color: "rgba(255,255,255,0.65)", border: "1px solid rgba(255,255,255,0.14)" }}
-              >
-                Explore Resources
-              </a>
-            </div>
-
-            {/* Trust stats */}
-            <div
-              className="flex items-center gap-8 pt-8"
-              style={{ borderTop: "1px solid rgba(255,255,255,0.08)" }}
-            >
-              {HERO_STATS.map((stat, i) => (
-                <div key={stat.label} className="flex items-center gap-8">
-                  {i > 0 && (
-                    <div className="w-px h-8" style={{ background: "rgba(255,255,255,0.10)" }} />
-                  )}
-                  <div>
-                    <div className="text-white font-bold text-2xl leading-none">{stat.value}</div>
-                    <div
-                      className="text-[10px] uppercase tracking-widest mt-1"
-                      style={{ color: "rgba(255,255,255,0.30)" }}
-                    >
-                      {stat.label}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── 2. FULL-WIDTH EVENT CARD (67th GA) ───────────────────────────── */}
-      <section className="bg-white py-12">
+      {/* ── 1. FULL-WIDTH EVENT CARD (67th GA) ───────────────────────────── */}
+      <section className="bg-white pt-8 pb-12">
         <div className="max-w-7xl mx-auto px-6">
           <div className="rounded-2xl overflow-hidden shadow-2xl bg-white">
 
@@ -222,7 +116,7 @@ export default async function HomePage({
             <div className="relative h-[480px] overflow-hidden">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="/images/Tbilisi_Photo.png"
+                src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Tbilisi_city_view.jpg/1280px-Tbilisi_city_view.jpg"
                 alt="Tbilisi, Georgia"
                 className="absolute inset-0 w-full h-full object-cover"
               />
@@ -342,7 +236,7 @@ export default async function HomePage({
                     >
                       {label}
                     </div>
-                    <div className="text-navy text-[11px] font-semibold leading-tight">{value}</div>
+                    <div className="text-navy text-[15px] font-bold leading-tight">{value}</div>
                   </div>
                 ))}
               </div>
@@ -352,16 +246,16 @@ export default async function HomePage({
                 <div
                   className="flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl mb-4"
                   style={{
-                    background: "rgba(201,168,76,0.08)",
-                    border: "1px solid rgba(201,168,76,0.18)",
+                    background: "rgba(139,0,0,0.07)",
+                    border: "1px solid rgba(139,0,0,0.20)",
                   }}
                 >
                   <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                    style={{ color: "#C9A84C" }}>
+                    style={{ color: "#8B0000" }}>
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8}
                       d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
-                  <span className="text-sm font-semibold" style={{ color: "#a88630" }}>
+                  <span className="text-sm font-semibold" style={{ color: "#8B0000" }}>
                     {daysRemaining} day{daysRemaining !== 1 ? "s" : ""} remaining to register
                   </span>
                 </div>
@@ -380,7 +274,7 @@ export default async function HomePage({
         </div>
       </section>
 
-      {/* ── 3. RESOURCE CARDS ─────────────────────────────────────────────── */}
+      {/* ── 2. RESOURCE CARDS ─────────────────────────────────────────────── */}
       <section id="resources" className="py-20 border-b border-gray-100" style={{ background: "#F8F9FA" }}>
         <div className="max-w-7xl mx-auto px-6">
 
@@ -434,7 +328,7 @@ export default async function HomePage({
         </div>
       </section>
 
-      {/* ── 4. NEXT EVENT (68th GA – Save the Date) ──────────────────────── */}
+      {/* ── 3. NEXT EVENT (68th GA – Save the Date) ──────────────────────── */}
       <section className="py-10 bg-white border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-6">
           <div
@@ -483,7 +377,7 @@ export default async function HomePage({
         </div>
       </section>
 
-      {/* ── 5. ABOUT PABSEC ───────────────────────────────────────────────── */}
+      {/* ── 4. ABOUT PABSEC ───────────────────────────────────────────────── */}
       <section className="py-24 bg-white border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
@@ -546,7 +440,7 @@ export default async function HomePage({
         </div>
       </section>
 
-      {/* ── 6. ARCHIVE PREVIEW ────────────────────────────────────────────── */}
+      {/* ── 5. ARCHIVE PREVIEW ────────────────────────────────────────────── */}
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex items-end justify-between mb-12">
