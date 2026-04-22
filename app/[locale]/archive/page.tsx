@@ -1,55 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { PAST_ASSEMBLIES } from "@/lib/data/archive";
 
 export const metadata: Metadata = {
   title: "Archive – PABSEC Events Platform",
   description: "Archive of past PABSEC General Assemblies, committee meetings and official sessions.",
 };
-
-const PAST_ASSEMBLIES = [
-  {
-    session: "66th",
-    title: "66th General Assembly",
-    location: "Baku, Azerbaijan",
-    date: "November 2025",
-    docs: ["Resolutions", "Agenda", "Minutes"],
-  },
-  {
-    session: "65th",
-    title: "65th General Assembly",
-    location: "Sofia, Bulgaria",
-    date: "June 2025",
-    docs: ["Resolutions", "Agenda", "Minutes"],
-  },
-  {
-    session: "64th",
-    title: "64th General Assembly",
-    location: "Athens, Greece",
-    date: "November 2024",
-    docs: ["Resolutions", "Agenda", "Minutes"],
-  },
-  {
-    session: "63rd",
-    title: "63rd General Assembly",
-    location: "Chisinau, Moldova",
-    date: "June 2024",
-    docs: ["Resolutions", "Agenda", "Minutes"],
-  },
-  {
-    session: "62nd",
-    title: "62nd General Assembly",
-    location: "Istanbul, Türkiye",
-    date: "November 2023",
-    docs: ["Resolutions", "Agenda"],
-  },
-  {
-    session: "61st",
-    title: "61st General Assembly",
-    location: "Tbilisi, Georgia",
-    date: "June 2023",
-    docs: ["Resolutions", "Agenda"],
-  },
-];
 
 export default async function ArchivePage({
   params,
@@ -87,42 +43,14 @@ export default async function ArchivePage({
           </div>
           <h1 className="text-navy text-4xl font-bold mb-4 tracking-tight">Archive</h1>
           <p className="text-gray-500 text-base max-w-lg leading-relaxed">
-            Official records of past PABSEC General Assemblies, committee meetings and official sessions.
-            Resolutions, programmes and minutes are preserved here for reference.
+            Official records of past PABSEC General Assemblies. Resolutions, programmes and minutes
+            are available on the official PABSEC website.
           </p>
         </div>
       </div>
 
       {/* Content */}
       <div className="max-w-5xl mx-auto px-6 py-16">
-
-        {/* Filter bar */}
-        <div className="flex items-center gap-3 mb-10">
-          <span
-            className="text-[10px] font-semibold uppercase tracking-[0.22em]"
-            style={{ color: "#9CA3AF" }}
-          >
-            Filter:
-          </span>
-          <button
-            className="text-[11px] font-semibold px-3.5 py-1.5 rounded-full text-white"
-            style={{ background: "#0B1E3D" }}
-          >
-            All Sessions
-          </button>
-          <button
-            className="text-[11px] font-semibold px-3.5 py-1.5 rounded-full border transition-colors hover:border-navy/30"
-            style={{ color: "rgba(11,30,61,0.45)", borderColor: "rgba(11,30,61,0.14)" }}
-          >
-            General Assembly
-          </button>
-          <button
-            className="text-[11px] font-semibold px-3.5 py-1.5 rounded-full border transition-colors hover:border-navy/30"
-            style={{ color: "rgba(11,30,61,0.45)", borderColor: "rgba(11,30,61,0.14)" }}
-          >
-            Committee Meetings
-          </button>
-        </div>
 
         {/* Assembly grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-16">
@@ -168,31 +96,25 @@ export default async function ArchivePage({
                 <p className="text-gray-400 text-xs">{assembly.date}</p>
               </div>
 
-              {/* Document chips */}
-              <div className="flex flex-wrap gap-2">
-                {assembly.docs.map((doc) => (
-                  <span
-                    key={doc}
-                    className="inline-flex items-center gap-1.5 text-[11px] font-medium px-2.5 py-1 rounded-lg border cursor-pointer hover:border-gold/30 hover:text-gold transition-colors"
-                    style={{
-                      color: "rgba(11,30,61,0.50)",
-                      borderColor: "rgba(11,30,61,0.12)",
-                      background: "rgba(11,30,61,0.02)",
-                    }}
-                  >
-                    <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round"
-                        d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
-                    </svg>
-                    {doc}
-                  </span>
-                ))}
-              </div>
+              {/* View Documents link */}
+              <a
+                href={assembly.docsUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 text-[12px] font-semibold transition-colors hover:text-gold"
+                style={{ color: "#1A5FA8" }}
+              >
+                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round"
+                    d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+                </svg>
+                View Documents →
+              </a>
             </div>
           ))}
         </div>
 
-        {/* Document access notice */}
+        {/* Footer note */}
         <div
           className="p-8 rounded-2xl text-center"
           style={{ background: "rgba(11,30,61,0.02)", border: "1px solid rgba(11,30,61,0.07)" }}
@@ -205,17 +127,19 @@ export default async function ArchivePage({
                 d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
             </svg>
           </div>
-          <h3 className="text-navy font-bold text-base mb-2">Full Archive Access</h3>
+          <h3 className="text-navy font-bold text-base mb-2">Full Document Archive</h3>
           <p className="text-gray-500 text-sm leading-relaxed max-w-md mx-auto mb-4">
-            The complete archive of official documents, resolutions and session minutes is available
-            to accredited delegates and officials upon request.
+            The complete archive of resolutions, programmes and session minutes is available on the
+            official PABSEC website.
           </p>
           <a
-            href="mailto:support@pabsecevents.org"
+            href="https://pabsec.org"
+            target="_blank"
+            rel="noopener noreferrer"
             className="inline-flex items-center gap-2 text-sm font-semibold transition-colors hover:text-gold"
             style={{ color: "#1A5FA8" }}
           >
-            Request Document Access
+            Visit pabsec.org
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
                 d="M17 8l4 4m0 0l-4 4m4-4H3" />

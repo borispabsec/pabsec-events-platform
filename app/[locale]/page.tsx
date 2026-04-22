@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { db } from "@/lib/db";
+import { PAST_ASSEMBLIES } from "@/lib/data/archive";
 
 export const metadata: Metadata = {
   title: "PABSEC Events Platform – Official Digital Gateway",
@@ -94,26 +95,6 @@ const COMMITTEE_MEETINGS = [
   },
 ];
 
-const PAST_ASSEMBLIES = [
-  {
-    session: "66th",
-    title: "66th General Assembly",
-    location: "Baku, Azerbaijan",
-    date: "November 2025",
-  },
-  {
-    session: "65th",
-    title: "65th General Assembly",
-    location: "Sofia, Bulgaria",
-    date: "June 2025",
-  },
-  {
-    session: "64th",
-    title: "64th General Assembly",
-    location: "Athens, Greece",
-    date: "November 2024",
-  },
-];
 
 export default async function HomePage({
   params,
@@ -432,7 +413,7 @@ export default async function HomePage({
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {PAST_ASSEMBLIES.map((assembly) => (
+            {PAST_ASSEMBLIES.slice(0, 3).map((assembly) => (
               <div
                 key={assembly.session}
                 className="group bg-white rounded-2xl p-7 border border-gray-100 hover:border-gold/20 hover:-translate-y-0.5 transition-all duration-200"
@@ -453,18 +434,36 @@ export default async function HomePage({
                   </span>
                 </div>
                 <h3 className="text-navy font-bold text-[15px] mb-1">{assembly.title}</h3>
-                <p className="text-gray-500 text-sm mb-0.5">{assembly.location}</p>
-                <p className="text-gray-400 text-xs mb-5">{assembly.date}</p>
-                <div
-                  className="flex items-center gap-1.5 text-xs font-semibold"
-                  style={{ color: "rgba(11,30,61,0.35)" }}
+                <div className="flex items-center gap-1.5 mb-0.5">
+                  <svg className="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={1.8}
+                    viewBox="0 0 24 24" style={{ color: "#9CA3AF" }}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round"
+                      d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 0115 0z" />
+                  </svg>
+                  <p className="text-gray-500 text-sm">{assembly.location}</p>
+                </div>
+                <div className="flex items-center gap-1.5 mb-5">
+                  <svg className="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={1.8}
+                    viewBox="0 0 24 24" style={{ color: "#9CA3AF" }}>
+                    <path strokeLinecap="round" strokeLinejoin="round"
+                      d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
+                  </svg>
+                  <p className="text-gray-400 text-xs">{assembly.date}</p>
+                </div>
+                <a
+                  href={assembly.docsUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 text-[12px] font-semibold transition-colors hover:text-gold"
+                  style={{ color: "#1A5FA8" }}
                 >
                   <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round"
                       d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
                   </svg>
-                  View Documents
-                </div>
+                  View Documents →
+                </a>
               </div>
             ))}
           </div>
