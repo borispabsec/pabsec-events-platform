@@ -219,24 +219,34 @@ export default async function HomePage({
           <div className="rounded-2xl overflow-hidden shadow-2xl bg-white">
 
             {/* Photo section — full-width, tall */}
-            <div className="relative h-[420px] overflow-hidden">
+            <div className="relative h-[480px] overflow-hidden">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src="/images/Tbilisi_Photo.png"
                 alt="Tbilisi, Georgia"
                 className="absolute inset-0 w-full h-full object-cover"
               />
-              {/* Gradient overlay */}
+              {/* Gradient overlay — heavier at bottom for legibility */}
               <div
                 className="absolute inset-0"
                 style={{
                   background:
-                    "linear-gradient(to bottom, rgba(0,0,0,0.25) 0%, rgba(7,15,32,0.85) 100%)",
+                    "linear-gradient(to bottom, rgba(0,0,0,0.35) 0%, rgba(5,12,28,0.80) 60%, rgba(5,12,28,0.95) 100%)",
                 }}
               />
 
-              {/* Top row: location + registration badge */}
-              <div className="absolute top-5 left-5 right-5 flex items-center justify-between">
+              {/* Very top: small elegant platform label */}
+              <div className="absolute top-5 left-0 right-0 flex justify-center">
+                <p
+                  className="text-[11px] font-light tracking-[0.22em] uppercase"
+                  style={{ color: "rgba(255,255,255,0.50)" }}
+                >
+                  Official Digital Gateway for PABSEC Events
+                </p>
+              </div>
+
+              {/* Badges row */}
+              <div className="absolute top-12 left-5 right-5 flex items-center justify-between">
                 <div
                   className="flex items-center gap-1.5 text-[12px] font-medium text-white/80 backdrop-blur-sm rounded-full px-3.5 py-1.5"
                   style={{ background: "rgba(0,0,0,0.30)", border: "1px solid rgba(255,255,255,0.15)" }}
@@ -257,19 +267,18 @@ export default async function HomePage({
                 </div>
               </div>
 
-              {/* Bottom of photo: gold label + white title + date/location */}
-              <div className="absolute bottom-0 left-0 right-0 p-7">
-                <div
-                  className="text-[11px] font-bold uppercase tracking-[0.28em] mb-3"
-                  style={{ color: "#C9A84C" }}
+              {/* Bottom: title + large date/location */}
+              <div className="absolute bottom-0 left-0 right-0 px-8 pb-8">
+                <h2
+                  className="text-white font-bold leading-tight mb-4"
+                  style={{ fontSize: "clamp(1.7rem, 3.5vw, 2.4rem)" }}
                 >
-                  67TH GENERAL ASSEMBLY
-                </div>
-                <h2 className="text-white font-bold leading-tight mb-2"
-                  style={{ fontSize: "clamp(1.4rem, 3vw, 2rem)" }}>
-                  67th Ordinary Session of the PABSEC General Assembly
+                  67th PABSEC General Assembly
                 </h2>
-                <p className="text-[13px]" style={{ color: "rgba(255,255,255,0.55)" }}>
+                <p
+                  className="font-semibold"
+                  style={{ fontSize: "clamp(1rem, 2vw, 1.25rem)", color: "rgba(255,255,255,0.85)" }}
+                >
                   30 June – 1 July 2026 · Tbilisi, Georgia
                 </p>
               </div>
