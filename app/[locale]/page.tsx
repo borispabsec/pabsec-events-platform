@@ -113,7 +113,7 @@ export default async function HomePage({
   return (
     <div className="font-sans">
 
-      {/* ── HERO ──────────────────────────────────────────────────────────── */}
+      {/* ── 1. HERO TEXT ──────────────────────────────────────────────────── */}
       <section
         className="relative overflow-hidden"
         style={{ background: "linear-gradient(150deg, #070F20 0%, #0B1E3D 60%, #0d2346 100%)" }}
@@ -138,248 +138,240 @@ export default async function HomePage({
         />
 
         <div className="relative z-10 w-full max-w-7xl mx-auto px-6 pt-20 pb-14">
+          <div className="animate-fade-in-up">
+            {/* Small lowercase label */}
+            <p
+              className="text-sm font-light mb-5 tracking-wide"
+              style={{ color: "rgba(201,168,76,0.70)" }}
+            >
+              Official Digital Gateway for
+            </p>
 
-          {/* ── Top row: Platform identity text + event card ── */}
-          <div className="grid grid-cols-1 lg:grid-cols-[1.1fr,1fr] gap-14 items-start mb-0">
+            {/* Main heading */}
+            <h1
+              className="text-white font-bold leading-[1.06] tracking-tight mb-6"
+              style={{ fontSize: "clamp(2.4rem, 5vw, 4.2rem)" }}
+            >
+              PABSEC{" "}
+              <em className="not-italic" style={{ color: "#C9A84C" }}>Events</em>
+            </h1>
 
-            {/* Left: Platform Identity */}
-            <div className="animate-fade-in-up pt-4">
-              {/* Small lowercase label */}
-              <p
-                className="text-sm font-light mb-5 tracking-wide"
-                style={{ color: "rgba(201,168,76,0.70)" }}
+            <p
+              className="text-[16px] leading-relaxed mb-10 max-w-[560px]"
+              style={{ color: "rgba(255,255,255,0.48)" }}
+            >
+              The permanent registration and information platform for General Assemblies,
+              Committee Meetings, and official events of the Parliamentary Assembly
+              of the Black Sea Economic Cooperation.
+            </p>
+
+            {/* CTAs */}
+            <div className="flex flex-wrap gap-4 mb-14">
+              <Link
+                href={`/${locale}/events`}
+                className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-xl font-semibold text-sm text-navy transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:brightness-110"
+                style={{ background: "#C9A84C" }}
               >
-                Official Digital gateway for
-              </p>
-
-              {/* Main heading */}
-              <h1
-                className="text-white font-bold leading-[1.06] tracking-tight mb-6"
-                style={{ fontSize: "clamp(2.4rem, 5vw, 4.2rem)" }}
+                View All Events
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                    d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+              </Link>
+              <a
+                href="#resources"
+                className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl font-semibold text-sm transition-all duration-200 hover:bg-white/10"
+                style={{ color: "rgba(255,255,255,0.65)", border: "1px solid rgba(255,255,255,0.14)" }}
               >
-                PABSEC{" "}
-                <em className="not-italic" style={{ color: "#C9A84C" }}>Events</em>
-              </h1>
-
-              <p
-                className="text-[16px] leading-relaxed mb-10 max-w-[460px]"
-                style={{ color: "rgba(255,255,255,0.48)" }}
-              >
-                The permanent registration and information platform for General Assemblies,
-                Committee Meetings, and official events of the Parliamentary Assembly
-                of the Black Sea Economic Cooperation.
-              </p>
-
-              {/* CTAs */}
-              <div className="flex flex-wrap gap-4 mb-14">
-                <Link
-                  href={`/${locale}/events`}
-                  className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-xl font-semibold text-sm text-navy transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:brightness-110"
-                  style={{ background: "#C9A84C" }}
-                >
-                  View All Events
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                      d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                  </svg>
-                </Link>
-                <a
-                  href="#resources"
-                  className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl font-semibold text-sm transition-all duration-200 hover:bg-white/10"
-                  style={{ color: "rgba(255,255,255,0.65)", border: "1px solid rgba(255,255,255,0.14)" }}
-                >
-                  Explore Resources
-                </a>
-              </div>
-
-              {/* Trust stats */}
-              <div
-                className="flex items-center gap-8 pt-8"
-                style={{ borderTop: "1px solid rgba(255,255,255,0.08)" }}
-              >
-                {HERO_STATS.map((stat, i) => (
-                  <div key={stat.label} className="flex items-center gap-8">
-                    {i > 0 && (
-                      <div className="w-px h-8" style={{ background: "rgba(255,255,255,0.10)" }} />
-                    )}
-                    <div>
-                      <div className="text-white font-bold text-2xl leading-none">{stat.value}</div>
-                      <div
-                        className="text-[10px] uppercase tracking-widest mt-1"
-                        style={{ color: "rgba(255,255,255,0.30)" }}
-                      >
-                        {stat.label}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
+                Explore Resources
+              </a>
             </div>
 
-            {/* Right: Event Card — photo top, white card bottom */}
-            <div className="animate-fade-in-right animation-delay-200">
-              <div className="rounded-2xl overflow-hidden shadow-2xl bg-white">
-
-                {/* ── Photo section (top half) ── */}
-                <div className="relative h-64 overflow-hidden">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src="/images/Tbilisi_Photo.png"
-                    alt="Tbilisi, Georgia"
-                    className="absolute inset-0 w-full h-full object-cover"
-                  />
-                  {/* Gradient overlay — dark at bottom for text legibility */}
-                  <div
-                    className="absolute inset-0"
-                    style={{
-                      background:
-                        "linear-gradient(to bottom, rgba(0,0,0,0.22) 0%, rgba(7,15,32,0.82) 100%)",
-                    }}
-                  />
-
-                  {/* Top row: location + registration badge */}
-                  <div className="absolute top-4 left-4 right-4 flex items-center justify-between">
-                    <div
-                      className="flex items-center gap-1.5 text-[11px] font-medium text-white/80 backdrop-blur-sm rounded-full px-3 py-1.5"
-                      style={{ background: "rgba(0,0,0,0.30)", border: "1px solid rgba(255,255,255,0.15)" }}
-                    >
-                      📍 Tbilisi, Georgia
-                    </div>
-                    <div
-                      className="flex items-center gap-1.5 rounded-full px-3 py-1.5 backdrop-blur-sm"
-                      style={{
-                        background: "rgba(34,197,94,0.15)",
-                        border: "1px solid rgba(74,222,128,0.25)",
-                      }}
-                    >
-                      <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
-                      <span className="text-[10px] font-medium tracking-wide text-green-300">
-                        Registration Open
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Bottom of photo: gold label + title */}
-                  <div className="absolute bottom-0 left-0 right-0 p-5">
-                    <div
-                      className="text-[11px] font-bold uppercase tracking-[0.28em] mb-2"
-                      style={{ color: "#C9A84C" }}
-                    >
-                      67TH GENERAL ASSEMBLY
-                    </div>
-                    <h3 className="text-white font-bold text-lg leading-tight mb-1">
-                      67th Ordinary Session of the PABSEC General Assembly
-                    </h3>
-                    <p className="text-[12px]" style={{ color: "rgba(255,255,255,0.55)" }}>
-                      30 June – 1 July 2026 · Tbilisi, Georgia
-                    </p>
-                  </div>
-                </div>
-
-                {/* ── White card section (bottom half) ── */}
-                <div className="p-5 bg-white">
-
-                  {/* 3 info blocks */}
-                  <div className="grid grid-cols-3 gap-3 mb-4">
-                    {[
-                      {
-                        label: "Date",
-                        value: "30 Jun – 1 Jul",
-                        icon: (
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round"
-                              d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
-                          </svg>
-                        ),
-                      },
-                      {
-                        label: "Location",
-                        value: "Tbilisi, GE",
-                        icon: (
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
-                            <path strokeLinecap="round" strokeLinejoin="round"
-                              d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 0115 0z" />
-                          </svg>
-                        ),
-                      },
-                      {
-                        label: "Format",
-                        value: "In-Person",
-                        icon: (
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round"
-                              d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" />
-                          </svg>
-                        ),
-                      },
-                    ].map(({ label, value, icon }) => (
-                      <div
-                        key={label}
-                        className="rounded-xl p-3 text-center"
-                        style={{
-                          background: "rgba(11,30,61,0.03)",
-                          border: "1px solid rgba(11,30,61,0.07)",
-                        }}
-                      >
-                        <div
-                          className="flex justify-center mb-1.5"
-                          style={{ color: "rgba(11,30,61,0.35)" }}
-                        >
-                          {icon}
-                        </div>
-                        <div
-                          className="text-[9px] uppercase tracking-wider mb-1"
-                          style={{ color: "#9CA3AF" }}
-                        >
-                          {label}
-                        </div>
-                        <div className="text-navy text-[11px] font-semibold leading-tight">{value}</div>
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Countdown bar */}
-                  {daysRemaining > 0 && (
-                    <div
-                      className="flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl mb-4"
-                      style={{
-                        background: "rgba(201,168,76,0.08)",
-                        border: "1px solid rgba(201,168,76,0.18)",
-                      }}
-                    >
-                      <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                        style={{ color: "#C9A84C" }}>
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8}
-                          d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                      </svg>
-                      <span className="text-sm font-semibold" style={{ color: "#a88630" }}>
-                        {daysRemaining} day{daysRemaining !== 1 ? "s" : ""} remaining to register
-                      </span>
-                    </div>
+            {/* Trust stats */}
+            <div
+              className="flex items-center gap-8 pt-8"
+              style={{ borderTop: "1px solid rgba(255,255,255,0.08)" }}
+            >
+              {HERO_STATS.map((stat, i) => (
+                <div key={stat.label} className="flex items-center gap-8">
+                  {i > 0 && (
+                    <div className="w-px h-8" style={{ background: "rgba(255,255,255,0.10)" }} />
                   )}
-
-                  {/* Register Now — navy blue, full-width */}
-                  <Link
-                    href={`/${locale}/events`}
-                    className="flex items-center justify-center gap-2 w-full py-3.5 rounded-xl font-semibold text-sm text-white transition-all duration-200 hover:opacity-90 hover:-translate-y-0.5 hover:shadow-md"
-                    style={{ background: "#0B1E3D" }}
-                  >
-                    Register Now
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                        d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                    </svg>
-                  </Link>
+                  <div>
+                    <div className="text-white font-bold text-2xl leading-none">{stat.value}</div>
+                    <div
+                      className="text-[10px] uppercase tracking-widest mt-1"
+                      style={{ color: "rgba(255,255,255,0.30)" }}
+                    >
+                      {stat.label}
+                    </div>
+                  </div>
                 </div>
-              </div>
+              ))}
             </div>
-
           </div>
         </div>
       </section>
 
-      {/* ── RESOURCE CARDS ────────────────────────────────────────────────── */}
+      {/* ── 2. FULL-WIDTH EVENT CARD (67th GA) ───────────────────────────── */}
+      <section className="bg-white py-12">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="rounded-2xl overflow-hidden shadow-2xl bg-white">
+
+            {/* Photo section — full-width, tall */}
+            <div className="relative h-[420px] overflow-hidden">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/images/Tbilisi_Photo.png"
+                alt="Tbilisi, Georgia"
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+              {/* Gradient overlay */}
+              <div
+                className="absolute inset-0"
+                style={{
+                  background:
+                    "linear-gradient(to bottom, rgba(0,0,0,0.25) 0%, rgba(7,15,32,0.85) 100%)",
+                }}
+              />
+
+              {/* Top row: location + registration badge */}
+              <div className="absolute top-5 left-5 right-5 flex items-center justify-between">
+                <div
+                  className="flex items-center gap-1.5 text-[12px] font-medium text-white/80 backdrop-blur-sm rounded-full px-3.5 py-1.5"
+                  style={{ background: "rgba(0,0,0,0.30)", border: "1px solid rgba(255,255,255,0.15)" }}
+                >
+                  📍 Tbilisi, Georgia
+                </div>
+                <div
+                  className="flex items-center gap-1.5 rounded-full px-3.5 py-1.5 backdrop-blur-sm"
+                  style={{
+                    background: "rgba(34,197,94,0.15)",
+                    border: "1px solid rgba(74,222,128,0.25)",
+                  }}
+                >
+                  <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
+                  <span className="text-[11px] font-medium tracking-wide text-green-300">
+                    Registration Open
+                  </span>
+                </div>
+              </div>
+
+              {/* Bottom of photo: gold label + white title + date/location */}
+              <div className="absolute bottom-0 left-0 right-0 p-7">
+                <div
+                  className="text-[11px] font-bold uppercase tracking-[0.28em] mb-3"
+                  style={{ color: "#C9A84C" }}
+                >
+                  67TH GENERAL ASSEMBLY
+                </div>
+                <h2 className="text-white font-bold leading-tight mb-2"
+                  style={{ fontSize: "clamp(1.4rem, 3vw, 2rem)" }}>
+                  67th Ordinary Session of the PABSEC General Assembly
+                </h2>
+                <p className="text-[13px]" style={{ color: "rgba(255,255,255,0.55)" }}>
+                  30 June – 1 July 2026 · Tbilisi, Georgia
+                </p>
+              </div>
+            </div>
+
+            {/* Card body */}
+            <div className="p-6 bg-white">
+
+              {/* 3 info blocks */}
+              <div className="grid grid-cols-3 gap-4 mb-4">
+                {[
+                  {
+                    label: "Date",
+                    value: "30 Jun – 1 Jul",
+                    icon: (
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round"
+                          d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
+                      </svg>
+                    ),
+                  },
+                  {
+                    label: "Location",
+                    value: "Tbilisi, Georgia",
+                    icon: (
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path strokeLinecap="round" strokeLinejoin="round"
+                          d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 0115 0z" />
+                      </svg>
+                    ),
+                  },
+                  {
+                    label: "Format",
+                    value: "In-Person",
+                    icon: (
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round"
+                          d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" />
+                      </svg>
+                    ),
+                  },
+                ].map(({ label, value, icon }) => (
+                  <div
+                    key={label}
+                    className="rounded-xl p-3 text-center"
+                    style={{
+                      background: "rgba(11,30,61,0.03)",
+                      border: "1px solid rgba(11,30,61,0.07)",
+                    }}
+                  >
+                    <div
+                      className="flex justify-center mb-1.5"
+                      style={{ color: "rgba(11,30,61,0.35)" }}
+                    >
+                      {icon}
+                    </div>
+                    <div
+                      className="text-[9px] uppercase tracking-wider mb-1"
+                      style={{ color: "#9CA3AF" }}
+                    >
+                      {label}
+                    </div>
+                    <div className="text-navy text-[11px] font-semibold leading-tight">{value}</div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Countdown bar */}
+              {daysRemaining > 0 && (
+                <div
+                  className="flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl mb-4"
+                  style={{
+                    background: "rgba(201,168,76,0.08)",
+                    border: "1px solid rgba(201,168,76,0.18)",
+                  }}
+                >
+                  <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                    style={{ color: "#C9A84C" }}>
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8}
+                      d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <span className="text-sm font-semibold" style={{ color: "#a88630" }}>
+                    {daysRemaining} day{daysRemaining !== 1 ? "s" : ""} remaining to register
+                  </span>
+                </div>
+              )}
+
+              {/* Register Now — navy blue, full-width */}
+              <Link
+                href={`/${locale}/events`}
+                className="flex items-center justify-center gap-2 w-full py-3.5 rounded-xl font-semibold text-sm text-white transition-all duration-200 hover:opacity-90 hover:-translate-y-0.5 hover:shadow-md"
+                style={{ background: "#0B1E3D" }}
+              >
+                Register Now →
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── 3. RESOURCE CARDS ─────────────────────────────────────────────── */}
       <section id="resources" className="py-20 border-b border-gray-100" style={{ background: "#F8F9FA" }}>
         <div className="max-w-7xl mx-auto px-6">
 
@@ -433,7 +425,7 @@ export default async function HomePage({
         </div>
       </section>
 
-      {/* ── NEXT EVENT (68th GA – Save the Date) ─────────────────────────── */}
+      {/* ── 4. NEXT EVENT (68th GA – Save the Date) ──────────────────────── */}
       <section className="py-10 bg-white border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-6">
           <div
@@ -482,7 +474,7 @@ export default async function HomePage({
         </div>
       </section>
 
-      {/* ── ABOUT PABSEC ──────────────────────────────────────────────────── */}
+      {/* ── 5. ABOUT PABSEC ───────────────────────────────────────────────── */}
       <section className="py-24 bg-white border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
@@ -545,7 +537,7 @@ export default async function HomePage({
         </div>
       </section>
 
-      {/* ── ARCHIVE PREVIEW ───────────────────────────────────────────────── */}
+      {/* ── 6. ARCHIVE PREVIEW ────────────────────────────────────────────── */}
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex items-end justify-between mb-12">
