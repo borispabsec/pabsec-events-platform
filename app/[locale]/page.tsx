@@ -107,191 +107,109 @@ export default async function HomePage({
   return (
     <div className="font-sans">
 
-      {/* ── 1. FULL-WIDTH EVENT CARD (67th GA) ───────────────────────────── */}
-      <section className="bg-white pt-8 pb-12">
+      {/* ── 1. EVENT CARD (67th GA) ───────────────────────────────────────── */}
+      <section className="bg-white pt-8 pb-0">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="rounded-2xl overflow-hidden shadow-2xl bg-white">
+          <div className="rounded-2xl overflow-hidden shadow-2xl">
 
-            {/* Photo section — full-width, tall */}
-            <div className="relative h-[480px] overflow-hidden">
+            {/* Photo — full-width, tall */}
+            <div className="relative h-[500px] overflow-hidden">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Tbilisi_city_view.jpg/1280px-Tbilisi_city_view.jpg"
+                src="/images/Tbilisi_Photo.png"
                 alt="Tbilisi, Georgia"
                 className="absolute inset-0 w-full h-full object-cover"
               />
-              {/* Gradient overlay — heavier at bottom for legibility */}
+              {/* Gradient overlay */}
               <div
                 className="absolute inset-0"
                 style={{
                   background:
-                    "linear-gradient(to bottom, rgba(0,0,0,0.35) 0%, rgba(5,12,28,0.80) 60%, rgba(5,12,28,0.95) 100%)",
+                    "linear-gradient(to bottom, rgba(0,0,0,0.30) 0%, rgba(5,12,28,0.72) 55%, rgba(5,12,28,0.96) 100%)",
                 }}
               />
 
-              {/* Very top: small elegant platform label */}
-              <div className="absolute top-5 left-0 right-0 flex justify-center">
+              {/* Very top centre: platform label */}
+              <div className="absolute top-5 left-0 right-0 flex justify-center pointer-events-none">
                 <p
-                  className="text-[11px] font-light tracking-[0.22em] uppercase"
-                  style={{ color: "rgba(255,255,255,0.50)" }}
+                  className="text-[11px] font-light tracking-[0.24em] uppercase"
+                  style={{ color: "rgba(255,255,255,0.45)" }}
                 >
                   Official Digital Gateway for PABSEC Events
                 </p>
               </div>
 
-              {/* Badges row */}
-              <div className="absolute top-12 left-5 right-5 flex items-center justify-between">
-                <div
-                  className="flex items-center gap-1.5 text-[12px] font-medium text-white/80 backdrop-blur-sm rounded-full px-3.5 py-1.5"
-                  style={{ background: "rgba(0,0,0,0.30)", border: "1px solid rgba(255,255,255,0.15)" }}
-                >
-                  📍 Tbilisi, Georgia
-                </div>
+              {/* Right-side stacked badges */}
+              <div className="absolute top-12 right-5 flex flex-col gap-2 items-end">
+                {/* Registration Open — green */}
                 <div
                   className="flex items-center gap-1.5 rounded-full px-3.5 py-1.5 backdrop-blur-sm"
                   style={{
                     background: "rgba(34,197,94,0.15)",
-                    border: "1px solid rgba(74,222,128,0.25)",
+                    border: "1px solid rgba(74,222,128,0.30)",
                   }}
                 >
-                  <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse flex-shrink-0" />
                   <span className="text-[11px] font-medium tracking-wide text-green-300">
                     Registration Open
                   </span>
                 </div>
+
+                {/* Days remaining — crimson */}
+                {daysRemaining > 0 && (
+                  <div
+                    className="flex items-center gap-1.5 rounded-full px-3.5 py-1.5 backdrop-blur-sm"
+                    style={{
+                      background: "rgba(139,0,0,0.22)",
+                      border: "1px solid rgba(220,38,38,0.35)",
+                    }}
+                  >
+                    <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: "#f87171" }} />
+                    <span className="text-[11px] font-medium tracking-wide" style={{ color: "#fca5a5" }}>
+                      {daysRemaining} days remaining
+                    </span>
+                  </div>
+                )}
+
+                {/* Register Now — navy/blue */}
+                <Link
+                  href={`/${locale}/events`}
+                  className="flex items-center gap-1.5 rounded-full px-3.5 py-1.5 backdrop-blur-sm transition-opacity hover:opacity-85"
+                  style={{
+                    background: "rgba(26,95,168,0.40)",
+                    border: "1px solid rgba(96,165,250,0.35)",
+                  }}
+                >
+                  <span className="w-1.5 h-1.5 rounded-full bg-blue-400 flex-shrink-0" />
+                  <span className="text-[11px] font-medium tracking-wide text-blue-200">
+                    Register Now →
+                  </span>
+                </Link>
               </div>
 
-              {/* Bottom: title + large date/location */}
-              <div className="absolute bottom-0 left-0 right-0 px-8 pb-8">
-                <h2
-                  className="text-white font-bold leading-tight mb-4"
-                  style={{ fontSize: "clamp(1.7rem, 3.5vw, 2.4rem)" }}
+              {/* Bottom: title + date/location */}
+              <div className="absolute bottom-0 left-0 right-0 px-8 pb-9">
+                <h1
+                  className="text-white font-bold leading-tight mb-3"
+                  style={{ fontSize: "clamp(1.75rem, 3.5vw, 2.5rem)" }}
                 >
                   67th PABSEC General Assembly
-                </h2>
+                </h1>
                 <p
                   className="font-semibold"
-                  style={{ fontSize: "clamp(1rem, 2vw, 1.25rem)", color: "rgba(255,255,255,0.85)" }}
+                  style={{ fontSize: "clamp(1rem, 2vw, 1.2rem)", color: "rgba(255,255,255,0.88)" }}
                 >
                   30 June – 1 July 2026 · Tbilisi, Georgia
                 </p>
               </div>
-            </div>
-
-            {/* Card body */}
-            <div className="p-6 bg-white">
-
-              {/* 3 info blocks */}
-              <div className="grid grid-cols-3 gap-4 mb-4">
-                {[
-                  {
-                    label: "Date",
-                    value: "30 Jun – 1 Jul",
-                    icon: (
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round"
-                          d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
-                      </svg>
-                    ),
-                  },
-                  {
-                    label: "Location",
-                    value: "Tbilisi, Georgia",
-                    icon: (
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
-                        <path strokeLinecap="round" strokeLinejoin="round"
-                          d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 0115 0z" />
-                      </svg>
-                    ),
-                  },
-                  {
-                    label: "Format",
-                    value: "In-Person",
-                    icon: (
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round"
-                          d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" />
-                      </svg>
-                    ),
-                  },
-                ].map(({ label, value, icon }) => (
-                  <div
-                    key={label}
-                    className="rounded-xl p-3 text-center"
-                    style={{
-                      background: "rgba(11,30,61,0.03)",
-                      border: "1px solid rgba(11,30,61,0.07)",
-                    }}
-                  >
-                    <div
-                      className="flex justify-center mb-1.5"
-                      style={{ color: "rgba(11,30,61,0.35)" }}
-                    >
-                      {icon}
-                    </div>
-                    <div
-                      className="text-[9px] uppercase tracking-wider mb-1"
-                      style={{ color: "#9CA3AF" }}
-                    >
-                      {label}
-                    </div>
-                    <div className="text-navy text-[15px] font-bold leading-tight">{value}</div>
-                  </div>
-                ))}
-              </div>
-
-              {/* Countdown bar */}
-              {daysRemaining > 0 && (
-                <div
-                  className="flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl mb-4"
-                  style={{
-                    background: "rgba(139,0,0,0.07)",
-                    border: "1px solid rgba(139,0,0,0.20)",
-                  }}
-                >
-                  <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                    style={{ color: "#8B0000" }}>
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8}
-                      d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  <span className="text-sm font-semibold" style={{ color: "#8B0000" }}>
-                    {daysRemaining} day{daysRemaining !== 1 ? "s" : ""} remaining to register
-                  </span>
-                </div>
-              )}
-
-              {/* Register Now — navy blue, full-width */}
-              <Link
-                href={`/${locale}/events`}
-                className="flex items-center justify-center gap-2 w-full py-3.5 rounded-xl font-semibold text-sm text-white transition-all duration-200 hover:opacity-90 hover:-translate-y-0.5 hover:shadow-md"
-                style={{ background: "#0B1E3D" }}
-              >
-                Register Now →
-              </Link>
             </div>
           </div>
         </div>
       </section>
 
       {/* ── 2. RESOURCE CARDS ─────────────────────────────────────────────── */}
-      <section id="resources" className="py-20 border-b border-gray-100" style={{ background: "#F8F9FA" }}>
+      <section id="resources" className="pt-6 pb-12 border-b border-gray-100" style={{ background: "#F8F9FA" }}>
         <div className="max-w-7xl mx-auto px-6">
-
-          <div className="text-center mb-14">
-            <div className="flex items-center justify-center gap-3 mb-4">
-              <div className="h-px w-8 bg-gold" />
-              <span className="text-[10px] tracking-[0.38em] uppercase font-semibold text-gold">
-                67th General Assembly Resources
-              </span>
-              <div className="h-px w-8 bg-gold" />
-            </div>
-            <h2 className="text-navy text-3xl font-bold mb-3">Everything Delegates Need</h2>
-            <p className="text-gray-500 text-base max-w-md mx-auto leading-relaxed">
-              Essential information and services for parliamentarians and officials.
-            </p>
-          </div>
-
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {RESOURCE_CARDS.map((card) => (
               <a
