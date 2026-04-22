@@ -2,103 +2,73 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Terms of Use – PABSEC Events Platform",
-  description: "Terms of Use for the PABSEC Events Platform.",
+  title: "Legal Notice – PABSEC Events Platform",
+  description: "Legal Notice and intellectual property statement for the PABSEC Events Platform.",
 };
 
 const SECTIONS = [
   {
-    id: "introduction",
-    title: "1. Introduction",
-    content: `This platform is operated by the developer/operator of the PABSEC Events Platform
-      on behalf of the Parliamentary Assembly of the Black Sea Economic Cooperation (PABSEC).
-      These Terms of Use govern your access to and use of the platform, including all content,
-      features and functionality made available through it.`,
-  },
-  {
-    id: "acceptance",
-    title: "2. Acceptance of Terms",
-    content: `By accessing or using this platform, you agree to be bound by these Terms of Use.
-      If you do not agree to all of the terms, you must not access or use the platform.
-      Continued use of the platform following any updates to these Terms constitutes acceptance
-      of the revised Terms.`,
-  },
-  {
-    id: "intellectual-property",
-    title: "3. Intellectual Property Rights",
-    content: `All intellectual property rights in the platform, including software, design,
-      workflows, databases and related digital assets, remain reserved by the developer/operator.
-      No part of the platform — including its interface, architecture, data structures, source code,
-      visual design, or operational workflows — may be reproduced, distributed, modified,
-      reverse-engineered, or used to create derivative works without the prior written
-      authorisation of the developer/operator.
+    id: "platform-operator",
+    title: "1. Platform Operator",
+    content: `The PABSEC Events Platform is independently developed and operated by a private developer/operator ("Operator") providing professional digital services for the administration of events of the Parliamentary Assembly of the Black Sea Economic Cooperation (PABSEC).
 
-      Event-related content submitted by participants (such as registration data and correspondence)
-      remains the property of the respective submitting parties, subject to the licence granted
-      herein for operational purposes.
+The Platform is not an official publication of PABSEC, nor is it operated by any government authority, member state parliament or intergovernmental organisation. The Operator provides this Platform as a service for event management purposes pursuant to arrangement with PABSEC event administrators.
 
-      The name "PABSEC" and associated marks belong to the Parliamentary Assembly of the Black Sea
-      Economic Cooperation and are used with permission. No licence to such marks is granted to users.`,
+For enquiries regarding the Platform or its operation, contact: support@pabsecevents.org`,
   },
   {
-    id: "permitted-use",
-    title: "4. Permitted Use",
-    content: `This platform is intended exclusively for official use by delegates, parliamentarians,
-      officials, accredited observers and press representatives in connection with PABSEC events.
-      Users may access the platform to register for events, retrieve official documents and
-      obtain practical information related to PABSEC assemblies.
+    id: "ip-ownership",
+    title: "2. Intellectual Property Ownership",
+    content: `All intellectual property rights in the Platform — including but not limited to:
 
-      Any commercial use, data scraping, automated access or use for any purpose other than
-      the intended institutional purpose is strictly prohibited.`,
-  },
-  {
-    id: "registration-data",
-    title: "5. Registration Data",
-    content: `Information submitted during the registration process is used exclusively for
-      the administration of PABSEC events. Personal data is processed in accordance with
-      applicable data protection requirements. Data is not shared with third parties
-      except as required for event logistics or by applicable law.
+— Software architecture, source code and compiled applications;
+— Visual design, user interface and user experience elements;
+— Data models, database schemas and workflows;
+— Operational processes and administrative systems;
+— Documentation and technical specifications;
+— Any derivative works or improvements thereof —
 
-      By submitting registration data, you confirm that the information provided is accurate
-      and that you are authorised to attend the relevant event.`,
+are and remain the exclusive property of the Operator. These rights are protected by copyright, trade secret and other applicable intellectual property laws.
+
+No intellectual property rights in the Platform are transferred to PABSEC, its member states, event participants or any other person by virtue of use of the Platform or by any arrangement relating to event administration.`,
   },
   {
-    id: "disclaimer",
-    title: "6. Disclaimer of Warranties",
-    content: `The platform is provided on an "as is" and "as available" basis without any
-      warranty of any kind, express or implied. The developer/operator does not warrant
-      that the platform will be error-free, uninterrupted, or free of harmful components.
-      Event information is subject to change without prior notice.`,
+    id: "no-transfer",
+    title: "3. No Transfer of Rights",
+    content: `Access to or use of this Platform does not grant any licence, right or interest in the intellectual property of the Platform. In particular:
+
+— No licence is granted to copy, reproduce, modify, distribute, create derivative works from or exploit the Platform or any component thereof;
+— No right is granted to use the Platform's design, architecture or source code for any other purpose;
+— No implied licence arises from the provision of services through the Platform;
+— Any written agreement purporting to transfer intellectual property rights in the Platform must be executed by the Operator and shall be binding only to the extent expressly stated therein.
+
+Enquiries regarding licensing of the Platform or any of its components should be directed to legal@pabsecevents.org.`,
   },
   {
-    id: "liability",
-    title: "7. Limitation of Liability",
-    content: `To the fullest extent permitted by applicable law, the developer/operator shall
-      not be liable for any indirect, incidental, special, consequential or punitive damages
-      arising from your use of, or inability to use, the platform. The total aggregate liability
-      of the developer/operator for any claim arising out of or relating to these Terms shall
-      not exceed the amount paid by you, if any, for access to the platform.`,
+    id: "pabsec-marks",
+    title: "4. PABSEC Name and Marks",
+    content: `The name "PABSEC", the name "Parliamentary Assembly of the Black Sea Economic Cooperation", and any associated emblems, seals or symbols are the property of the Parliamentary Assembly of the Black Sea Economic Cooperation. These marks are used on this Platform pursuant to arrangement and do not constitute a transfer of rights in such marks to the Operator or to any user.
+
+The Operator makes no claim of ownership to the PABSEC name or any official marks of PABSEC or its member state parliaments.`,
   },
   {
-    id: "governing-law",
-    title: "8. Governing Law and Jurisdiction",
-    content: `These Terms of Use are governed by and construed in accordance with the laws
-      applicable to the operator's jurisdiction of registration. Any disputes arising out of
-      or in connection with these Terms shall be subject to the exclusive jurisdiction of
-      the competent courts of that jurisdiction.`,
+    id: "content-disclaimer",
+    title: "5. Content and Information Disclaimer",
+    content: `Event information, programme details, documents and other content published on this Platform is provided for information purposes only. While the Operator endeavours to ensure the accuracy of information published, event details — including dates, venues, agenda and speakers — are subject to change without prior notice and the Operator accepts no liability for inaccuracies or omissions.
+
+Official documents and resolutions of PABSEC are the property of PABSEC and are published on this Platform for the convenience of delegates and participants. The authoritative versions of such documents are those maintained by the PABSEC International Secretariat.`,
   },
   {
-    id: "amendments",
-    title: "9. Amendments",
-    content: `The developer/operator reserves the right to amend these Terms of Use at any time.
-      Changes will be effective upon publication on this page. Users are responsible for
-      reviewing these Terms periodically. Material changes will be communicated through the platform.`,
+    id: "enforcement",
+    title: "6. Enforcement",
+    content: `The Operator reserves all rights to enforce its intellectual property rights to the fullest extent permitted by applicable law. Unauthorised copying, reproduction, distribution, modification, scraping or exploitation of the Platform or any part thereof may result in civil and/or criminal proceedings.
+
+Reports of intellectual property infringement or misuse of the Platform may be submitted to legal@pabsecevents.org.`,
   },
   {
     id: "contact",
-    title: "10. Contact",
-    content: `For enquiries regarding these Terms of Use or intellectual property matters,
-      please contact:`,
+    title: "7. Contact",
+    content: `Legal and intellectual property enquiries:`,
     contact: true,
   },
 ];
@@ -122,7 +92,8 @@ export default async function LegalPage({
           <div className="flex items-center gap-3 mb-5">
             <Link
               href={`/${locale}`}
-              className="text-[11px] font-semibold uppercase tracking-[0.08em] text-navy/40 hover:text-navy transition-colors flex items-center gap-1.5"
+              className="text-[11px] font-semibold uppercase tracking-[0.08em] hover:text-navy transition-colors flex items-center gap-1.5"
+              style={{ color: "rgba(11,30,61,0.40)" }}
             >
               <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -134,18 +105,43 @@ export default async function LegalPage({
             <div className="h-px w-8 bg-gold" />
             <span className="text-[10px] font-semibold uppercase tracking-[0.38em] text-gold">Legal</span>
           </div>
-          <h1 className="text-navy text-4xl font-bold mb-4 tracking-tight">Terms of Use</h1>
+          <h1 className="text-navy text-4xl font-bold mb-4 tracking-tight">Legal Notice</h1>
           <p className="text-gray-500 text-sm">
-            Last updated: January 2026 &nbsp;·&nbsp; PABSEC Events Platform
+            Last updated: April 2026 &nbsp;·&nbsp; PABSEC Events Platform
           </p>
         </div>
       </div>
 
+      {/* Table of contents */}
+      <div className="max-w-3xl mx-auto px-6 pt-12 pb-4">
+        <div
+          className="rounded-xl p-6"
+          style={{ background: "rgba(11,30,61,0.02)", border: "1px solid rgba(11,30,61,0.07)" }}
+        >
+          <h2 className="text-[10px] font-semibold uppercase tracking-[0.22em] mb-4" style={{ color: "#9CA3AF" }}>
+            Contents
+          </h2>
+          <ol className="space-y-1.5 list-none">
+            {SECTIONS.map((s) => (
+              <li key={s.id}>
+                <a
+                  href={`#${s.id}`}
+                  className="text-sm hover:text-gold transition-colors"
+                  style={{ color: "rgba(11,30,61,0.55)" }}
+                >
+                  {s.title}
+                </a>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </div>
+
       {/* Content */}
-      <div className="max-w-3xl mx-auto px-6 py-16">
+      <div className="max-w-3xl mx-auto px-6 py-12">
         <div className="space-y-12">
           {SECTIONS.map((section) => (
-            <div key={section.id} id={section.id}>
+            <div key={section.id} id={section.id} className="scroll-mt-24">
               <h2 className="text-navy text-xl font-bold mb-4">{section.title}</h2>
               <p className="text-gray-600 leading-relaxed text-[15px] whitespace-pre-line">
                 {section.content}
@@ -175,15 +171,15 @@ export default async function LegalPage({
           ))}
         </div>
 
-        {/* Divider */}
-        <div className="h-px bg-gray-100 my-16" />
+        <div className="h-px bg-gray-100 my-14" />
 
-        {/* Footer note */}
-        <p className="text-gray-400 text-xs leading-relaxed">
-          © 2026 Proprietary conference management software. All rights reserved.
-          All intellectual property rights in the platform, including software, design, workflows,
-          databases and related digital assets, remain reserved by the developer/operator.
-        </p>
+        <div className="flex flex-wrap gap-4 text-xs" style={{ color: "rgba(11,30,61,0.35)" }}>
+          <Link href={`/${locale}/terms`} className="hover:text-navy transition-colors">Terms of Use</Link>
+          <span>·</span>
+          <Link href={`/${locale}/privacy`} className="hover:text-navy transition-colors">Privacy Policy</Link>
+          <span>·</span>
+          <Link href={`/${locale}`} className="hover:text-navy transition-colors">Return to Home</Link>
+        </div>
       </div>
     </div>
   );

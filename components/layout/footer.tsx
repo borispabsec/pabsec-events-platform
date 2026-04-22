@@ -20,7 +20,7 @@ export function Footer() {
       <div className="max-w-7xl mx-auto px-6 py-16">
 
         {/* Main grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-10">
 
           {/* Column 1: Identity */}
           <div>
@@ -28,20 +28,26 @@ export function Footer() {
               <div className="text-white font-bold text-xl tracking-[0.22em] uppercase leading-none mb-2">
                 PABSEC
               </div>
-              <div className="text-white/22 text-[8px] uppercase tracking-[0.12em] font-medium leading-relaxed">
+              <div
+                className="text-[8px] uppercase tracking-[0.12em] font-medium leading-relaxed"
+                style={{ color: "rgba(255,255,255,0.22)" }}
+              >
                 Parliamentary Assembly of the<br />Black Sea Economic Cooperation
               </div>
             </div>
             <div className="h-px bg-gradient-to-r from-gold/25 to-transparent mb-5" />
-            <div className="text-white/28 text-xs leading-relaxed space-y-0.5">
-              <p>PABSEC International Secretariat</p>
-              <p>Istanbul, Republic of Türkiye</p>
+            <div className="space-y-0.5">
+              <p className="text-xs" style={{ color: "rgba(255,255,255,0.28)" }}>PABSEC International Secretariat</p>
+              <p className="text-xs" style={{ color: "rgba(255,255,255,0.28)" }}>Istanbul, Republic of Türkiye</p>
             </div>
           </div>
 
           {/* Column 2: Navigation */}
           <div>
-            <h4 className="text-white/30 text-[9px] uppercase tracking-[0.22em] font-semibold mb-5">
+            <h4
+              className="text-[9px] uppercase tracking-[0.22em] font-semibold mb-5"
+              style={{ color: "rgba(255,255,255,0.30)" }}
+            >
               Navigation
             </h4>
             <ul className="space-y-2.5">
@@ -49,7 +55,8 @@ export function Footer() {
                 <li key={label}>
                   <Link
                     href={`/${locale}${path}`}
-                    className="text-white/32 text-sm hover:text-gold transition-colors duration-150"
+                    className="text-sm hover:text-gold transition-colors duration-150"
+                    style={{ color: "rgba(255,255,255,0.32)" }}
                   >
                     {label}
                   </Link>
@@ -60,14 +67,18 @@ export function Footer() {
 
           {/* Column 3: Contact */}
           <div>
-            <h4 className="text-white/30 text-[9px] uppercase tracking-[0.22em] font-semibold mb-5">
+            <h4
+              className="text-[9px] uppercase tracking-[0.22em] font-semibold mb-5"
+              style={{ color: "rgba(255,255,255,0.30)" }}
+            >
               Contact
             </h4>
             <ul className="space-y-2.5 mb-6">
               <li>
                 <a
                   href="mailto:support@pabsecevents.org"
-                  className="text-white/32 text-sm hover:text-gold transition-colors duration-150 block"
+                  className="text-sm hover:text-gold transition-colors duration-150 block"
+                  style={{ color: "rgba(255,255,255,0.32)" }}
                 >
                   support@pabsecevents.org
                 </a>
@@ -75,7 +86,8 @@ export function Footer() {
               <li>
                 <a
                   href="mailto:admin@pabsecevents.org"
-                  className="text-white/32 text-sm hover:text-gold transition-colors duration-150 block"
+                  className="text-sm hover:text-gold transition-colors duration-150 block"
+                  style={{ color: "rgba(255,255,255,0.32)" }}
                 >
                   admin@pabsecevents.org
                 </a>
@@ -85,7 +97,8 @@ export function Footer() {
               href="https://www.pabsec.org"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 text-white/22 text-xs hover:text-white/45 transition-colors duration-150"
+              className="inline-flex items-center gap-1.5 text-xs hover:text-white/45 transition-colors duration-150"
+              style={{ color: "rgba(255,255,255,0.22)" }}
             >
               www.pabsec.org
               <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -96,25 +109,50 @@ export function Footer() {
           </div>
         </div>
 
-        {/* Bottom bar */}
-        <div className="border-t border-white/5 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-white/18 text-xs">
-            © 2026 Proprietary conference management software. All rights reserved.
+        {/* IP Disclaimer */}
+        <div
+          className="py-4 px-5 rounded-xl mb-8"
+          style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.05)" }}
+        >
+          <p className="text-[11px] leading-relaxed" style={{ color: "rgba(255,255,255,0.22)" }}>
+            Use of this platform does not transfer intellectual property rights. All software, design,
+            architecture and digital assets of this platform remain the exclusive property of the independent
+            developer/operator. The name &quot;PABSEC&quot; and associated marks belong to the Parliamentary Assembly
+            of the Black Sea Economic Cooperation.
           </p>
-          <div className="flex items-center gap-4">
+        </div>
+
+        {/* Bottom bar */}
+        <div
+          className="border-t border-white/5 pt-7 flex flex-col sm:flex-row items-center justify-between gap-4"
+        >
+          <p className="text-xs" style={{ color: "rgba(255,255,255,0.18)" }}>
+            © 2026 Independent developer. All rights reserved.
+          </p>
+          <div className="flex items-center gap-4 flex-wrap justify-center">
             <Link
-              href={`/${locale}/legal`}
-              className="text-white/20 text-xs hover:text-white/42 transition-colors"
+              href={`/${locale}/terms`}
+              className="text-xs hover:text-white/42 transition-colors"
+              style={{ color: "rgba(255,255,255,0.20)" }}
             >
               Terms of Use
             </Link>
-            <span className="text-white/10 text-xs">·</span>
-            <a
-              href="mailto:legal@pabsecevents.org"
-              className="text-white/20 text-xs hover:text-white/42 transition-colors"
+            <span className="text-xs" style={{ color: "rgba(255,255,255,0.10)" }}>·</span>
+            <Link
+              href={`/${locale}/privacy`}
+              className="text-xs hover:text-white/42 transition-colors"
+              style={{ color: "rgba(255,255,255,0.20)" }}
             >
-              legal@pabsecevents.org
-            </a>
+              Privacy Policy
+            </Link>
+            <span className="text-xs" style={{ color: "rgba(255,255,255,0.10)" }}>·</span>
+            <Link
+              href={`/${locale}/legal`}
+              className="text-xs hover:text-white/42 transition-colors"
+              style={{ color: "rgba(255,255,255,0.20)" }}
+            >
+              Legal Notice
+            </Link>
           </div>
         </div>
       </div>
