@@ -57,7 +57,7 @@ const RESOURCE_CARDS = [
   {
     id: "registration",
     title: "Registration",
-    description: "Secure online accreditation for parliamentarians, officials and accredited press.",
+    description: "Secure online accreditation for parliamentarians and officials.",
     cta: "Register Now",
     href: "/events",
     icon: (
@@ -115,7 +115,7 @@ export default async function HomePage({
 
       {/* ── HERO ──────────────────────────────────────────────────────────── */}
       <section
-        className="relative overflow-hidden min-h-[92vh] flex items-center"
+        className="relative overflow-hidden"
         style={{ background: "linear-gradient(150deg, #070F20 0%, #0B1E3D 60%, #0d2346 100%)" }}
       >
         {/* Decorative radial glows */}
@@ -124,7 +124,7 @@ export default async function HomePage({
           style={{ background: "radial-gradient(circle, rgba(26,95,168,0.12) 0%, transparent 65%)" }}
         />
         <div
-          className="absolute bottom-[-80px] left-[-80px] w-[500px] h-[500px] rounded-full pointer-events-none"
+          className="absolute bottom-0 left-[-80px] w-[500px] h-[500px] rounded-full pointer-events-none"
           style={{ background: "radial-gradient(circle, rgba(201,168,76,0.07) 0%, transparent 65%)" }}
         />
         {/* Subtle grid overlay */}
@@ -137,27 +137,33 @@ export default async function HomePage({
           }}
         />
 
-        <div className="relative z-10 w-full max-w-7xl mx-auto px-6 py-24">
-          <div className="grid grid-cols-1 lg:grid-cols-[1.15fr,1fr] gap-16 items-center">
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-6 pt-20 pb-14">
 
-            {/* ── Left: Platform Identity ── */}
-            <div className="animate-fade-in-up">
+          {/* ── Top row: Platform identity text + event card ── */}
+          <div className="grid grid-cols-1 lg:grid-cols-[1.1fr,1fr] gap-14 items-start mb-0">
+
+            {/* Left: Platform Identity */}
+            <div className="animate-fade-in-up pt-4">
+              {/* Small lowercase label */}
               <p
-                className="text-[11px] tracking-[0.42em] uppercase font-semibold mb-4"
-                style={{ color: "rgba(201,168,76,0.72)" }}
+                className="text-sm font-light mb-5 tracking-wide"
+                style={{ color: "rgba(201,168,76,0.70)" }}
               >
-                Official Digital Gateway for
+                Official Digital gateway for
               </p>
+
+              {/* Main heading */}
               <h1
-                className="text-white font-bold leading-[1.08] tracking-tight mb-6"
-                style={{ fontSize: "clamp(2.2rem, 4.8vw, 4rem)" }}
+                className="text-white font-bold leading-[1.06] tracking-tight mb-6"
+                style={{ fontSize: "clamp(2.4rem, 5vw, 4.2rem)" }}
               >
                 PABSEC{" "}
                 <em className="not-italic" style={{ color: "#C9A84C" }}>Events</em>
               </h1>
+
               <p
-                className="text-lg leading-relaxed mb-10 max-w-[480px]"
-                style={{ color: "rgba(255,255,255,0.50)" }}
+                className="text-[16px] leading-relaxed mb-10 max-w-[460px]"
+                style={{ color: "rgba(255,255,255,0.48)" }}
               >
                 The permanent registration and information platform for General Assemblies,
                 Committee Meetings, and official events of the Parliamentary Assembly
@@ -210,43 +216,35 @@ export default async function HomePage({
               </div>
             </div>
 
-            {/* ── Right: Hero Event Card (full-photo background) ── */}
+            {/* Right: Event Card — photo top, white card bottom */}
             <div className="animate-fade-in-right animation-delay-200">
-              <div
-                className="relative rounded-2xl overflow-hidden shadow-2xl"
-                style={{ minHeight: "580px" }}
-              >
-                {/* Tbilisi photo — full card background */}
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src="/images/Tbilisi_Photo.png"
-                  alt="Tbilisi, Georgia"
-                  className="absolute inset-0 w-full h-full object-cover"
-                />
+              <div className="rounded-2xl overflow-hidden shadow-2xl bg-white">
 
-                {/* Gradient overlay: light at top, very dark at bottom */}
-                <div
-                  className="absolute inset-0"
-                  style={{
-                    background:
-                      "linear-gradient(to bottom, rgba(0,0,0,0.40) 0%, rgba(7,15,32,0.88) 58%, #070F20 100%)",
-                  }}
-                />
+                {/* ── Photo section (top half) ── */}
+                <div className="relative h-64 overflow-hidden">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src="/images/Tbilisi_Photo.png"
+                    alt="Tbilisi, Georgia"
+                    className="absolute inset-0 w-full h-full object-cover"
+                  />
+                  {/* Gradient overlay — dark at bottom for text legibility */}
+                  <div
+                    className="absolute inset-0"
+                    style={{
+                      background:
+                        "linear-gradient(to bottom, rgba(0,0,0,0.22) 0%, rgba(7,15,32,0.82) 100%)",
+                    }}
+                  />
 
-                {/* Card content */}
-                <div
-                  className="relative z-10 flex flex-col p-7 pt-7"
-                  style={{ minHeight: "580px" }}
-                >
-                  {/* Top row */}
-                  <div className="flex items-start justify-between mb-auto">
-                    <span
-                      className="text-[9px] tracking-[0.35em] uppercase font-semibold"
-                      style={{ color: "rgba(255,255,255,0.38)" }}
+                  {/* Top row: location + registration badge */}
+                  <div className="absolute top-4 left-4 right-4 flex items-center justify-between">
+                    <div
+                      className="flex items-center gap-1.5 text-[11px] font-medium text-white/80 backdrop-blur-sm rounded-full px-3 py-1.5"
+                      style={{ background: "rgba(0,0,0,0.30)", border: "1px solid rgba(255,255,255,0.15)" }}
                     >
-                      Official Digital Gateway
-                    </span>
-                    {/* Registration status badge */}
+                      📍 Tbilisi, Georgia
+                    </div>
                     <div
                       className="flex items-center gap-1.5 rounded-full px-3 py-1.5 backdrop-blur-sm"
                       style={{
@@ -261,119 +259,118 @@ export default async function HomePage({
                     </div>
                   </div>
 
-                  {/* Bottom: main event info */}
-                  <div className="mt-auto">
-                    {/* Gold session label */}
+                  {/* Bottom of photo: gold label + title */}
+                  <div className="absolute bottom-0 left-0 right-0 p-5">
                     <div
-                      className="text-[12px] font-bold uppercase tracking-[0.28em] mb-3"
+                      className="text-[11px] font-bold uppercase tracking-[0.28em] mb-2"
                       style={{ color: "#C9A84C" }}
                     >
                       67TH GENERAL ASSEMBLY
                     </div>
-
-                    {/* Title */}
-                    <h3
-                      className="text-white font-bold leading-tight mb-2"
-                      style={{ fontSize: "clamp(1.1rem, 2.2vw, 1.3rem)" }}
-                    >
-                      67th Ordinary Session of the<br />PABSEC General Assembly
+                    <h3 className="text-white font-bold text-lg leading-tight mb-1">
+                      67th Ordinary Session of the PABSEC General Assembly
                     </h3>
-
-                    {/* Date + location line */}
-                    <p className="text-sm mb-6" style={{ color: "rgba(255,255,255,0.50)" }}>
+                    <p className="text-[12px]" style={{ color: "rgba(255,255,255,0.55)" }}>
                       30 June – 1 July 2026 · Tbilisi, Georgia
                     </p>
+                  </div>
+                </div>
 
-                    {/* 3 info blocks */}
-                    <div className="grid grid-cols-3 gap-2.5 mb-5">
-                      {[
-                        {
-                          label: "Date",
-                          value: "30 Jun – 1 Jul",
-                          icon: (
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round"
-                                d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
-                            </svg>
-                          ),
-                        },
-                        {
-                          label: "Location",
-                          value: "Tbilisi, GE",
-                          icon: (
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
-                              <path strokeLinecap="round" strokeLinejoin="round"
-                                d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 0115 0z" />
-                            </svg>
-                          ),
-                        },
-                        {
-                          label: "Format",
-                          value: "In-Person",
-                          icon: (
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round"
-                                d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" />
-                            </svg>
-                          ),
-                        },
-                      ].map(({ label, value, icon }) => (
-                        <div
-                          key={label}
-                          className="rounded-xl p-3 text-center"
-                          style={{
-                            background: "rgba(255,255,255,0.09)",
-                            border: "1px solid rgba(255,255,255,0.12)",
-                          }}
-                        >
-                          <div className="flex justify-center mb-1.5" style={{ color: "rgba(255,255,255,0.38)" }}>
-                            {icon}
-                          </div>
-                          <div
-                            className="text-[9px] uppercase tracking-wider mb-1"
-                            style={{ color: "rgba(255,255,255,0.35)" }}
-                          >
-                            {label}
-                          </div>
-                          <div className="text-white text-[11px] font-semibold leading-tight">{value}</div>
-                        </div>
-                      ))}
-                    </div>
+                {/* ── White card section (bottom half) ── */}
+                <div className="p-5 bg-white">
 
-                    {/* Countdown */}
-                    {daysRemaining > 0 && (
+                  {/* 3 info blocks */}
+                  <div className="grid grid-cols-3 gap-3 mb-4">
+                    {[
+                      {
+                        label: "Date",
+                        value: "30 Jun – 1 Jul",
+                        icon: (
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round"
+                              d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
+                          </svg>
+                        ),
+                      },
+                      {
+                        label: "Location",
+                        value: "Tbilisi, GE",
+                        icon: (
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                            <path strokeLinecap="round" strokeLinejoin="round"
+                              d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 0115 0z" />
+                          </svg>
+                        ),
+                      },
+                      {
+                        label: "Format",
+                        value: "In-Person",
+                        icon: (
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round"
+                              d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" />
+                          </svg>
+                        ),
+                      },
+                    ].map(({ label, value, icon }) => (
                       <div
-                        className="flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl mb-4"
+                        key={label}
+                        className="rounded-xl p-3 text-center"
                         style={{
-                          background: "rgba(201,168,76,0.15)",
-                          border: "1px solid rgba(201,168,76,0.28)",
+                          background: "rgba(11,30,61,0.03)",
+                          border: "1px solid rgba(11,30,61,0.07)",
                         }}
                       >
-                        <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                          style={{ color: "#C9A84C" }}>
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8}
-                            d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        <span className="text-sm font-semibold" style={{ color: "#C9A84C" }}>
-                          {daysRemaining} day{daysRemaining !== 1 ? "s" : ""} remaining to register
-                        </span>
+                        <div
+                          className="flex justify-center mb-1.5"
+                          style={{ color: "rgba(11,30,61,0.35)" }}
+                        >
+                          {icon}
+                        </div>
+                        <div
+                          className="text-[9px] uppercase tracking-wider mb-1"
+                          style={{ color: "#9CA3AF" }}
+                        >
+                          {label}
+                        </div>
+                        <div className="text-navy text-[11px] font-semibold leading-tight">{value}</div>
                       </div>
-                    )}
-
-                    {/* Register Now CTA */}
-                    <Link
-                      href={`/${locale}/events`}
-                      className="flex items-center justify-center gap-2 w-full py-3.5 rounded-xl font-semibold text-sm text-navy transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:brightness-110"
-                      style={{ background: "#C9A84C" }}
-                    >
-                      Register Now
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                          d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                      </svg>
-                    </Link>
+                    ))}
                   </div>
+
+                  {/* Countdown bar */}
+                  {daysRemaining > 0 && (
+                    <div
+                      className="flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl mb-4"
+                      style={{
+                        background: "rgba(201,168,76,0.08)",
+                        border: "1px solid rgba(201,168,76,0.18)",
+                      }}
+                    >
+                      <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                        style={{ color: "#C9A84C" }}>
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8}
+                          d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      <span className="text-sm font-semibold" style={{ color: "#a88630" }}>
+                        {daysRemaining} day{daysRemaining !== 1 ? "s" : ""} remaining to register
+                      </span>
+                    </div>
+                  )}
+
+                  {/* Register Now — navy blue, full-width */}
+                  <Link
+                    href={`/${locale}/events`}
+                    className="flex items-center justify-center gap-2 w-full py-3.5 rounded-xl font-semibold text-sm text-white transition-all duration-200 hover:opacity-90 hover:-translate-y-0.5 hover:shadow-md"
+                    style={{ background: "#0B1E3D" }}
+                  >
+                    Register Now
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                        d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                    </svg>
+                  </Link>
                 </div>
               </div>
             </div>
@@ -382,14 +379,67 @@ export default async function HomePage({
         </div>
       </section>
 
-      {/* ── NEXT EVENT (68th GA – Coming Soon) ───────────────────────────── */}
+      {/* ── RESOURCE CARDS ────────────────────────────────────────────────── */}
+      <section id="resources" className="py-20 border-b border-gray-100" style={{ background: "#F8F9FA" }}>
+        <div className="max-w-7xl mx-auto px-6">
+
+          <div className="text-center mb-14">
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <div className="h-px w-8 bg-gold" />
+              <span className="text-[10px] tracking-[0.38em] uppercase font-semibold text-gold">
+                67th General Assembly Resources
+              </span>
+              <div className="h-px w-8 bg-gold" />
+            </div>
+            <h2 className="text-navy text-3xl font-bold mb-3">Everything Delegates Need</h2>
+            <p className="text-gray-500 text-base max-w-md mx-auto leading-relaxed">
+              Essential information and services for parliamentarians and officials.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {RESOURCE_CARDS.map((card) => (
+              <a
+                key={card.id}
+                href={card.href.startsWith("/") ? `/${locale}${card.href}` : card.href}
+                className="group bg-white rounded-2xl p-7 flex flex-col gap-5 border border-gray-100 hover:border-gold/30 hover:-translate-y-1 transition-all duration-300 relative overflow-hidden"
+                style={{ boxShadow: "0 2px 8px rgba(0,0,0,0.05)" }}
+              >
+                <div className="absolute top-0 left-0 h-[2px] w-0 group-hover:w-full bg-gold transition-all duration-500 rounded-t-2xl" />
+                <div
+                  className="w-11 h-11 rounded-xl flex items-center justify-center transition-all duration-300"
+                  style={{ background: "rgba(11,30,61,0.05)", color: "#0B1E3D" }}
+                >
+                  <div className="group-hover:hidden">{card.icon}</div>
+                  <div className="hidden group-hover:block" style={{ color: "#C9A84C" }}>{card.icon}</div>
+                </div>
+                <div className="flex-1">
+                  <h3 className="font-bold text-navy text-[15px] mb-2">{card.title}</h3>
+                  <p className="text-gray-500 text-sm leading-relaxed">{card.description}</p>
+                </div>
+                <div
+                  className="flex items-center gap-1.5 text-sm font-semibold group-hover:gap-3 transition-all duration-200"
+                  style={{ color: "#C9A84C" }}
+                >
+                  {card.cta}
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                      d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  </svg>
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── NEXT EVENT (68th GA – Save the Date) ─────────────────────────── */}
       <section className="py-10 bg-white border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-6">
           <div
             className="relative rounded-2xl px-8 py-8 md:px-12 overflow-hidden"
             style={{ background: "linear-gradient(135deg, #0B1E3D 0%, #132848 100%)" }}
           >
-            {/* Decorative glow */}
             <div
               className="absolute top-[-40px] right-[-40px] w-64 h-64 rounded-full pointer-events-none"
               style={{ background: "radial-gradient(circle, rgba(201,168,76,0.08), transparent 70%)" }}
@@ -433,7 +483,7 @@ export default async function HomePage({
       </section>
 
       {/* ── ABOUT PABSEC ──────────────────────────────────────────────────── */}
-      <section className="py-24 bg-white">
+      <section className="py-24 bg-white border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
 
@@ -495,62 +545,8 @@ export default async function HomePage({
         </div>
       </section>
 
-      {/* ── RESOURCE CARDS ────────────────────────────────────────────────── */}
-      <section id="resources" className="py-20 border-y border-gray-100" style={{ background: "#F8F9FA" }}>
-        <div className="max-w-7xl mx-auto px-6">
-
-          <div className="text-center mb-14">
-            <div className="flex items-center justify-center gap-3 mb-4">
-              <div className="h-px w-8 bg-gold" />
-              <span className="text-[10px] tracking-[0.38em] uppercase font-semibold text-gold">
-                67th General Assembly Resources
-              </span>
-              <div className="h-px w-8 bg-gold" />
-            </div>
-            <h2 className="text-navy text-3xl font-bold mb-3">Everything Delegates Need</h2>
-            <p className="text-gray-500 text-base max-w-md mx-auto leading-relaxed">
-              Essential information and services for parliamentarians and officials.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {RESOURCE_CARDS.map((card) => (
-              <a
-                key={card.id}
-                href={card.href.startsWith("/") ? `/${locale}${card.href}` : card.href}
-                className="group bg-white rounded-2xl p-7 flex flex-col gap-5 border border-gray-100 hover:border-gold/30 hover:-translate-y-1 transition-all duration-300 relative overflow-hidden"
-                style={{ boxShadow: "0 2px 8px rgba(0,0,0,0.05)" }}
-              >
-                <div className="absolute top-0 left-0 h-[2px] w-0 group-hover:w-full bg-gold transition-all duration-500 rounded-t-2xl" />
-                <div
-                  className="w-11 h-11 rounded-xl flex items-center justify-center transition-all duration-300"
-                  style={{ background: "rgba(11,30,61,0.05)", color: "#0B1E3D" }}
-                >
-                  <div className="group-hover:hidden">{card.icon}</div>
-                  <div className="hidden group-hover:block" style={{ color: "#C9A84C" }}>{card.icon}</div>
-                </div>
-                <div className="flex-1">
-                  <h3 className="font-bold text-navy text-[15px] mb-2">{card.title}</h3>
-                  <p className="text-gray-500 text-sm leading-relaxed">{card.description}</p>
-                </div>
-                <div
-                  className="flex items-center gap-1.5 text-sm font-semibold group-hover:gap-3 transition-all duration-200"
-                  style={{ color: "#C9A84C" }}
-                >
-                  {card.cta}
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                      d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                  </svg>
-                </div>
-              </a>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* ── ARCHIVE PREVIEW ───────────────────────────────────────────────── */}
-      <section className="py-20 bg-white border-b border-gray-100">
+      <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex items-end justify-between mb-12">
             <div>
