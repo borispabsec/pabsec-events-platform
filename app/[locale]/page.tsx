@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { db } from "@/lib/db";
 
 export const metadata: Metadata = {
   title: "PABSEC Events Platform – Official Digital Gateway",
@@ -69,10 +70,28 @@ const RESOURCE_CARDS = [
   },
 ];
 
-const MEMBER_STATES = [
-  "Albania", "Armenia", "Azerbaijan", "Bulgaria",
-  "Georgia", "Greece", "Moldova", "North Macedonia",
-  "Romania", "Russia", "Serbia", "Türkiye", "Ukraine",
+const COMMITTEE_MEETINGS = [
+  {
+    id: "econ",
+    session: "67th Meeting",
+    committee: "Committee on Economic and Development Policy",
+    period: "September / October 2026",
+    location: "Sofia, Bulgaria",
+  },
+  {
+    id: "legal",
+    session: "68th Meeting",
+    committee: "Committee on Legal Affairs and International Cooperation",
+    period: "September / October 2026",
+    location: "TBA",
+  },
+  {
+    id: "social",
+    session: "67th Meeting",
+    committee: "Committee on Social and Humanitarian Policy",
+    period: "September / October 2026",
+    location: "Yerevan, Armenia",
+  },
 ];
 
 const PAST_ASSEMBLIES = [
@@ -103,6 +122,23 @@ export default async function HomePage({
 }) {
   const { locale } = await params;
   const daysRemaining = getDaysRemaining();
+
+  // 68th GA data from DB — editable via admin panel
+  let ga68 = { location: "Athens, Hellenic Republic", period: "November 2026" };
+  try {
+    const event = await db.event.findUnique({
+      where: { slug: "pabsec-68th-general-assembly" },
+      select: { location: true, startDate: true },
+    });
+    if (event) {
+      ga68 = {
+        location: event.location,
+        period: event.startDate.toLocaleDateString("en-US", { month: "long", year: "numeric" }),
+      };
+    }
+  } catch {
+    // DB unavailable — hardcoded fallback already set above
+  }
 
   return (
     <div className="font-sans">
@@ -139,11 +175,11 @@ export default async function HomePage({
                 </p>
               </div>
 
-              {/* Right-side stacked badges */}
-              <div className="absolute top-12 right-5 flex flex-col gap-2 items-end">
+              {/* Right-side stacked badges — all same width */}
+              <div className="absolute top-12 right-5 flex flex-col gap-2" style={{ width: "178px" }}>
                 {/* Registration Open — green */}
                 <div
-                  className="flex items-center gap-1.5 rounded-full px-3.5 py-1.5 backdrop-blur-sm"
+                  className="flex items-center justify-center gap-1.5 w-full rounded-full px-3 py-1.5 backdrop-blur-sm"
                   style={{
                     background: "rgba(34,197,94,0.15)",
                     border: "1px solid rgba(74,222,128,0.30)",
@@ -158,7 +194,7 @@ export default async function HomePage({
                 {/* Days remaining — crimson */}
                 {daysRemaining > 0 && (
                   <div
-                    className="flex items-center gap-1.5 rounded-full px-3.5 py-1.5 backdrop-blur-sm"
+                    className="flex items-center justify-center gap-1.5 w-full rounded-full px-3 py-1.5 backdrop-blur-sm"
                     style={{
                       background: "rgba(139,0,0,0.22)",
                       border: "1px solid rgba(220,38,38,0.35)",
@@ -171,10 +207,10 @@ export default async function HomePage({
                   </div>
                 )}
 
-                {/* Register Now — navy/blue */}
+                {/* Register Now — blue */}
                 <Link
                   href={`/${locale}/events`}
-                  className="flex items-center gap-1.5 rounded-full px-3.5 py-1.5 backdrop-blur-sm transition-opacity hover:opacity-85"
+                  className="flex items-center justify-center gap-1.5 w-full rounded-full px-3 py-1.5 backdrop-blur-sm transition-opacity hover:opacity-85"
                   style={{
                     background: "rgba(26,95,168,0.40)",
                     border: "1px solid rgba(96,165,250,0.35)",
@@ -246,9 +282,82 @@ export default async function HomePage({
         </div>
       </section>
 
-      {/* ── 3. NEXT EVENT (68th GA – Save the Date) ──────────────────────── */}
-      <section className="py-10 bg-white border-b border-gray-100">
+      {/* ── 3. UPCOMING EVENTS ────────────────────────────────────────────── */}
+      <section className="py-10 border-b border-blue-100" style={{ background: "#EBF4FF" }}>
         <div className="max-w-7xl mx-auto px-6">
+
+          {/* Section label */}
+          <div className="flex items-center gap-3 mb-7">
+            <div className="h-px w-8" style={{ background: "#1A5FA8" }} />
+            <span
+              className="text-[10px] tracking-[0.38em] uppercase font-semibold"
+              style={{ color: "#1A5FA8" }}
+            >
+              Upcoming Events
+            </span>
+          </div>
+
+          {/* Autumn Committee Meetings */}
+          <p
+            className="text-[10px] font-bold uppercase tracking-[0.22em] mb-4"
+            style={{ color: "rgba(11,30,61,0.38)" }}
+          >
+            Autumn 2026 — Committee Meetings
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+            {COMMITTEE_MEETINGS.map((m) => (
+              <div
+                key={m.id}
+                className="bg-white rounded-xl p-5 border border-blue-100"
+                style={{ boxShadow: "0 1px 4px rgba(26,95,168,0.06)" }}
+              >
+                <div className="mb-3">
+                  <span
+                    className="text-[9px] tracking-[0.22em] uppercase font-semibold px-2.5 py-1 rounded-full"
+                    style={{
+                      background: "rgba(201,168,76,0.12)",
+                      color: "#a88630",
+                      border: "1px solid rgba(201,168,76,0.28)",
+                    }}
+                  >
+                    Save the Date
+                  </span>
+                </div>
+                <p
+                  className="text-[9px] font-bold uppercase tracking-widest mb-1.5"
+                  style={{ color: "rgba(11,30,61,0.35)" }}
+                >
+                  {m.session}
+                </p>
+                <h4 className="text-navy font-bold text-[13px] leading-snug mb-4">{m.committee}</h4>
+                <div className="space-y-1.5">
+                  <p className="text-[12px] text-gray-500 flex items-center gap-2">
+                    <svg className="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round"
+                        d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
+                    </svg>
+                    {m.period}
+                  </p>
+                  <p className="text-[12px] text-gray-500 flex items-center gap-2">
+                    <svg className="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                      <path strokeLinecap="round" strokeLinejoin="round"
+                        d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 0115 0z" />
+                    </svg>
+                    {m.location}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* 68th General Assembly — data from DB */}
+          <p
+            className="text-[10px] font-bold uppercase tracking-[0.22em] mb-4"
+            style={{ color: "rgba(11,30,61,0.38)" }}
+          >
+            68th Session of the General Assembly
+          </p>
           <div
             className="relative rounded-2xl px-8 py-8 md:px-12 overflow-hidden"
             style={{ background: "linear-gradient(135deg, #0B1E3D 0%, #132848 100%)" }}
@@ -272,8 +381,8 @@ export default async function HomePage({
                   </span>
                 </div>
                 <h3 className="text-white font-bold text-xl mb-1">68th General Assembly</h3>
-                <p className="text-sm" style={{ color: "rgba(255,255,255,0.42)" }}>
-                  Venue and dates to be announced · Autumn 2026
+                <p className="text-sm" style={{ color: "rgba(255,255,255,0.55)" }}>
+                  {ga68.location} · {ga68.period}
                 </p>
               </div>
               <div
@@ -295,70 +404,7 @@ export default async function HomePage({
         </div>
       </section>
 
-      {/* ── 4. ABOUT PABSEC ───────────────────────────────────────────────── */}
-      <section className="py-24 bg-white border-b border-gray-100">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
-
-            <div>
-              <div className="flex items-center gap-3 mb-6">
-                <div className="h-px w-8 bg-gold" />
-                <span className="text-gold text-[10px] tracking-[0.38em] uppercase font-semibold">About</span>
-              </div>
-              <h2 className="text-navy text-3xl font-bold leading-tight mb-6">
-                Parliamentary Assembly of the<br />Black Sea Economic Cooperation
-              </h2>
-              <p className="text-gray-600 leading-relaxed mb-4 text-[15px]">
-                PABSEC is the parliamentary dimension of the Organisation of the Black Sea Economic
-                Cooperation (BSEC). Established in 1993, it brings together parliamentarians from
-                all thirteen BSEC member states to foster regional cooperation and democratic governance.
-              </p>
-              <p className="text-gray-600 leading-relaxed mb-8 text-[15px]">
-                The General Assembly — the supreme body of PABSEC — convenes twice per year to
-                adopt resolutions, elect Bureau members and shape the parliamentary agenda for the
-                Black Sea region. The International Secretariat is headquartered in Istanbul.
-              </p>
-              <div className="flex flex-wrap gap-2.5">
-                {["Founded 1993", "13 Member States", "Biannual Sessions", "Istanbul Secretariat"].map((tag) => (
-                  <span
-                    key={tag}
-                    className="text-[11px] font-semibold px-3.5 py-1.5 rounded-full border"
-                    style={{
-                      color: "#0B1E3D",
-                      borderColor: "rgba(11,30,61,0.14)",
-                      background: "rgba(11,30,61,0.04)",
-                    }}
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            </div>
-
-            <div
-              className="rounded-2xl p-8"
-              style={{ background: "rgba(248,249,250,0.7)", border: "1px solid rgba(11,30,61,0.07)" }}
-            >
-              <h3
-                className="text-[10px] font-semibold uppercase tracking-[0.25em] mb-6"
-                style={{ color: "#9CA3AF" }}
-              >
-                Member States
-              </h3>
-              <div className="grid grid-cols-2 gap-y-3.5 gap-x-6">
-                {MEMBER_STATES.map((state) => (
-                  <div key={state} className="flex items-center gap-2.5 text-sm text-gray-700">
-                    <div className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: "#1A5FA8" }} />
-                    {state}
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── 5. ARCHIVE PREVIEW ────────────────────────────────────────────── */}
+      {/* ── 4. ARCHIVE PREVIEW ────────────────────────────────────────────── */}
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex items-end justify-between mb-12">

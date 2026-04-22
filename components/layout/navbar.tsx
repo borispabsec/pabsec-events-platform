@@ -31,15 +31,14 @@ export function Navbar() {
 
         {/* Wordmark logo */}
         <Link href={`/${locale}`} className="flex-shrink-0 group">
-          <div className="leading-none select-none">
+          <div className="leading-none select-none transition-transform duration-200 group-hover:-translate-y-[1px]">
             <div
-              className="font-playfair font-bold text-[1.55rem] leading-none tracking-wide transition-opacity duration-200 group-hover:opacity-75"
-              style={{ color: "#1a3a6b" }}
+              className="font-playfair font-bold text-[1.55rem] leading-none tracking-wide text-[#1a3a6b] transition-all duration-200 [text-shadow:0_1px_4px_rgba(26,58,107,0.18)] group-hover:text-[#1e4a8a] group-hover:[text-shadow:0_2px_12px_rgba(26,58,107,0.32)]"
             >
               PABSEC
             </div>
             <div
-              className="text-[7px] leading-none mt-[4px] font-semibold uppercase tracking-[0.12em]"
+              className="text-[7px] leading-none mt-[4px] font-semibold uppercase tracking-[0.12em] transition-opacity duration-200 group-hover:opacity-70"
               style={{ color: "rgba(26,58,107,0.42)", fontVariantCaps: "small-caps" }}
             >
               Parliamentary Assembly of the Black Sea Economic Cooperation

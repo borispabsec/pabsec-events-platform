@@ -67,6 +67,12 @@ if [[ "$RUN_MIGRATE" == true ]]; then
     || warn "No pending migrations (or prisma migrate deploy not applicable)"
 fi
 
+# ── Prisma: seed (safe — all entries use upsert with update:{}) ──────────────
+step "Seeding database"
+ssh "$SERVER" "cd $APP_DIR && npm run db:seed" \
+  && ok "Database seeded" \
+  || warn "Seed step failed — check db:seed output"
+
 # ── Build ───────────────────────────────────────────────────────────────────
 step "Building production bundle"
 ssh "$SERVER" "cd $APP_DIR && npm run build" \
