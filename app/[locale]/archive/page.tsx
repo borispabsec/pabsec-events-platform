@@ -98,7 +98,7 @@ export default async function ArchivePage({
 
               {/* View Documents link */}
               <a
-                href={assembly.docsUrl}
+                href="https://www.pabsec.org/page-detail/pabsec-general-assemblies/8"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1.5 text-[12px] font-semibold transition-colors hover:text-gold"
