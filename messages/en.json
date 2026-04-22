@@ -2,13 +2,15 @@
   "nav": {
     "home": "Home",
     "events": "Events",
-    "documents": "Documents",
-    "about": "About PABSEC",
-    "contact": "Contact"
+    "registration": "Registration",
+    "archive": "Archive",
+    "about": "About",
+    "contact": "Contact",
+    "documents": "Documents"
   },
   "home": {
-    "hero_title": "Parliamentary Assembly of the Black Sea Economic Cooperation",
-    "hero_subtitle": "Fostering cooperation among the parliaments of BSEC member states",
+    "hero_title": "Official Digital Gateway for PABSEC Events",
+    "hero_subtitle": "The secure registration and information platform for parliamentary assemblies and official BSEC events.",
     "upcoming_events": "Upcoming Events",
     "view_all_events": "View All Events",
     "latest_documents": "Latest Documents",

@@ -4,11 +4,48 @@
 
 @layer base {
   :root {
+    --color-navy: #0B1E3D;
+    --color-navy-light: #132848;
+    --color-navy-dark: #070F20;
+    --color-gold: #C9A84C;
+    --color-gold-light: #e0c070;
+    --color-pabsec: #1A5FA8;
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
   }
 
+  html {
+    scroll-behavior: smooth;
+  }
+
   body {
     @apply bg-white text-gray-900 antialiased;
+    font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
+  }
+
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: #f1f5f9; }
+  ::-webkit-scrollbar-thumb { background: rgba(11, 30, 61, 0.18); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(11, 30, 61, 0.32); }
+}
+
+@layer utilities {
+  .animation-delay-100 { animation-delay: 100ms; }
+  .animation-delay-200 { animation-delay: 200ms; }
+  .animation-delay-300 { animation-delay: 300ms; }
+  .animation-delay-400 { animation-delay: 400ms; }
+
+  .text-gradient-gold {
+    background: linear-gradient(135deg, #C9A84C 0%, #e0c070 50%, #C9A84C 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .text-gradient-navy {
+    background: linear-gradient(135deg, #0B1E3D 0%, #1A5FA8 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 }

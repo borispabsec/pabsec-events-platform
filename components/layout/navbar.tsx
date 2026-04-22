@@ -5,6 +5,15 @@ import { useLocale } from "next-intl";
 import { locales, localeNames } from "@/lib/i18n/config";
 import { usePathname, useRouter } from "next/navigation";
 
+const NAV_LINKS = [
+  { label: "Home",         path: "" },
+  { label: "Events",       path: "/events" },
+  { label: "Registration", path: "/events#registration" },
+  { label: "Archive",      path: "/archive" },
+  { label: "About",        path: "/about" },
+  { label: "Contact",      path: "/contact" },
+];
+
 export function Navbar() {
   const locale = useLocale();
   const pathname = usePathname();
@@ -16,56 +25,69 @@ export function Navbar() {
     router.push(segments.join("/") || "/");
   }
 
-  const navLinks = [
-    { label: "Programme",      href: `/${locale}/events#programme` },
-    { label: "Documents",      href: `/${locale}/events#documents`  },
-    { label: "Register",       href: `/${locale}/events`            },
-    { label: "Practical Info", href: `/${locale}/events#practical`  },
-  ];
-
   return (
-    <header style={{ background: "#0B1E3D" }} className="shadow-md sticky top-0 z-50">
-      <nav className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between gap-6">
-        {/* Logo / wordmark */}
-        <Link href={`/${locale}`} className="flex items-center gap-3 flex-shrink-0">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="https://www.pabsec.org/frontend/img/logo@2x_en.gif"
-            alt="PABSEC"
-            className="h-8 w-auto object-contain"
-          />
-          <span className="hidden sm:block text-white font-semibold text-sm leading-tight">
-            PABSEC<br />
-            <span className="text-blue-300 font-normal text-xs">Events Platform</span>
-          </span>
+    <header className="bg-white border-b border-gray-100 sticky top-0 z-50 shadow-[0_1px_8px_rgba(0,0,0,0.06)]">
+      <nav className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between gap-6">
+
+        {/* Wordmark logo */}
+        <Link href={`/${locale}`} className="flex-shrink-0 group">
+          <div className="leading-none select-none">
+            <div
+              className="font-playfair font-bold text-[1.55rem] leading-none tracking-wide transition-opacity duration-200 group-hover:opacity-75"
+              style={{ color: "#1a3a6b" }}
+            >
+              PABSEC
+            </div>
+            <div
+              className="text-[7px] leading-none mt-[4px] font-semibold uppercase tracking-[0.12em]"
+              style={{ color: "rgba(26,58,107,0.42)", fontVariantCaps: "small-caps" }}
+            >
+              Parliamentary Assembly of the Black Sea Economic Cooperation
+            </div>
+          </div>
         </Link>
 
-        {/* Nav links */}
-        <div className="hidden lg:flex items-center gap-1">
-          {navLinks.map((link) => (
-            <Link
-              key={link.label}
-              href={link.href}
-              className="text-blue-200/70 hover:text-white hover:bg-white/10 transition-colors text-sm font-medium px-3 py-2 rounded-md"
-            >
-              {link.label}
-            </Link>
-          ))}
+        {/* Navigation links — desktop */}
+        <div className="hidden lg:flex items-center gap-0.5 flex-1 justify-center">
+          {NAV_LINKS.map(({ label, path }) => {
+            const href = `/${locale}${path}`;
+            const basePath = path.split("#")[0];
+            const isActive =
+              basePath === ""
+                ? pathname === `/${locale}`
+                : pathname.startsWith(`/${locale}${basePath}`);
+
+            return (
+              <Link
+                key={label}
+                href={href}
+                className={`relative text-[11px] font-semibold uppercase tracking-[0.08em] px-3 py-2.5 rounded-md transition-colors duration-150 ${
+                  isActive
+                    ? "text-navy"
+                    : "text-navy/42 hover:text-navy hover:bg-gray-50"
+                }`}
+              >
+                {label}
+                {isActive && (
+                  <span className="absolute bottom-0 left-3 right-3 h-[2px] rounded-full bg-gold" />
+                )}
+              </Link>
+            );
+          })}
         </div>
 
-        {/* Locale switcher */}
-        <div className="flex items-center gap-1 flex-shrink-0">
+        {/* Language switcher */}
+        <div className="flex items-center border border-gray-200 rounded-lg overflow-hidden flex-shrink-0">
           {locales.map((l) => (
             <button
               key={l}
               onClick={() => switchLocale(l)}
               aria-label={localeNames[l]}
-              className={`text-xs font-semibold px-2.5 py-1 rounded transition-colors ${
+              className={`text-[11px] font-bold uppercase px-2.5 py-1.5 border-r border-gray-200 last:border-r-0 transition-all duration-150 ${
                 l === locale
-                  ? "text-white"
-                  : "text-blue-300/60 hover:text-blue-200"
+                  ? "bg-navy text-white"
+                  : "text-navy/45 hover:text-navy hover:bg-gray-50"
               }`}
-              style={l === locale ? { background: "#1A5FA8" } : undefined}
             >
               {l.toUpperCase()}
             </button>

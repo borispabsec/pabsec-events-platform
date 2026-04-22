@@ -2,13 +2,15 @@
   "nav": {
     "home": "Ana Sayfa",
     "events": "Etkinlikler",
-    "documents": "Belgeler",
-    "about": "PABSEC Hakkında",
-    "contact": "İletişim"
+    "registration": "Kayıt",
+    "archive": "Arşiv",
+    "about": "Hakkında",
+    "contact": "İletişim",
+    "documents": "Belgeler"
   },
   "home": {
-    "hero_title": "Karadeniz Ekonomik İşbirliği Parlamenter Asamblesi",
-    "hero_subtitle": "KEİ üye devletleri parlamentoları arasında işbirliğini güçlendirme",
+    "hero_title": "PABSEC Etkinlikleri için Resmi Dijital Ağ Geçidi",
+    "hero_subtitle": "Parlamenter asambleler ve resmi KEİ etkinlikleri için güvenli kayıt ve bilgi platformu.",
     "upcoming_events": "Yaklaşan Etkinlikler",
     "view_all_events": "Tüm Etkinlikleri Görüntüle",
     "latest_documents": "Son Belgeler",
