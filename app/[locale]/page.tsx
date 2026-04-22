@@ -271,7 +271,7 @@ export default async function HomePage({
           <div className="flex items-center gap-3 mb-7">
             <div className="h-px w-8" style={{ background: "#1A5FA8" }} />
             <span
-              className="text-[10px] tracking-[0.38em] uppercase font-semibold"
+              className="text-sm tracking-[0.22em] uppercase font-bold"
               style={{ color: "#1A5FA8" }}
             >
               Upcoming Events
