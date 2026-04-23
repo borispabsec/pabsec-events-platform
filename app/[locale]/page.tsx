@@ -15,13 +15,15 @@ function getDaysRemaining(): number {
   return Math.max(0, Math.ceil((target.getTime() - now.getTime()) / 86_400_000));
 }
 
+const EVENT_SLUG = "pabsec-67th-general-assembly";
+
 const RESOURCE_CARDS = [
   {
     id: "programme",
     title: "Programme",
     description: "Full agenda of plenary sessions, committee meetings and side events for delegates.",
     cta: "View Programme",
-    href: "#programme",
+    href: `/events/${EVENT_SLUG}?tab=programme`,
     icon: (
       <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={1.6} viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round"
@@ -34,7 +36,7 @@ const RESOURCE_CARDS = [
     title: "Documents",
     description: "Resolutions, reports, draft texts and official background papers for delegates.",
     cta: "Browse Documents",
-    href: "#documents",
+    href: `/events/${EVENT_SLUG}?tab=documents`,
     icon: (
       <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={1.6} viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round"
@@ -47,7 +49,7 @@ const RESOURCE_CARDS = [
     title: "Practical Information",
     description: "Venue details, visa guidance, accommodation options and transport information.",
     cta: "Learn More",
-    href: "#practical",
+    href: `/events/${EVENT_SLUG}?tab=info`,
     icon: (
       <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={1.6} viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -61,7 +63,7 @@ const RESOURCE_CARDS = [
     title: "Registration",
     description: "Secure online accreditation for parliamentarians and officials.",
     cta: "Register Now",
-    href: "/events",
+    href: `/events/${EVENT_SLUG}?tab=register`,
     icon: (
       <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={1.6} viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round"
