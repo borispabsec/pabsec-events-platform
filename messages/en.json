@@ -146,7 +146,13 @@
     "register_title": "Register for this Assembly",
     "register_desc": "Complete the form below to register as a delegate, observer or accredited participant. You will receive a confirmation by e-mail after submission.",
     "reg_closed_title": "Registration Closed",
-    "reg_closed_desc": "This assembly has concluded. Registration is no longer available."
+    "reg_closed_desc": "This assembly has concluded. Registration is no longer available.",
+    "doc_cat_programme": "Programme",
+    "doc_cat_hotel": "Hotel Information",
+    "doc_cat_practical": "Practical Information",
+    "doc_cat_official": "Official Documents",
+    "doc_download": "Download",
+    "doc_no_docs": "No documents have been uploaded for this language yet."
   },
   "about_page": {
     "eyebrow": "Organisation",
@@ -173,5 +179,18 @@
     "legal_desc": "Intellectual property, terms of use and legal matters.",
     "secretariat_title": "PABSEC International Secretariat",
     "secretariat_location": "Istanbul, Republic of Türkiye"
+  },
+  "footer": {
+    "abbr": "PABSEC",
+    "org_name": "Parliamentary Assembly of the Black Sea Economic Cooperation",
+    "secretariat": "PABSEC International Secretariat",
+    "location": "Istanbul, Republic of Türkiye",
+    "nav_heading": "Navigation",
+    "contact_heading": "Contact",
+    "ip_disclaimer": "Use of this platform does not transfer intellectual property rights. All software, design, architecture and digital assets of this platform remain the exclusive property of the independent developer/operator. The name \"PABSEC\" and associated marks belong to the Parliamentary Assembly of the Black Sea Economic Cooperation.",
+    "copyright": "© 2026 Independent developer. All rights reserved.",
+    "terms": "Terms of Use",
+    "privacy": "Privacy Policy",
+    "legal_notice": "Legal Notice"
   }
 }

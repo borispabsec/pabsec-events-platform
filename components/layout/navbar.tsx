@@ -1,23 +1,25 @@
 "use client";
 
 import Link from "next/link";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { locales, localeNames } from "@/lib/i18n/config";
 import { usePathname, useRouter } from "next/navigation";
 
 const NAV_LINKS = [
-  { label: "Home",         path: "" },
-  { label: "Events",       path: "/events" },
-  { label: "Registration", path: "/events#registration" },
-  { label: "Archive",      path: "/archive" },
-  { label: "About",        path: "/about" },
-  { label: "Contact",      path: "/contact" },
-];
+  { key: "home",         path: "" },
+  { key: "events",       path: "/events" },
+  { key: "registration", path: "/events#registration" },
+  { key: "archive",      path: "/archive" },
+  { key: "about",        path: "/about" },
+  { key: "contact",      path: "/contact" },
+] as const;
 
 export function Navbar() {
   const locale = useLocale();
   const pathname = usePathname();
   const router = useRouter();
+  const tNav = useTranslations("nav");
+  const tFooter = useTranslations("footer");
 
   function switchLocale(next: string) {
     const segments = pathname.split("/");
@@ -35,20 +37,20 @@ export function Navbar() {
             <div
               className="font-playfair font-bold text-[1.55rem] leading-none tracking-wide text-[#1a3a6b] transition-all duration-200 [text-shadow:0_1px_4px_rgba(26,58,107,0.18)] group-hover:text-[#1e4a8a] group-hover:[text-shadow:0_2px_12px_rgba(26,58,107,0.32)]"
             >
-              PABSEC
+              {tFooter("abbr")}
             </div>
             <div
               className="text-[7px] leading-none mt-[4px] font-semibold uppercase tracking-[0.12em] transition-opacity duration-200 group-hover:opacity-70"
               style={{ color: "rgba(26,58,107,0.42)", fontVariantCaps: "small-caps" }}
             >
-              Parliamentary Assembly of the Black Sea Economic Cooperation
+              {tFooter("org_name")}
             </div>
           </div>
         </Link>
 
         {/* Navigation links — desktop */}
         <div className="hidden lg:flex items-center gap-0.5 flex-1 justify-center">
-          {NAV_LINKS.map(({ label, path }) => {
+          {NAV_LINKS.map(({ key, path }) => {
             const href = `/${locale}${path}`;
             const basePath = path.split("#")[0];
             const isActive =
@@ -58,7 +60,7 @@ export function Navbar() {
 
             return (
               <Link
-                key={label}
+                key={key}
                 href={href}
                 className={`relative text-[11px] font-semibold uppercase tracking-[0.08em] px-3 py-2.5 rounded-md transition-colors duration-150 ${
                   isActive
@@ -66,7 +68,7 @@ export function Navbar() {
                     : "text-navy/42 hover:text-navy hover:bg-gray-50"
                 }`}
               >
-                {label}
+                {tNav(key)}
                 {isActive && (
                   <span className="absolute bottom-0 left-3 right-3 h-[2px] rounded-full bg-gold" />
                 )}

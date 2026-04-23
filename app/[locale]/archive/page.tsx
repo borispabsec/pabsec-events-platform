@@ -64,7 +64,9 @@ export default async function ArchivePage({
 
         {/* Assembly grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-16">
-          {PAST_ASSEMBLIES.map((assembly) => (
+          {PAST_ASSEMBLIES.map((assembly) => {
+            const docsHref = locale !== "en" ? `${assembly.docsUrl}?hl=${locale}` : assembly.docsUrl;
+            return (
             <div
               key={assembly.session}
               className="rounded-2xl p-7 border border-gray-100 bg-white hover:border-gold/20 hover:-translate-y-0.5 transition-all duration-200"
@@ -108,7 +110,7 @@ export default async function ArchivePage({
 
               {/* View Documents link */}
               <a
-                href={assembly.docsUrl}
+                href={docsHref}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1.5 text-[12px] font-semibold transition-colors hover:text-gold"
@@ -121,7 +123,8 @@ export default async function ArchivePage({
                 {tUi("view_documents")} →
               </a>
             </div>
-          ))}
+            );
+          })}
         </div>
 
         {/* Footer note */}

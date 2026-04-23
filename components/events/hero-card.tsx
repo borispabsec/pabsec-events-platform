@@ -74,7 +74,7 @@ export function HeroCard({
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           ref={imgRef}
-          src="/images/Tbilisi_Photo.png"
+          src="/images/Stariy_Tbilisi.jpg"
           alt="Tbilisi, Georgia"
           className="absolute inset-0 w-full h-full object-cover"
           crossOrigin="anonymous"

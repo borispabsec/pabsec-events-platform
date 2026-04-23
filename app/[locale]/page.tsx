@@ -325,7 +325,9 @@ export default async function HomePage({
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {PAST_ASSEMBLIES.slice(0, 3).map((assembly) => (
+            {PAST_ASSEMBLIES.slice(0, 3).map((assembly) => {
+              const docsHref = locale !== "en" ? `${assembly.docsUrl}?hl=${locale}` : assembly.docsUrl;
+              return (
               <div
                 key={assembly.session}
                 className="group bg-white rounded-2xl p-7 border border-gray-100 hover:border-gold/20 hover:-translate-y-0.5 transition-all duration-200"
@@ -364,7 +366,7 @@ export default async function HomePage({
                   <p className="text-gray-400 text-xs">{assembly.date}</p>
                 </div>
                 <a
-                  href={assembly.docsUrl}
+                  href={docsHref}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-1.5 text-[12px] font-semibold transition-colors hover:text-gold"
@@ -377,7 +379,8 @@ export default async function HomePage({
                   {tUi("view_documents")} →
                 </a>
               </div>
-            ))}
+              );
+            })}
           </div>
 
           <div className="mt-8 text-center sm:hidden">

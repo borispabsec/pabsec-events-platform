@@ -146,7 +146,13 @@
     "register_title": "Bu Kurula Kayıt Olun",
     "register_desc": "Delege, gözlemci veya akredite katılımcı olarak kayıt olmak için formu doldurun. Başvurunuzun ardından e-posta ile onay alacaksınız.",
     "reg_closed_title": "Kayıt Kapalı",
-    "reg_closed_desc": "Bu kurul sona ermiştir. Kayıt artık mevcut değildir."
+    "reg_closed_desc": "Bu kurul sona ermiştir. Kayıt artık mevcut değildir.",
+    "doc_cat_programme": "Program",
+    "doc_cat_hotel": "Otel Bilgisi",
+    "doc_cat_practical": "Pratik Bilgiler",
+    "doc_cat_official": "Resmi Belgeler",
+    "doc_download": "İndir",
+    "doc_no_docs": "Bu dil için henüz belge yüklenmemiştir."
   },
   "about_page": {
     "eyebrow": "Kuruluş",
@@ -171,7 +177,20 @@
     "administration_desc": "Akreditasyon, heyet koordinasyonu ve resmi yazışmalar.",
     "legal": "Hukuki",
     "legal_desc": "Fikri mülkiyet, kullanım koşulları ve hukuki konular.",
-    "secretariat_title": "PABSEC Uluslararası Sekreterliği",
+    "secretariat_title": "KEIPA Uluslararası Sekreterliği",
     "secretariat_location": "İstanbul, Türkiye Cumhuriyeti"
+  },
+  "footer": {
+    "abbr": "KEIPA",
+    "org_name": "Karadeniz Ekonomik İşbirliği Parlamenter Asamblesi",
+    "secretariat": "KEIPA Uluslararası Sekreterliği",
+    "location": "İstanbul, Türkiye Cumhuriyeti",
+    "nav_heading": "Gezinti",
+    "contact_heading": "İletişim",
+    "ip_disclaimer": "Bu platformun kullanımı fikri mülkiyet haklarının devri anlamına gelmez. Bu platformun tüm yazılım, tasarım, mimari ve dijital varlıkları bağımsız geliştirici/operatörün münhasır mülkiyetinde kalmaktadır. \"KEIPA\" adı ve ilgili markalar, Karadeniz Ekonomik İşbirliği Parlamenter Asamblesi'ne aittir.",
+    "copyright": "© 2026 Bağımsız geliştirici. Tüm hakları saklıdır.",
+    "terms": "Kullanım Koşulları",
+    "privacy": "Gizlilik Politikası",
+    "legal_notice": "Yasal Uyarı"
   }
 }

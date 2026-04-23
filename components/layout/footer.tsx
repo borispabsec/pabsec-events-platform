@@ -1,19 +1,21 @@
 "use client";
 
 import Link from "next/link";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 const NAV_LINKS = [
-  { label: "Home",         path: "" },
-  { label: "Events",       path: "/events" },
-  { label: "Registration", path: "/events" },
-  { label: "Archive",      path: "/archive" },
-  { label: "About",        path: "/about" },
-  { label: "Contact",      path: "/contact" },
-];
+  { key: "home",         path: "" },
+  { key: "events",       path: "/events" },
+  { key: "registration", path: "/events" },
+  { key: "archive",      path: "/archive" },
+  { key: "about",        path: "/about" },
+  { key: "contact",      path: "/contact" },
+] as const;
 
 export function Footer() {
   const locale = useLocale();
+  const t = useTranslations("footer");
+  const tNav = useTranslations("nav");
 
   return (
     <footer style={{ background: "#070F20" }} className="border-t border-white/5 mt-auto">
@@ -26,19 +28,19 @@ export function Footer() {
           <div>
             <div className="mb-5">
               <div className="text-white font-bold text-xl tracking-[0.22em] uppercase leading-none mb-2">
-                PABSEC
+                {t("abbr")}
               </div>
               <div
                 className="text-[8px] uppercase tracking-[0.12em] font-medium leading-relaxed"
                 style={{ color: "rgba(255,255,255,0.22)" }}
               >
-                Parliamentary Assembly of the<br />Black Sea Economic Cooperation
+                {t("org_name")}
               </div>
             </div>
             <div className="h-px bg-gradient-to-r from-gold/25 to-transparent mb-5" />
             <div className="space-y-0.5">
-              <p className="text-xs" style={{ color: "rgba(255,255,255,0.28)" }}>PABSEC International Secretariat</p>
-              <p className="text-xs" style={{ color: "rgba(255,255,255,0.28)" }}>Istanbul, Republic of Türkiye</p>
+              <p className="text-xs" style={{ color: "rgba(255,255,255,0.28)" }}>{t("secretariat")}</p>
+              <p className="text-xs" style={{ color: "rgba(255,255,255,0.28)" }}>{t("location")}</p>
             </div>
           </div>
 
@@ -48,17 +50,17 @@ export function Footer() {
               className="text-[9px] uppercase tracking-[0.22em] font-semibold mb-5"
               style={{ color: "rgba(255,255,255,0.30)" }}
             >
-              Navigation
+              {t("nav_heading")}
             </h4>
             <ul className="space-y-2.5">
-              {NAV_LINKS.map(({ label, path }) => (
-                <li key={label}>
+              {NAV_LINKS.map(({ key, path }) => (
+                <li key={key}>
                   <Link
                     href={`/${locale}${path}`}
                     className="text-sm hover:text-gold transition-colors duration-150"
                     style={{ color: "rgba(255,255,255,0.32)" }}
                   >
-                    {label}
+                    {tNav(key)}
                   </Link>
                 </li>
               ))}
@@ -71,7 +73,7 @@ export function Footer() {
               className="text-[9px] uppercase tracking-[0.22em] font-semibold mb-5"
               style={{ color: "rgba(255,255,255,0.30)" }}
             >
-              Contact
+              {t("contact_heading")}
             </h4>
             <ul className="space-y-2.5 mb-6">
               <li>
@@ -115,19 +117,14 @@ export function Footer() {
           style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.05)" }}
         >
           <p className="text-[11px] leading-relaxed" style={{ color: "rgba(255,255,255,0.22)" }}>
-            Use of this platform does not transfer intellectual property rights. All software, design,
-            architecture and digital assets of this platform remain the exclusive property of the independent
-            developer/operator. The name &quot;PABSEC&quot; and associated marks belong to the Parliamentary Assembly
-            of the Black Sea Economic Cooperation.
+            {t("ip_disclaimer")}
           </p>
         </div>
 
         {/* Bottom bar */}
-        <div
-          className="border-t border-white/5 pt-7 flex flex-col sm:flex-row items-center justify-between gap-4"
-        >
+        <div className="border-t border-white/5 pt-7 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-xs" style={{ color: "rgba(255,255,255,0.18)" }}>
-            © 2026 Independent developer. All rights reserved.
+            {t("copyright")}
           </p>
           <div className="flex items-center gap-4 flex-wrap justify-center">
             <Link
@@ -135,7 +132,7 @@ export function Footer() {
               className="text-xs hover:text-white/42 transition-colors"
               style={{ color: "rgba(255,255,255,0.20)" }}
             >
-              Terms of Use
+              {t("terms")}
             </Link>
             <span className="text-xs" style={{ color: "rgba(255,255,255,0.10)" }}>·</span>
             <Link
@@ -143,7 +140,7 @@ export function Footer() {
               className="text-xs hover:text-white/42 transition-colors"
               style={{ color: "rgba(255,255,255,0.20)" }}
             >
-              Privacy Policy
+              {t("privacy")}
             </Link>
             <span className="text-xs" style={{ color: "rgba(255,255,255,0.10)" }}>·</span>
             <Link
@@ -151,7 +148,7 @@ export function Footer() {
               className="text-xs hover:text-white/42 transition-colors"
               style={{ color: "rgba(255,255,255,0.20)" }}
             >
-              Legal Notice
+              {t("legal_notice")}
             </Link>
           </div>
         </div>

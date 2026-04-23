@@ -22,6 +22,7 @@ model Event {
   translations  EventTranslation[]
   registrations Registration[]
   media         EventMedia[]
+  documents     EventDocument[]
 
   @@map("events")
 }
@@ -74,6 +75,21 @@ model Registration {
   event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
 
   @@map("registrations")
+}
+
+model EventDocument {
+  id        String   @id @default(cuid())
+  eventId   String
+  event     Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  locale    Locale
+  category  String
+  title     String
+  fileUrl   String
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+
+  @@index([eventId, locale])
+  @@map("event_documents")
 }
 
 model Document {
