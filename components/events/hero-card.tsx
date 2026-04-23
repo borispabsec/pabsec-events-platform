@@ -74,22 +74,6 @@ export function HeroCard({
     ? "linear-gradient(to bottom, rgba(0,0,0,0.25) 0%, rgba(5,12,28,0.65) 50%, rgba(5,12,28,0.93) 100%)"
     : "linear-gradient(to bottom, rgba(255,255,255,0.0) 0%, rgba(248,249,250,0.30) 50%, rgba(248,249,250,0.82) 100%)";
 
-  // Badge styles
-  const greenBg     = imageDark ? "rgba(34,197,94,0.15)"  : "rgba(34,197,94,0.18)";
-  const greenBorder = imageDark ? "rgba(74,222,128,0.30)" : "rgba(21,128,61,0.40)";
-  const greenText   = imageDark ? "#86efac"  : "#15803d";
-  const greenDot    = imageDark ? "#4ade80"  : "#16a34a";
-
-  const redBg       = imageDark ? "rgba(139,0,0,0.22)"    : "rgba(220,38,38,0.10)";
-  const redBorder   = imageDark ? "rgba(220,38,38,0.35)"  : "rgba(220,38,38,0.35)";
-  const redText     = imageDark ? "#fca5a5"  : "#b91c1c";
-  const redDot      = imageDark ? "#f87171"  : "#dc2626";
-
-  const blueBg      = imageDark ? "rgba(26,95,168,0.40)"  : "rgba(26,95,168,0.12)";
-  const blueBorder  = imageDark ? "rgba(96,165,250,0.35)" : "rgba(26,95,168,0.40)";
-  const blueText    = imageDark ? "#93c5fd"  : "#1a5fa8";
-  const blueDot     = imageDark ? "#60a5fa"  : "#1a5fa8";
-
   return (
     <div className="rounded-2xl overflow-hidden shadow-2xl">
       <div className="relative h-[500px] overflow-hidden">
@@ -111,40 +95,64 @@ export function HeroCard({
           </p>
         </div>
 
-        {/* Right-side stacked badges */}
-        <div className="absolute top-12 right-5 flex flex-col gap-2" style={{ width: "178px" }}>
+        {/* Right-side stacked badges — always readable on any photo */}
+        <div className="absolute top-12 right-5 flex flex-col gap-2.5">
+          {/* Registration Open */}
           <div
-            className="flex items-center justify-center gap-1.5 w-full rounded-full px-3 py-1.5 backdrop-blur-sm"
-            style={{ background: greenBg, border: `1px solid ${greenBorder}` }}
+            className="flex items-center justify-center gap-2 text-center"
+            style={{
+              minWidth: "200px",
+              padding: "10px 20px",
+              borderRadius: "25px",
+              background: "rgba(0,0,0,0.70)",
+              border: "1px solid rgba(255,255,255,0.4)",
+              backdropFilter: "blur(4px)",
+              WebkitBackdropFilter: "blur(4px)",
+            }}
           >
-            <span
-              className="w-1.5 h-1.5 rounded-full animate-pulse flex-shrink-0"
-              style={{ background: greenDot }}
-            />
-            <span className="text-[11px] font-medium tracking-wide" style={{ color: greenText }}>
+            <span className="w-2 h-2 rounded-full animate-pulse flex-shrink-0" style={{ background: "#22c55e" }} />
+            <span className="text-[12px] font-semibold text-white tracking-wide">
               {labels.registrationOpen}
             </span>
           </div>
 
+          {/* Days remaining */}
           {daysRemaining > 0 && (
             <div
-              className="flex items-center justify-center gap-1.5 w-full rounded-full px-3 py-1.5 backdrop-blur-sm"
-              style={{ background: redBg, border: `1px solid ${redBorder}` }}
+              className="flex items-center justify-center gap-2 text-center"
+              style={{
+                minWidth: "200px",
+                padding: "10px 20px",
+                borderRadius: "25px",
+                background: "rgba(0,0,0,0.70)",
+                border: "1px solid rgba(255,255,255,0.4)",
+                backdropFilter: "blur(4px)",
+                WebkitBackdropFilter: "blur(4px)",
+              }}
             >
-              <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: redDot }} />
-              <span className="text-[11px] font-medium tracking-wide" style={{ color: redText }}>
+              <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: "#dc2626" }} />
+              <span className="text-[12px] font-semibold text-white tracking-wide">
                 {labels.daysRemaining.replace("{days}", String(daysRemaining))}
               </span>
             </div>
           )}
 
+          {/* Register Now */}
           <Link
             href={`/${locale}/events/${eventSlug}?tab=register`}
-            className="flex items-center justify-center gap-1.5 w-full rounded-full px-3 py-1.5 backdrop-blur-sm transition-opacity hover:opacity-85"
-            style={{ background: blueBg, border: `1px solid ${blueBorder}` }}
+            className="flex items-center justify-center gap-2 text-center transition-opacity hover:opacity-80"
+            style={{
+              minWidth: "200px",
+              padding: "10px 20px",
+              borderRadius: "25px",
+              background: "rgba(0,0,0,0.70)",
+              border: "1px solid rgba(255,255,255,0.4)",
+              backdropFilter: "blur(4px)",
+              WebkitBackdropFilter: "blur(4px)",
+            }}
           >
-            <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: blueDot }} />
-            <span className="text-[11px] font-medium tracking-wide" style={{ color: blueText }}>
+            <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: "#3b82f6" }} />
+            <span className="text-[12px] font-semibold text-white tracking-wide">
               {labels.registerNow} →
             </span>
           </Link>
