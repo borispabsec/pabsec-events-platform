@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 };
 
 function getDaysRemaining(): number {
-  const target = new Date("2026-06-29T00:00:00.000Z");
+  const target = new Date("2026-06-30T00:00:00.000Z");
   const now = new Date();
   return Math.max(0, Math.ceil((target.getTime() - now.getTime()) / 86_400_000));
 }
@@ -156,6 +156,8 @@ export default async function HomePage({
               registrationOpen: tUi("registration_open"),
               daysRemaining: tUi("days_remaining"),
               registerNow: tUi("register_now"),
+              eventTitle: tHome("hero_event_title"),
+              eventDateLocation: tHome("hero_event_date_location"),
             }}
           />
         </div>
@@ -326,10 +328,13 @@ export default async function HomePage({
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {PAST_ASSEMBLIES.slice(0, 3).map((assembly) => {
-              const docsHref = locale !== "en" ? `${assembly.docsUrl}?hl=${locale}` : assembly.docsUrl;
+              const loc = locale as "en" | "ru" | "tr";
+              const docsHref = assembly.flipId
+                ? `/api/pabsec-docs?assembly_id=${assembly.flipId}&lang=${locale}`
+                : (assembly.legacyUrl ?? "https://www.pabsec.org");
               return (
               <div
-                key={assembly.session}
+                key={assembly.session[loc]}
                 className="group bg-white rounded-2xl p-7 border border-gray-100 hover:border-gold/20 hover:-translate-y-0.5 transition-all duration-200"
                 style={{ boxShadow: "0 2px 8px rgba(0,0,0,0.04)" }}
               >
@@ -338,7 +343,7 @@ export default async function HomePage({
                     className="text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full"
                     style={{ background: "rgba(11,30,61,0.06)", color: "#0B1E3D" }}
                   >
-                    {assembly.session}
+                    {assembly.session[loc]}
                   </span>
                   <span
                     className="text-[10px] font-medium px-2.5 py-1 rounded-full"
@@ -347,7 +352,7 @@ export default async function HomePage({
                     {tUi("completed")}
                   </span>
                 </div>
-                <h3 className="text-navy font-bold text-[15px] mb-1">{assembly.title}</h3>
+                <h3 className="text-navy font-bold text-[15px] mb-1">{assembly.title[loc]}</h3>
                 <div className="flex items-center gap-1.5 mb-0.5">
                   <svg className="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={1.8}
                     viewBox="0 0 24 24" style={{ color: "#9CA3AF" }}>
@@ -355,7 +360,7 @@ export default async function HomePage({
                     <path strokeLinecap="round" strokeLinejoin="round"
                       d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 0115 0z" />
                   </svg>
-                  <p className="text-gray-500 text-sm">{assembly.location}</p>
+                  <p className="text-gray-500 text-sm">{assembly.location[loc]}</p>
                 </div>
                 <div className="flex items-center gap-1.5 mb-5">
                   <svg className="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={1.8}
@@ -363,7 +368,7 @@ export default async function HomePage({
                     <path strokeLinecap="round" strokeLinejoin="round"
                       d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
                   </svg>
-                  <p className="text-gray-400 text-xs">{assembly.date}</p>
+                  <p className="text-gray-400 text-xs">{assembly.date[loc]}</p>
                 </div>
                 <a
                   href={docsHref}

@@ -1,6 +1,15 @@
 import { unstable_cache } from "next/cache";
 import * as cheerio from "cheerio";
-import { PAST_ASSEMBLIES, type Assembly } from "@/lib/data/archive";
+import { PAST_ASSEMBLIES } from "@/lib/data/archive";
+
+// Simple flat type used for scraped EN-only assembly data
+type ScrapedAssembly = {
+  session: string;
+  title: string;
+  location: string;
+  date: string;
+  docsUrl: string;
+};
 
 const PABSEC_BASE = "https://www.pabsec.org";
 const ASSEMBLIES_URL = `${PABSEC_BASE}/page-detail/pabsec-general-assemblies/8`;
@@ -43,9 +52,9 @@ async function fetchPage(url: string, locale = "en"): Promise<string> {
 
 // ── Assembly list parser ──────────────────────────────────────────────────────
 
-function parseAssemblies(html: string): Assembly[] {
+function parseAssemblies(html: string): ScrapedAssembly[] {
   const $ = cheerio.load(html);
-  const results: Assembly[] = [];
+  const results: ScrapedAssembly[] = [];
 
   // pabsec.org uses a standard <table> for the assembly list
   $("table tr").each((_i, row) => {
@@ -116,13 +125,31 @@ function parseCalendar(html: string): CalendarEvent[] {
 // ── Cached public API ─────────────────────────────────────────────────────────
 
 export const getPabsecAssemblies = unstable_cache(
-  async (locale = "en"): Promise<Assembly[]> => {
+  async (locale = "en"): Promise<ScrapedAssembly[]> => {
     try {
       const html = await fetchPage(ASSEMBLIES_URL, locale);
       const parsed = parseAssemblies(html);
-      return parsed.length > 0 ? parsed : PAST_ASSEMBLIES;
+      // Fall back to static data in EN-only flat format
+      if (parsed.length > 0) return parsed;
+      return PAST_ASSEMBLIES.map((a) => ({
+        session: a.session.en,
+        title: a.title.en,
+        location: a.location.en,
+        date: a.date.en,
+        docsUrl: a.flipId
+          ? `https://www.pabsec.org/assemblies-flip/${a.flipId}`
+          : (a.legacyUrl ?? "https://www.pabsec.org"),
+      }));
     } catch {
-      return PAST_ASSEMBLIES;
+      return PAST_ASSEMBLIES.map((a) => ({
+        session: a.session.en,
+        title: a.title.en,
+        location: a.location.en,
+        date: a.date.en,
+        docsUrl: a.flipId
+          ? `https://www.pabsec.org/assemblies-flip/${a.flipId}`
+          : (a.legacyUrl ?? "https://www.pabsec.org"),
+      }));
     }
   },
   ["pabsec-assemblies"],

@@ -107,7 +107,9 @@
     "ga68_title": "68th General Assembly",
     "archive_eyebrow": "Archive",
     "archive_title": "Past Assemblies",
-    "archive_desc": "Official records of previous PABSEC sessions, resolutions and documents."
+    "archive_desc": "Official records of previous PABSEC sessions, resolutions and documents.",
+    "hero_event_title": "67th PABSEC General Assembly",
+    "hero_event_date_location": "30 June – 1 July 2026 · Tbilisi, Georgia"
   },
   "committees": {
     "economic": "Committee on Economic and Development Policy",
@@ -130,7 +132,9 @@
     "upcoming_label": "Upcoming",
     "past_label": "Past",
     "programme_coming_title": "Programme Coming Soon",
-    "programme_coming_desc": "The detailed programme will be published closer to the event date. Check back or visit the official PABSEC website for updates.",
+    "programme_coming_desc": "The detailed programme will be published closer to the event date.",
+    "programme_for": "Programme for",
+    "programme_coming_soon": "Programme will be available soon",
     "about_assembly": "About this Assembly",
     "documents_title": "Official Documents",
     "documents_desc": "Resolutions, reports and session documents are published on the official PABSEC website. Draft documents for delegates will be made available prior to the session.",

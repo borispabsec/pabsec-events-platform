@@ -8,12 +8,13 @@ interface HeroCardProps {
   daysRemaining: number;
   locale: string;
   eventSlug: string;
-  // i18n strings passed from server
   labels: {
     gatewayLabel: string;
     registrationOpen: string;
     daysRemaining: string;
     registerNow: string;
+    eventTitle: string;
+    eventDateLocation: string;
   };
 }
 
@@ -24,15 +25,15 @@ export function HeroCard({
   eventSlug,
   labels,
 }: HeroCardProps) {
-  // true = image is dark → use white text; false = image is light → use dark text
-  const [imageDark, setImageDark] = useState(true);
+  // false = light image → dark text; true = dark image → white text
+  const [imageDark, setImageDark] = useState(false);
   const imgRef = useRef<HTMLImageElement>(null);
 
   useEffect(() => {
     if (textColorMode === "white") { setImageDark(true); return; }
     if (textColorMode === "dark")  { setImageDark(false); return; }
 
-    // AUTO: sample the bottom-third of the image with Canvas API
+    // AUTO: sample the bottom 45% of the image with Canvas API
     const img = imgRef.current;
     if (!img) return;
 
@@ -56,7 +57,7 @@ export function HeroCard({
         }
         setImageDark(total / pixels < 128);
       } catch {
-        // CORS or canvas error — keep default (white text on dark image)
+        // CORS or canvas error — keep default (dark text)
       }
     };
 
@@ -64,9 +65,30 @@ export function HeroCard({
     else img.addEventListener("load", detect, { once: true });
   }, [textColorMode]);
 
-  const textClass = imageDark ? "text-white" : "text-navy";
-  const textMuted = imageDark ? "rgba(255,255,255,0.88)" : "rgba(11,30,61,0.80)";
-  const labelMuted = imageDark ? "rgba(255,255,255,0.45)" : "rgba(11,30,61,0.38)";
+  const textClass    = imageDark ? "text-white" : "text-[#0B1E3D]";
+  const textMuted    = imageDark ? "rgba(255,255,255,0.88)" : "rgba(11,30,61,0.82)";
+  const labelMuted   = imageDark ? "rgba(255,255,255,0.45)" : "rgba(11,30,61,0.50)";
+
+  // Gradient overlay adapts so text stays readable on both dark and light photos
+  const overlay = imageDark
+    ? "linear-gradient(to bottom, rgba(0,0,0,0.25) 0%, rgba(5,12,28,0.65) 50%, rgba(5,12,28,0.93) 100%)"
+    : "linear-gradient(to bottom, rgba(255,255,255,0.0) 0%, rgba(248,249,250,0.30) 50%, rgba(248,249,250,0.82) 100%)";
+
+  // Badge styles
+  const greenBg     = imageDark ? "rgba(34,197,94,0.15)"  : "rgba(34,197,94,0.18)";
+  const greenBorder = imageDark ? "rgba(74,222,128,0.30)" : "rgba(21,128,61,0.40)";
+  const greenText   = imageDark ? "#86efac"  : "#15803d";
+  const greenDot    = imageDark ? "#4ade80"  : "#16a34a";
+
+  const redBg       = imageDark ? "rgba(139,0,0,0.22)"    : "rgba(220,38,38,0.10)";
+  const redBorder   = imageDark ? "rgba(220,38,38,0.35)"  : "rgba(220,38,38,0.35)";
+  const redText     = imageDark ? "#fca5a5"  : "#b91c1c";
+  const redDot      = imageDark ? "#f87171"  : "#dc2626";
+
+  const blueBg      = imageDark ? "rgba(26,95,168,0.40)"  : "rgba(26,95,168,0.12)";
+  const blueBorder  = imageDark ? "rgba(96,165,250,0.35)" : "rgba(26,95,168,0.40)";
+  const blueText    = imageDark ? "#93c5fd"  : "#1a5fa8";
+  const blueDot     = imageDark ? "#60a5fa"  : "#1a5fa8";
 
   return (
     <div className="rounded-2xl overflow-hidden shadow-2xl">
@@ -79,14 +101,8 @@ export function HeroCard({
           className="absolute inset-0 w-full h-full object-cover"
           crossOrigin="anonymous"
         />
-        {/* Gradient overlay */}
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              "linear-gradient(to bottom, rgba(0,0,0,0.28) 0%, rgba(5,12,28,0.68) 50%, rgba(5,12,28,0.95) 100%)",
-          }}
-        />
+        {/* Adaptive gradient overlay */}
+        <div className="absolute inset-0" style={{ background: overlay }} />
 
         {/* Top centre: platform label */}
         <div className="absolute top-5 left-0 right-0 flex justify-center pointer-events-none">
@@ -95,14 +111,17 @@ export function HeroCard({
           </p>
         </div>
 
-        {/* Right-side stacked badges — all same width */}
+        {/* Right-side stacked badges */}
         <div className="absolute top-12 right-5 flex flex-col gap-2" style={{ width: "178px" }}>
           <div
             className="flex items-center justify-center gap-1.5 w-full rounded-full px-3 py-1.5 backdrop-blur-sm"
-            style={{ background: "rgba(34,197,94,0.15)", border: "1px solid rgba(74,222,128,0.30)" }}
+            style={{ background: greenBg, border: `1px solid ${greenBorder}` }}
           >
-            <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse flex-shrink-0" />
-            <span className="text-[11px] font-medium tracking-wide text-green-300">
+            <span
+              className="w-1.5 h-1.5 rounded-full animate-pulse flex-shrink-0"
+              style={{ background: greenDot }}
+            />
+            <span className="text-[11px] font-medium tracking-wide" style={{ color: greenText }}>
               {labels.registrationOpen}
             </span>
           </div>
@@ -110,10 +129,10 @@ export function HeroCard({
           {daysRemaining > 0 && (
             <div
               className="flex items-center justify-center gap-1.5 w-full rounded-full px-3 py-1.5 backdrop-blur-sm"
-              style={{ background: "rgba(139,0,0,0.22)", border: "1px solid rgba(220,38,38,0.35)" }}
+              style={{ background: redBg, border: `1px solid ${redBorder}` }}
             >
-              <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: "#f87171" }} />
-              <span className="text-[11px] font-medium tracking-wide" style={{ color: "#fca5a5" }}>
+              <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: redDot }} />
+              <span className="text-[11px] font-medium tracking-wide" style={{ color: redText }}>
                 {labels.daysRemaining.replace("{days}", String(daysRemaining))}
               </span>
             </div>
@@ -122,25 +141,25 @@ export function HeroCard({
           <Link
             href={`/${locale}/events/${eventSlug}?tab=register`}
             className="flex items-center justify-center gap-1.5 w-full rounded-full px-3 py-1.5 backdrop-blur-sm transition-opacity hover:opacity-85"
-            style={{ background: "rgba(26,95,168,0.40)", border: "1px solid rgba(96,165,250,0.35)" }}
+            style={{ background: blueBg, border: `1px solid ${blueBorder}` }}
           >
-            <span className="w-1.5 h-1.5 rounded-full bg-blue-400 flex-shrink-0" />
-            <span className="text-[11px] font-medium tracking-wide text-blue-200">
+            <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: blueDot }} />
+            <span className="text-[11px] font-medium tracking-wide" style={{ color: blueText }}>
               {labels.registerNow} →
             </span>
           </Link>
         </div>
 
-        {/* Bottom: title + date/location — color adapts to image */}
+        {/* Bottom: event title + date/location — color adapts to image */}
         <div className="absolute bottom-0 left-0 right-0 px-8 pb-9">
           <h1
             className={`font-bold leading-tight mb-3 ${textClass}`}
             style={{ fontSize: "clamp(1.75rem, 3.5vw, 2.5rem)" }}
           >
-            67th PABSEC General Assembly
+            {labels.eventTitle}
           </h1>
           <p className="font-semibold" style={{ fontSize: "clamp(1rem, 2vw, 1.2rem)", color: textMuted }}>
-            29 June – 1 July 2026 · Tbilisi, Georgia
+            {labels.eventDateLocation}
           </p>
         </div>
       </div>

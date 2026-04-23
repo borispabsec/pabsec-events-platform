@@ -45,12 +45,13 @@ model EventMedia {
 }
 
 model EventTranslation {
-  id          String @id @default(cuid())
+  id          String  @id @default(cuid())
   eventId     String
   locale      Locale
   title       String
-  description String @db.Text
+  description String  @db.Text
   agenda      String? @db.Text
+  location    String? // localized city/country name; falls back to event.location
 
   event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
 

@@ -88,7 +88,7 @@
     "also_visit": "Resmi PABSEC konuları için ayrıca ziyaret edin"
   },
   "home_page": {
-    "gateway_label": "PABSEC Etkinlikleri için Resmi Dijital Ağ Geçidi",
+    "gateway_label": "KEİPA Etkinlikleri için Resmi Dijital Platform",
     "res_programme_title": "Program",
     "res_programme_desc": "Genel oturumların, komite toplantılarının ve yan etkinliklerin tam gündemi.",
     "res_programme_cta": "Programı Görüntüle",
@@ -107,7 +107,9 @@
     "ga68_title": "68. Genel Kurul",
     "archive_eyebrow": "Arşiv",
     "archive_title": "Geçmiş Kurullar",
-    "archive_desc": "Önceki PABSEC oturumlarının resmi kayıtları, kararlar ve belgeler."
+    "archive_desc": "Önceki KEİPA oturumlarının resmi kayıtları, kararlar ve belgeler.",
+    "hero_event_title": "KEİPA Genel Kurulunun 67. Olağan Oturumu",
+    "hero_event_date_location": "30 Haziran – 1 Temmuz 2026 · Tiflis, Gürcistan"
   },
   "committees": {
     "economic": "Ekonomik Kalkınma Politikası Komitesi",
@@ -130,7 +132,9 @@
     "upcoming_label": "Yaklaşan",
     "past_label": "Geçmiş",
     "programme_coming_title": "Program Yakında",
-    "programme_coming_desc": "Ayrıntılı program, etkinlik tarihine yakın yayımlanacaktır. Güncellemeler için resmi PABSEC web sitesini takip edin.",
+    "programme_coming_desc": "Ayrıntılı program, etkinlik tarihine yakın yayımlanacaktır.",
+    "programme_for": "Program",
+    "programme_coming_soon": "Program yakında yayımlanacaktır",
     "about_assembly": "Bu Kurul Hakkında",
     "documents_title": "Resmi Belgeler",
     "documents_desc": "Kararlar, raporlar ve oturum belgeleri resmi PABSEC web sitesinde yayımlanmaktadır. Taslak belgeler oturum öncesinde delegelere sunulacaktır.",
@@ -181,8 +185,8 @@
     "secretariat_location": "İstanbul, Türkiye Cumhuriyeti"
   },
   "footer": {
-    "abbr": "KEIPA",
-    "org_name": "Karadeniz Ekonomik İşbirliği Parlamenter Asamblesi",
+    "abbr": "KEİPA",
+    "org_name": "Karadeniz Ekonomik İşbirliği Parlamenter Asamblesi — KEİPA",
     "secretariat": "KEIPA Uluslararası Sekreterliği",
     "location": "İstanbul, Türkiye Cumhuriyeti",
     "nav_heading": "Gezinti",
