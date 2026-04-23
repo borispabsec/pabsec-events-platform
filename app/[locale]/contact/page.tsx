@@ -1,28 +1,25 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 
-export const metadata: Metadata = {
-  title: "Contact – PABSEC Events Platform",
-  description: "Contact the PABSEC Events Platform support team.",
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "contact_page" });
+  return {
+    title: `${t("title")} – PABSEC Events Platform`,
+    description: t("subtitle"),
+  };
+}
 
-const CONTACTS = [
-  {
-    label: "General Support",
-    email: "support@pabsecevents.org",
-    description: "Registration assistance, platform issues and general enquiries.",
-  },
-  {
-    label: "Administration",
-    email: "admin@pabsecevents.org",
-    description: "Accreditation matters, delegation coordination and official correspondence.",
-  },
-  {
-    label: "Legal",
-    email: "legal@pabsecevents.org",
-    description: "Intellectual property, terms of use and legal matters.",
-  },
-];
+const CONTACT_EMAILS = [
+  { key: "general_support",  email: "support@pabsecevents.org" },
+  { key: "administration",   email: "admin@pabsecevents.org" },
+  { key: "legal",            email: "legal@pabsecevents.org" },
+] as const;
 
 export default async function ContactPage({
   params,
@@ -30,6 +27,10 @@ export default async function ContactPage({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
+  const [t, tUi] = await Promise.all([
+    getTranslations({ locale, namespace: "contact_page" }),
+    getTranslations({ locale, namespace: "ui" }),
+  ]);
 
   return (
     <div className="font-sans bg-white min-h-screen">
@@ -48,50 +49,49 @@ export default async function ContactPage({
               <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
               </svg>
-              Home
+              {tUi("back_home")}
             </Link>
           </div>
           <div className="flex items-center gap-3 mb-4">
             <div className="h-px w-8 bg-gold" />
             <span className="text-[10px] font-semibold uppercase tracking-[0.38em] text-gold">
-              Get in Touch
+              {t("eyebrow")}
             </span>
           </div>
-          <h1 className="text-navy text-4xl font-bold mb-4 tracking-tight">Contact</h1>
-          <p className="text-gray-500 text-base max-w-lg leading-relaxed">
-            For assistance with registration, accreditation or platform enquiries,
-            please contact the appropriate team below.
-          </p>
+          <h1 className="text-navy text-4xl font-bold mb-4 tracking-tight">{t("title")}</h1>
+          <p className="text-gray-500 text-base max-w-lg leading-relaxed">{t("subtitle")}</p>
         </div>
       </div>
 
       {/* Contact cards */}
       <div className="max-w-3xl mx-auto px-6 py-16">
         <div className="space-y-5">
-          {CONTACTS.map((contact) => (
+          {CONTACT_EMAILS.map(({ key, email }) => (
             <div
-              key={contact.email}
+              key={email}
               className="rounded-2xl p-7 border border-gray-100 bg-white flex flex-col sm:flex-row sm:items-center gap-5"
               style={{ boxShadow: "0 2px 8px rgba(0,0,0,0.05)" }}
             >
               <div className="flex-1">
                 <div className="text-[10px] font-semibold uppercase tracking-[0.25em] text-gray-400 mb-1.5">
-                  {contact.label}
+                  {t(key)}
                 </div>
                 <a
-                  href={`mailto:${contact.email}`}
+                  href={`mailto:${email}`}
                   className="text-navy font-bold text-base hover:text-gold transition-colors"
                 >
-                  {contact.email}
+                  {email}
                 </a>
-                <p className="text-gray-500 text-sm mt-1.5 leading-relaxed">{contact.description}</p>
+                <p className="text-gray-500 text-sm mt-1.5 leading-relaxed">
+                  {t(`${key}_desc` as Parameters<typeof t>[0])}
+                </p>
               </div>
               <a
-                href={`mailto:${contact.email}`}
+                href={`mailto:${email}`}
                 className="flex-shrink-0 inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm text-white transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:brightness-110"
                 style={{ background: "#1A5FA8" }}
               >
-                Email
+                {tUi("email_btn")}
                 <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
                     d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
@@ -116,10 +116,10 @@ export default async function ContactPage({
               </svg>
             </div>
             <div>
-              <div className="text-navy font-semibold text-sm mb-1">PABSEC International Secretariat</div>
+              <div className="text-navy font-semibold text-sm mb-1">{t("secretariat_title")}</div>
               <div className="text-gray-500 text-sm leading-relaxed">
-                Istanbul, Republic of Türkiye<br />
-                For official PABSEC matters, please also visit{" "}
+                {t("secretariat_location")}<br />
+                {tUi("also_visit")}{" "}
                 <a
                   href="https://www.pabsec.org"
                   target="_blank"

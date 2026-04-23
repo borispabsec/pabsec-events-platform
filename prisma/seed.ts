@@ -10,9 +10,10 @@ async function main() {
     create: {
       slug: "pabsec-67th-general-assembly",
       status: EventStatus.PUBLISHED,
-      startDate: new Date("2026-06-30T09:00:00Z"),
+      startDate: new Date("2026-06-29T09:00:00Z"),
       endDate: new Date("2026-07-01T18:00:00Z"),
       location: "Tbilisi, Georgia",
+      heroTextColor: "auto",
       translations: {
         create: [
           {
@@ -48,6 +49,7 @@ async function main() {
       startDate: new Date("2026-11-01T09:00:00Z"),
       endDate: new Date("2026-11-03T18:00:00Z"),
       location: "Athens, Hellenic Republic",
+      heroTextColor: "auto",
       translations: {
         create: [
           {

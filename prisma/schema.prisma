@@ -14,8 +14,9 @@ model Event {
   startDate   DateTime
   endDate     DateTime
   location    String
-  imageUrl    String?
-  createdAt   DateTime    @default(now())
+  imageUrl      String?
+  heroTextColor String      @default("auto")
+  createdAt     DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
 
   translations  EventTranslation[]
