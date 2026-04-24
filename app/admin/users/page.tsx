@@ -4,6 +4,7 @@ import { db } from "@/lib/db";
 import Image from "next/image";
 import { sendRegistrationApproved, sendRegistrationRejected } from "@/lib/email";
 import { findMemberPhoto } from "@/lib/services/pabsec-data";
+import { DeleteUserForm } from "@/components/admin/delete-user-form";
 
 async function requireAdmin() {
   const cookieStore = await cookies();
@@ -35,7 +36,7 @@ async function approveUser(formData: FormData) {
       adminNotes: notes,
     },
   });
-  sendRegistrationApproved({ to: user.email, firstName: user.firstName, lastName: user.lastName }).catch(console.error);
+  await sendRegistrationApproved({ to: user.email, firstName: user.firstName, lastName: user.lastName });
   redirect("/admin/users");
 }
 
@@ -49,7 +50,7 @@ async function rejectUser(formData: FormData) {
   const user = await db.authUser.findUnique({ where: { id } });
   if (!user) return;
   await db.authUser.update({ where: { id }, data: { status: "REJECTED", adminNotes: notes } });
-  sendRegistrationRejected({ to: user.email, firstName: user.firstName, lastName: user.lastName, reason }).catch(console.error);
+  await sendRegistrationRejected({ to: user.email, firstName: user.firstName, lastName: user.lastName, reason });
   redirect("/admin/users");
 }
 
@@ -62,15 +63,6 @@ async function unlockUser(formData: FormData) {
     where: { id },
     data: { failedLoginAttempts: 0, lockedUntil: null },
   });
-  redirect("/admin/users");
-}
-
-async function deleteUser(formData: FormData) {
-  "use server";
-  await requireAdmin();
-  const id = formData.get("userId") as string;
-  if (!id) return;
-  await db.authUser.delete({ where: { id } });
   redirect("/admin/users");
 }
 
@@ -95,17 +87,17 @@ export default async function UsersPage({
     filter === "rejected" ? { status: "REJECTED" as const } :
     {};
 
-  const users = await db.authUser.findMany({
-    where,
-    orderBy: [{ status: "asc" }, { createdAt: "desc" }],
-  });
+  const [users, allCount, countRows] = await Promise.all([
+    db.authUser.findMany({
+      where,
+      orderBy: [{ status: "asc" }, { createdAt: "desc" }],
+    }),
+    db.authUser.count(),
+    db.authUser.groupBy({ by: ["status"], _count: true }),
+  ]);
 
-  const counts = await db.authUser.groupBy({ by: ["status"], _count: true });
-  const countMap: Record<string, number> = {};
-  counts.forEach((c) => { countMap[c.status.toLowerCase()] = c._count; });
-  countMap.all = users.length + (filter === "all" ? 0 : Object.values(countMap).reduce((a, b) => a + b, 0));
-
-  const allCount = await db.authUser.count();
+  const countMap: Record<string, number> = { all: allCount };
+  countRows.forEach((c) => { countMap[c.status.toLowerCase()] = c._count; });
 
   return (
     <div className="p-8">
@@ -119,15 +111,16 @@ export default async function UsersPage({
       </div>
 
       {/* Filter tabs */}
-      <div className="flex gap-2 mb-6">
+      <div className="flex gap-2 mb-6 flex-wrap">
         {STATUS_FILTERS.map((f) => {
-          const cnt = f.value === "all" ? allCount : (countMap[f.value] ?? 0);
+          const cnt = countMap[f.value] ?? 0;
+          const active = filter === f.value || (f.value === "all" && !["pending","approved","rejected"].includes(filter));
           return (
             <a
               key={f.value}
               href={`/admin/users${f.value === "all" ? "" : `?filter=${f.value}`}`}
               className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold transition ${
-                (filter === f.value || (filter !== "pending" && filter !== "approved" && filter !== "rejected" && f.value === "all"))
+                active
                   ? "bg-navy text-white"
                   : "bg-white border border-gray-200 text-gray-500 hover:border-navy/30 hover:text-navy"
               }`}
@@ -135,9 +128,7 @@ export default async function UsersPage({
               {f.label}
               {cnt > 0 && (
                 <span className={`inline-flex items-center justify-center w-4 h-4 rounded-full text-[9px] font-bold ${
-                  (filter === f.value || (filter !== "pending" && filter !== "approved" && filter !== "rejected" && f.value === "all"))
-                    ? "bg-white/20 text-white"
-                    : "bg-gray-100 text-gray-500"
+                  active ? "bg-white/20 text-white" : "bg-gray-100 text-gray-500"
                 }`}>
                   {cnt}
                 </span>
@@ -191,7 +182,7 @@ export default async function UsersPage({
                     )}
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-4 gap-x-4 gap-y-0.5 text-xs text-gray-500">
-                    <span><strong className="text-gray-600">@</strong> {u.username}</span>
+                    <span><strong className="text-gray-600">@</strong>{u.username}</span>
                     <span><strong className="text-gray-600">Email:</strong> {u.email}</span>
                     <span><strong className="text-gray-600">Country:</strong> {u.country}</span>
                     <span><strong className="text-gray-600">Role:</strong> {u.role}</span>
@@ -199,16 +190,14 @@ export default async function UsersPage({
                   {u.adminNotes && (
                     <p className="text-gray-400 text-xs italic mt-1">Note: {u.adminNotes}</p>
                   )}
-                  <div className="flex flex-wrap gap-1 mt-2">
-                    <a
-                      href={`https://www.pabsec.org/search?q=${encodeURIComponent(u.firstName + " " + u.lastName)}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 text-[10px] font-semibold text-blue-500 hover:text-gold transition"
-                    >
-                      Verify on pabsec.org →
-                    </a>
-                  </div>
+                  <a
+                    href={`https://www.pabsec.org/search?q=${encodeURIComponent(u.firstName + " " + u.lastName)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 mt-2 text-[10px] font-semibold text-blue-500 hover:text-gold transition"
+                  >
+                    Verify on pabsec.org →
+                  </a>
                 </div>
               </div>
 
@@ -249,12 +238,7 @@ export default async function UsersPage({
                     </button>
                   </form>
                 )}
-                <form action={deleteUser} onSubmit={(e) => { if (!confirm(`Delete ${u.firstName} ${u.lastName}?`)) e.preventDefault(); }}>
-                  <input type="hidden" name="userId" value={u.id} />
-                  <button type="submit" className="px-3 py-1.5 rounded-xl border border-red-200 text-red-500 text-xs font-semibold hover:bg-red-50 transition">
-                    Delete
-                  </button>
-                </form>
+                <DeleteUserForm userId={u.id} name={`${u.firstName} ${u.lastName}`} />
               </div>
             </div>
           ))}

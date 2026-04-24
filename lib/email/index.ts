@@ -3,7 +3,7 @@ import { Resend } from "resend";
 function getResend(): Resend | null {
   const key = process.env.RESEND_API_KEY;
   if (!key) {
-    console.warn("RESEND_API_KEY not set — emails will not be sent");
+    console.warn("[email] RESEND_API_KEY not set — emails will not be sent");
     return null;
   }
   return new Resend(key);
@@ -13,14 +13,27 @@ const FROM = "PABSEC Events <noreply@pabsecevents.org>";
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL ?? "borispabsec@gmail.com";
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://pabsecevents.org";
 
+async function send(opts: Parameters<Resend["emails"]["send"]>[0]) {
+  const resend = getResend();
+  if (!resend) return;
+  try {
+    const result = await resend.emails.send(opts);
+    if (result.error) {
+      console.error("[email] Resend API error:", JSON.stringify(result.error));
+    } else {
+      console.log("[email] Sent OK →", opts.to, "|", opts.subject);
+    }
+  } catch (err) {
+    console.error("[email] Send failed →", opts.to, "|", opts.subject, "|", err);
+  }
+}
+
 export async function sendRegistrationReceived(opts: {
   to: string;
   firstName: string;
   lastName: string;
 }) {
-  const resend = getResend();
-  if (!resend) return;
-  await resend.emails.send({
+  await send({
     from: FROM,
     to: opts.to,
     subject: "Registration request received – PABSEC Events",
@@ -43,9 +56,8 @@ export async function sendAdminNewRequest(opts: {
   email: string;
   userId: string;
 }) {
-  const resend = getResend();
-  if (!resend) return;
-  await resend.emails.send({
+  const adminKey = process.env.ADMIN_KEY ?? "changeme";
+  await send({
     from: FROM,
     to: ADMIN_EMAIL,
     subject: `New registration request: ${opts.firstName} ${opts.lastName}`,
@@ -58,7 +70,7 @@ export async function sendAdminNewRequest(opts: {
         <li><strong>Role:</strong> ${opts.role}</li>
       </ul>
       <p>
-        <a href="${APP_URL}/admin?key=${process.env.ADMIN_KEY ?? "changeme"}">
+        <a href="${APP_URL}/admin?key=${adminKey}">
           Review in Admin Panel
         </a>
       </p>
@@ -71,9 +83,7 @@ export async function sendRegistrationApproved(opts: {
   firstName: string;
   lastName: string;
 }) {
-  const resend = getResend();
-  if (!resend) return;
-  await resend.emails.send({
+  await send({
     from: FROM,
     to: opts.to,
     subject: "Registration approved – PABSEC Events",
@@ -93,9 +103,7 @@ export async function sendRegistrationRejected(opts: {
   lastName: string;
   reason?: string;
 }) {
-  const resend = getResend();
-  if (!resend) return;
-  await resend.emails.send({
+  await send({
     from: FROM,
     to: opts.to,
     subject: "Registration not approved – PABSEC Events",
@@ -115,10 +123,8 @@ export async function sendPasswordReset(opts: {
   firstName: string;
   token: string;
 }) {
-  const resend = getResend();
-  if (!resend) return;
   const resetUrl = `${APP_URL}/en/reset-password?token=${opts.token}`;
-  await resend.emails.send({
+  await send({
     from: FROM,
     to: opts.to,
     subject: "Password reset – PABSEC Events",

@@ -111,11 +111,11 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    // Fire emails — don't block response on failure
-    Promise.all([
+    // Fire emails — awaited but errors are handled inside send()
+    await Promise.all([
       sendRegistrationReceived({ to: email, firstName, lastName }),
       sendAdminNewRequest({ firstName, lastName, country, role, email, userId: user.id }),
-    ]).catch(console.error);
+    ]);
 
     return NextResponse.json({ success: true, message: "Registration submitted" }, { status: 201 });
   } catch (err) {

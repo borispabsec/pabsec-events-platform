@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { db } from "@/lib/db";
+import { AddDocumentForm } from "@/components/admin/add-document-form";
 
 async function requireAdmin() {
   const cookieStore = await cookies();
@@ -32,14 +33,15 @@ async function deleteDocument(formData: FormData) {
   redirect("/admin/documents");
 }
 
-const CATEGORIES = [
-  { id: "programme",  label: "Programme" },
-  { id: "hotel",      label: "Hotel Information" },
-  { id: "practical",  label: "Practical Info" },
-  { id: "official",   label: "Official Documents" },
-];
-
 const LOCALES = ["en", "ru", "tr"] as const;
+
+function formatUrl(url: string) {
+  if (url.startsWith("/uploads/")) {
+    const parts = url.split("/");
+    return "📎 " + parts[parts.length - 1];
+  }
+  return url.replace(/^https?:\/\//, "");
+}
 
 export default async function DocumentsPage({
   searchParams,
@@ -71,7 +73,7 @@ export default async function DocumentsPage({
           <span className="text-[10px] font-semibold uppercase tracking-[0.38em] text-gold">Management</span>
         </div>
         <h1 className="text-navy text-2xl font-bold">Documents</h1>
-        <p className="text-gray-400 text-sm mt-1">Add and manage event documents per locale.</p>
+        <p className="text-gray-400 text-sm mt-1">Upload files or add URL links per locale.</p>
       </div>
 
       {/* Event filter */}
@@ -125,7 +127,7 @@ export default async function DocumentsPage({
                             key={doc.id}
                             className="flex items-center gap-3 px-4 py-2.5 rounded-xl border border-gray-100 bg-gray-50"
                           >
-                            <span className="text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded bg-navy/6 text-navy/60">
+                            <span className="text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded bg-navy/6 text-navy/60 flex-shrink-0">
                               {doc.category}
                             </span>
                             <span className="flex-1 text-xs text-navy font-medium truncate">{doc.title}</span>
@@ -133,13 +135,13 @@ export default async function DocumentsPage({
                               href={doc.fileUrl}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="text-[10px] text-blue-500 hover:text-gold transition truncate max-w-[180px]"
+                              className="text-[10px] text-blue-500 hover:text-gold transition truncate max-w-[200px] flex-shrink-0"
                             >
-                              {doc.fileUrl.replace(/^https?:\/\//, "")}
+                              {formatUrl(doc.fileUrl)}
                             </a>
-                            <form action={deleteDocument}>
+                            <form action={deleteDocument} className="flex-shrink-0">
                               <input type="hidden" name="id" value={doc.id} />
-                              <button type="submit" className="text-[10px] font-semibold text-red-400 hover:text-red-600 transition flex-shrink-0">
+                              <button type="submit" className="text-[10px] font-semibold text-red-400 hover:text-red-600 transition">
                                 Delete
                               </button>
                             </form>
@@ -154,52 +156,9 @@ export default async function DocumentsPage({
                 )}
               </div>
 
-              {/* Add document form */}
-              <div className="px-6 pb-6 border-t border-gray-50">
-                <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mt-4 mb-3">Add Document</p>
-                <form action={addDocument} className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                  <input type="hidden" name="eventId" value={event.id} />
-                  <select
-                    name="locale"
-                    required
-                    className="px-3 py-2 rounded-lg border border-gray-200 text-xs text-navy focus:outline-none focus:border-gold"
-                  >
-                    <option value="en">EN – English</option>
-                    <option value="ru">RU – Русский</option>
-                    <option value="tr">TR – Türkçe</option>
-                  </select>
-                  <select
-                    name="category"
-                    required
-                    className="px-3 py-2 rounded-lg border border-gray-200 text-xs text-navy focus:outline-none focus:border-gold"
-                  >
-                    {CATEGORIES.map((c) => (
-                      <option key={c.id} value={c.id}>{c.label}</option>
-                    ))}
-                  </select>
-                  <input
-                    type="text"
-                    name="title"
-                    required
-                    placeholder="Document title"
-                    className="px-3 py-2 rounded-lg border border-gray-200 text-xs focus:outline-none focus:border-gold placeholder:text-gray-300"
-                  />
-                  <div className="flex gap-2">
-                    <input
-                      type="url"
-                      name="fileUrl"
-                      required
-                      placeholder="https://…"
-                      className="flex-1 px-3 py-2 rounded-lg border border-gray-200 text-xs focus:outline-none focus:border-gold placeholder:text-gray-300"
-                    />
-                    <button
-                      type="submit"
-                      className="px-3 py-2 rounded-lg bg-navy text-white text-xs font-semibold hover:bg-navy/90 transition flex-shrink-0"
-                    >
-                      Add
-                    </button>
-                  </div>
-                </form>
+              {/* Add document form (client component) */}
+              <div className="px-6 pb-6">
+                <AddDocumentForm eventId={event.id} addDocumentAction={addDocument} />
               </div>
             </div>
           );
