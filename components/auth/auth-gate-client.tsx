@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { LoginModal, ForgotPasswordModal } from "./login-modal";
 import { RegisterModal } from "./register-modal";
 import { useAuth } from "./auth-provider";
@@ -9,7 +10,14 @@ type ModalView = "login" | "register" | "forgot" | null;
 
 export function AuthGateClient() {
   const { refresh } = useAuth();
+  const router = useRouter();
   const [modal, setModal] = useState<ModalView>(null);
+
+  async function onLoginSuccess() {
+    await refresh();
+    router.refresh();
+    setModal(null);
+  }
 
   return (
     <>
@@ -30,7 +38,7 @@ export function AuthGateClient() {
 
       {modal === "login" && (
         <LoginModal
-          onClose={() => { setModal(null); refresh(); }}
+          onClose={onLoginSuccess}
           onOpenRegister={() => setModal("register")}
           onOpenForgot={() => setModal("forgot")}
         />

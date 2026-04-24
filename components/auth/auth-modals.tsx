@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { LoginModal, ForgotPasswordModal } from "./login-modal";
 import { RegisterModal } from "./register-modal";
 import { useAuth } from "./auth-provider";
@@ -9,9 +10,16 @@ import Image from "next/image";
 type ModalView = "login" | "register" | "forgot" | null;
 
 export function AuthButton() {
-  const { user, loading, logout } = useAuth();
+  const { user, loading, logout, refresh } = useAuth();
+  const router = useRouter();
   const [modal, setModal] = useState<ModalView>(null);
   const [menuOpen, setMenuOpen] = useState(false);
+
+  async function onLoginSuccess() {
+    await refresh();
+    router.refresh();
+    setModal(null);
+  }
 
   if (loading) {
     return <div className="w-16 h-7 rounded-lg bg-gray-100 animate-pulse" />;
@@ -79,7 +87,7 @@ export function AuthButton() {
 
       {modal === "login" && (
         <LoginModal
-          onClose={() => setModal(null)}
+          onClose={onLoginSuccess}
           onOpenRegister={() => setModal("register")}
           onOpenForgot={() => setModal("forgot")}
         />
