@@ -1,5 +1,8 @@
 import { redirect } from "next/navigation";
 import { db } from "@/lib/db";
+import Image from "next/image";
+import { sendRegistrationApproved, sendRegistrationRejected } from "@/lib/email";
+import { findMemberPhoto } from "@/lib/services/pabsec-data";
 
 async function updateHeroTextColor(formData: FormData) {
   "use server";
@@ -33,6 +36,47 @@ async function deleteEventDocument(formData: FormData) {
   redirect("/admin");
 }
 
+async function approveUser(formData: FormData) {
+  "use server";
+  const id = formData.get("userId") as string;
+  const notes = (formData.get("notes") as string) || null;
+  if (!id) return;
+  const user = await db.authUser.findUnique({ where: { id } });
+  if (!user) return;
+  let photoUrl = user.photoUrl;
+  if (!photoUrl) {
+    try {
+      const found = await findMemberPhoto(user.firstName, user.lastName);
+      if (found) photoUrl = found;
+    } catch { /* best-effort */ }
+  }
+  await db.authUser.update({
+    where: { id },
+    data: {
+      status: "APPROVED",
+      approvedAt: new Date(),
+      approvedBy: "admin",
+      photoUrl: photoUrl ?? user.uploadedPhotoUrl,
+      adminNotes: notes,
+    },
+  });
+  sendRegistrationApproved({ to: user.email, firstName: user.firstName, lastName: user.lastName }).catch(console.error);
+  redirect("/admin?" + new URLSearchParams({ key: process.env.ADMIN_KEY ?? "changeme" }).toString());
+}
+
+async function rejectUser(formData: FormData) {
+  "use server";
+  const id = formData.get("userId") as string;
+  const reason = (formData.get("reason") as string) || undefined;
+  const notes = (formData.get("notes") as string) || null;
+  if (!id) return;
+  const user = await db.authUser.findUnique({ where: { id } });
+  if (!user) return;
+  await db.authUser.update({ where: { id }, data: { status: "REJECTED", adminNotes: notes } });
+  sendRegistrationRejected({ to: user.email, firstName: user.firstName, lastName: user.lastName, reason }).catch(console.error);
+  redirect("/admin?" + new URLSearchParams({ key: process.env.ADMIN_KEY ?? "changeme" }).toString());
+}
+
 const DOCUMENT_CATEGORIES = [
   { id: "programme",  label: "Programme" },
   { id: "hotel",      label: "Hotel Information" },
@@ -60,13 +104,17 @@ export default async function AdminPage({
     );
   }
 
-  const events = await db.event.findMany({
-    orderBy: { startDate: "desc" },
-    include: {
-      translations: { where: { locale: "en" } },
-      documents: { orderBy: [{ locale: "asc" }, { category: "asc" }, { sortOrder: "asc" }] },
-    },
-  });
+  const [events, pendingUsers, allUsers] = await Promise.all([
+    db.event.findMany({
+      orderBy: { startDate: "desc" },
+      include: {
+        translations: { where: { locale: "en" } },
+        documents: { orderBy: [{ locale: "asc" }, { category: "asc" }, { sortOrder: "asc" }] },
+      },
+    }),
+    db.authUser.findMany({ where: { status: "PENDING" }, orderBy: { createdAt: "desc" } }),
+    db.authUser.findMany({ where: { status: { not: "PENDING" } }, orderBy: { createdAt: "desc" }, take: 50 }),
+  ]);
 
   const colorOptions = [
     { value: "auto",  label: "Auto-detect (Canvas)", desc: "Samples the bottom of the photo to decide" },
@@ -81,8 +129,127 @@ export default async function AdminPage({
           <div className="h-px w-8 bg-gold" />
           <span className="text-[10px] font-semibold uppercase tracking-[0.38em] text-gold">Admin</span>
         </div>
-        <h1 className="text-navy text-3xl font-bold mb-2">Event Settings</h1>
-        <p className="text-gray-500 text-sm mb-10">Hero text colour and document management per event.</p>
+        <h1 className="text-navy text-3xl font-bold mb-2">Admin Panel</h1>
+        <p className="text-gray-500 text-sm mb-10">Registration requests, event settings, and document management.</p>
+
+        {/* ── Registration Requests ──────────────────────────────────────────── */}
+        <section className="mb-12">
+          <div className="flex items-center gap-3 mb-4">
+            <h2 className="text-navy font-bold text-lg">Registration Requests</h2>
+            {pendingUsers.length > 0 && (
+              <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-gold text-white text-[10px] font-bold">
+                {pendingUsers.length}
+              </span>
+            )}
+          </div>
+
+          {pendingUsers.length === 0 ? (
+            <div className="bg-white rounded-2xl border border-gray-100 p-8 text-center">
+              <p className="text-gray-400 text-sm">No pending registration requests.</p>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {pendingUsers.map((u) => (
+                <div key={u.id} className="bg-white rounded-2xl border border-gray-100 overflow-hidden" style={{ boxShadow: "0 2px 8px rgba(0,0,0,0.04)" }}>
+                  <div className="px-6 py-5 flex items-start gap-5">
+                    {u.uploadedPhotoUrl ? (
+                      <Image
+                        src={u.uploadedPhotoUrl}
+                        alt={`${u.firstName} ${u.lastName}`}
+                        width={56}
+                        height={56}
+                        className="w-14 h-14 rounded-xl object-cover flex-shrink-0 border border-gray-100"
+                        unoptimized
+                      />
+                    ) : (
+                      <div className="w-14 h-14 rounded-xl bg-navy/8 flex items-center justify-center flex-shrink-0 border border-gray-100 text-navy font-bold text-lg">
+                        {u.firstName[0]}{u.lastName[0]}
+                      </div>
+                    )}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex flex-wrap items-center gap-2 mb-1">
+                        <h3 className="text-navy font-bold text-base">{u.firstName} {u.lastName}</h3>
+                        <span className="text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full bg-amber-50 text-amber-700">PENDING</span>
+                      </div>
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-x-6 gap-y-0.5 text-sm text-gray-500">
+                        <span><strong className="text-gray-700">Email:</strong> {u.email}</span>
+                        <span><strong className="text-gray-700">Country:</strong> {u.country}</span>
+                        <span><strong className="text-gray-700">Role:</strong> {u.role}</span>
+                      </div>
+                      <a
+                        href={`https://www.pabsec.org/search?q=${encodeURIComponent(u.firstName + " " + u.lastName)}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 mt-2 text-[11px] font-semibold text-blue-500 hover:text-gold transition"
+                      >
+                        Verify on pabsec.org
+                        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                        </svg>
+                      </a>
+                    </div>
+                  </div>
+
+                  <div className="px-6 pb-5 flex flex-wrap gap-3">
+                    <form action={approveUser} className="flex items-end gap-2">
+                      <input type="hidden" name="userId" value={u.id} />
+                      <div>
+                        <label className="block text-[10px] font-semibold uppercase tracking-widest text-gray-400 mb-1">Admin Notes</label>
+                        <input type="text" name="notes" placeholder="Optional notes…" className="px-3 py-1.5 rounded-lg border border-gray-200 text-sm focus:outline-none focus:border-gold w-48" />
+                      </div>
+                      <button type="submit" className="px-4 py-2 rounded-xl bg-green-600 text-white text-sm font-semibold hover:bg-green-700 transition">
+                        Approve
+                      </button>
+                    </form>
+
+                    <form action={rejectUser} className="flex items-end gap-2">
+                      <input type="hidden" name="userId" value={u.id} />
+                      <div>
+                        <label className="block text-[10px] font-semibold uppercase tracking-widest text-gray-400 mb-1">Rejection Reason</label>
+                        <input type="text" name="reason" placeholder="Reason for rejection…" className="px-3 py-1.5 rounded-lg border border-gray-200 text-sm focus:outline-none focus:border-gold w-48" />
+                      </div>
+                      <button type="submit" className="px-4 py-2 rounded-xl bg-red-500 text-white text-sm font-semibold hover:bg-red-600 transition">
+                        Reject
+                      </button>
+                    </form>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Recent approved/rejected */}
+          {allUsers.length > 0 && (
+            <div className="mt-6">
+              <h3 className="text-[11px] font-semibold uppercase tracking-widest text-gray-400 mb-3">Recent Decisions</h3>
+              <div className="bg-white rounded-2xl border border-gray-100 divide-y divide-gray-50">
+                {allUsers.map((u) => (
+                  <div key={u.id} className="flex items-center gap-4 px-5 py-3">
+                    <div className="flex-1 min-w-0">
+                      <span className="text-navy font-semibold text-sm">{u.firstName} {u.lastName}</span>
+                      <span className="text-gray-400 text-xs ml-2">{u.country} · {u.role}</span>
+                    </div>
+                    <span className={`text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full ${
+                      u.status === "APPROVED"
+                        ? "bg-green-50 text-green-700"
+                        : "bg-red-50 text-red-600"
+                    }`}>
+                      {u.status}
+                    </span>
+                    {u.adminNotes && (
+                      <span className="text-gray-400 text-xs italic truncate max-w-[160px]">{u.adminNotes}</span>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </section>
+
+        {/* ── Event Settings ─────────────────────────────────────────────────── */}
+        <div className="flex items-center gap-3 mb-4">
+          <h2 className="text-navy font-bold text-lg">Event Settings</h2>
+        </div>
 
         <div className="space-y-8">
           {events.map((event) => {

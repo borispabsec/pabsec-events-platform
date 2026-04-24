@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useLocale, useTranslations } from "next-intl";
 import { locales, localeNames } from "@/lib/i18n/config";
 import { usePathname, useRouter } from "next/navigation";
+import { AuthButton } from "@/components/auth/auth-modals";
 
 const NAV_LINKS = [
   { key: "home",         path: "" },
@@ -77,22 +78,25 @@ export function Navbar() {
           })}
         </div>
 
-        {/* Language switcher */}
-        <div className="flex items-center border border-gray-200 rounded-lg overflow-hidden flex-shrink-0">
-          {locales.map((l) => (
-            <button
-              key={l}
-              onClick={() => switchLocale(l)}
-              aria-label={localeNames[l]}
-              className={`text-[11px] font-bold uppercase px-2.5 py-1.5 border-r border-gray-200 last:border-r-0 transition-all duration-150 ${
-                l === locale
-                  ? "bg-navy text-white"
-                  : "text-navy/45 hover:text-navy hover:bg-gray-50"
-              }`}
-            >
-              {l.toUpperCase()}
-            </button>
-          ))}
+        {/* Right side: Login + Language switcher */}
+        <div className="flex items-center gap-3 flex-shrink-0">
+          <AuthButton />
+          <div className="flex items-center border border-gray-200 rounded-lg overflow-hidden">
+            {locales.map((l) => (
+              <button
+                key={l}
+                onClick={() => switchLocale(l)}
+                aria-label={localeNames[l]}
+                className={`text-[11px] font-bold uppercase px-2.5 py-1.5 border-r border-gray-200 last:border-r-0 transition-all duration-150 ${
+                  l === locale
+                    ? "bg-navy text-white"
+                    : "text-navy/45 hover:text-navy hover:bg-gray-50"
+                }`}
+              >
+                {l.toUpperCase()}
+              </button>
+            ))}
+          </div>
         </div>
       </nav>
     </header>

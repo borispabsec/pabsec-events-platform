@@ -148,3 +148,33 @@ enum DocumentCategory {
   PRESS_RELEASE
   OTHER
 }
+
+model AuthUser {
+  id                  String     @id @default(cuid())
+  username            String     @unique
+  email               String     @unique
+  passwordHash        String
+  firstName           String
+  lastName            String
+  country             String
+  role                String
+  status              UserStatus @default(PENDING)
+  photoUrl            String?
+  uploadedPhotoUrl    String?
+  adminNotes          String?
+  createdAt           DateTime   @default(now())
+  approvedAt          DateTime?
+  approvedBy          String?
+  failedLoginAttempts Int        @default(0)
+  lockedUntil         DateTime?
+  resetToken          String?    @unique
+  resetTokenExpiry    DateTime?
+
+  @@map("auth_users")
+}
+
+enum UserStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}

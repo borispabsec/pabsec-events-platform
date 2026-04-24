@@ -5,6 +5,8 @@ import Link from "next/link";
 import { db } from "@/lib/db";
 import { formatDateRange } from "@/lib/utils";
 import { RegistrationForm } from "@/components/events/registration-form";
+import { getSession } from "@/lib/auth/session";
+import { AuthGateClient } from "@/components/auth/auth-gate-client";
 
 async function getEvent(id: string, locale: string) {
   try {
@@ -57,12 +59,14 @@ export default async function EventDetailPage({
   const validTab = TABS.some((t) => t.id === rawTab);
   const activeTab: TabId = validTab ? (rawTab as TabId) : "programme";
 
-  const [event, tEvents, tUi, tPage] = await Promise.all([
+  const [event, tEvents, tUi, tPage, session] = await Promise.all([
     getEvent(id, locale),
     getTranslations({ locale, namespace: "events" }),
     getTranslations({ locale, namespace: "ui" }),
     getTranslations({ locale, namespace: "event_page" }),
+    getSession(),
   ]);
+  const isAuthenticated = session?.status === "APPROVED";
 
   if (!event) notFound();
 
@@ -262,7 +266,8 @@ export default async function EventDetailPage({
         })()}
 
         {/* DOCUMENTS */}
-        {activeTab === "documents" && (() => {
+        {activeTab === "documents" && !isAuthenticated && <AuthGate locale={locale} />}
+        {activeTab === "documents" && isAuthenticated && (() => {
           const DOC_CATEGORIES = [
             { id: "programme", label: tPage("doc_cat_programme") },
             { id: "hotel",     label: tPage("doc_cat_hotel") },
@@ -351,7 +356,8 @@ export default async function EventDetailPage({
         })()}
 
         {/* PRACTICAL INFORMATION */}
-        {activeTab === "info" && (
+        {activeTab === "info" && !isAuthenticated && <AuthGate locale={locale} />}
+        {activeTab === "info" && isAuthenticated && (
           <div>
             <div className="flex items-center gap-3 mb-8">
               <div className="h-px w-8 bg-gold" />
@@ -377,7 +383,8 @@ export default async function EventDetailPage({
         )}
 
         {/* REGISTRATION */}
-        {activeTab === "register" && (
+        {activeTab === "register" && !isAuthenticated && <AuthGate locale={locale} />}
+        {activeTab === "register" && isAuthenticated && (
           <div>
             <div className="flex items-center gap-3 mb-8">
               <div className="h-px w-8 bg-gold" />
@@ -401,6 +408,24 @@ export default async function EventDetailPage({
         )}
 
       </div>
+    </div>
+  );
+}
+
+function AuthGate({ locale }: { locale: string }) {
+  return (
+    <div className="rounded-2xl p-12 text-center border border-gray-100" style={{ background: "rgba(11,30,61,0.02)" }}>
+      <div className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4" style={{ background: "rgba(11,30,61,0.06)" }}>
+        <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={1.6} viewBox="0 0 24 24" style={{ color: "#0B1E3D" }}>
+          <path strokeLinecap="round" strokeLinejoin="round"
+            d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+        </svg>
+      </div>
+      <h3 className="text-navy font-bold text-base mb-2">Delegates Only</h3>
+      <p className="text-gray-500 text-sm leading-relaxed max-w-xs mx-auto mb-6">
+        This section is available to approved PABSEC delegates. Please sign in or register to access this content.
+      </p>
+      <AuthGateClient />
     </div>
   );
 }

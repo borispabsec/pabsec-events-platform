@@ -12,6 +12,14 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "upload.wikimedia.org",
       },
+      {
+        protocol: "https",
+        hostname: "www.pabsec.org",
+      },
+      {
+        protocol: "http",
+        hostname: "178.104.232.189",
+      },
     ],
   },
 };

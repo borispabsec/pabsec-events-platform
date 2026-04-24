@@ -156,6 +156,36 @@ export const getPabsecAssemblies = unstable_cache(
   { revalidate: 3600 }
 );
 
+// ── Member photo lookup ───────────────────────────────────────────────────────
+
+export async function findMemberPhoto(
+  firstName: string,
+  lastName: string
+): Promise<string | null> {
+  try {
+    const searchName = `${firstName} ${lastName}`.toLowerCase();
+    const membersUrl = `${PABSEC_BASE}/members`;
+    const html = await fetchPage(membersUrl);
+    const $ = cheerio.load(html);
+    let foundPhoto: string | null = null;
+    $("img").each((_i, el) => {
+      const alt = ($(el).attr("alt") ?? "").toLowerCase();
+      const src = $(el).attr("src") ?? "";
+      if (alt.includes(firstName.toLowerCase()) && alt.includes(lastName.toLowerCase())) {
+        foundPhoto = src.startsWith("http") ? src : `${PABSEC_BASE}${src}`;
+        return false;
+      }
+      if (alt.includes(searchName)) {
+        foundPhoto = src.startsWith("http") ? src : `${PABSEC_BASE}${src}`;
+        return false;
+      }
+    });
+    return foundPhoto;
+  } catch {
+    return null;
+  }
+}
+
 export const getPabsecCalendar = unstable_cache(
   async (locale = "en"): Promise<CalendarEvent[]> => {
     try {
