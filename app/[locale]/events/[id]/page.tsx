@@ -412,7 +412,8 @@ export default async function EventDetailPage({
   );
 }
 
-function AuthGate({ locale }: { locale: string }) {
+async function AuthGate({ locale }: { locale: string }) {
+  const tAuth = await getTranslations({ locale, namespace: "auth" });
   return (
     <div className="rounded-2xl p-12 text-center border border-gray-100" style={{ background: "rgba(11,30,61,0.02)" }}>
       <div className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4" style={{ background: "rgba(11,30,61,0.06)" }}>
@@ -421,9 +422,9 @@ function AuthGate({ locale }: { locale: string }) {
             d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
         </svg>
       </div>
-      <h3 className="text-navy font-bold text-base mb-2">Delegates Only</h3>
+      <h3 className="text-navy font-bold text-base mb-2">{tAuth("delegates_only")}</h3>
       <p className="text-gray-500 text-sm leading-relaxed max-w-xs mx-auto mb-6">
-        This section is available to approved PABSEC delegates. Please sign in or register to access this content.
+        {tAuth("delegates_only_desc")}
       </p>
       <AuthGateClient />
     </div>
