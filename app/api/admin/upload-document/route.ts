@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { cookies } from "next/headers";
 import path from "path";
 import fs from "fs/promises";
 
@@ -7,9 +6,16 @@ const ALLOWED_EXTS = ["pdf", "doc", "docx", "ppt", "pptx", "xls", "xlsx"];
 const MAX_SIZE = 100 * 1024 * 1024; // 100 MB
 
 export async function POST(req: NextRequest) {
-  // Check admin session
-  const cookieStore = await cookies();
-  if (cookieStore.get("admin_session")?.value !== "1") {
+  // Read cookie directly from request (more reliable in route handlers)
+  const sessionCookie = req.cookies.get("admin_session")?.value;
+
+  // Debug: log all cookies received
+  const allCookies = [...req.cookies.getAll()].map((c) => `${c.name}=${c.value}`).join("; ");
+  console.log(`[upload] Cookies received: ${allCookies || "(none)"}`);
+  console.log(`[upload] admin_session value: "${sessionCookie ?? "(missing)"}"`);
+
+  if (sessionCookie !== "1") {
+    console.warn("[upload] Unauthorized — admin_session missing or wrong value");
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -33,7 +39,6 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Generate unique filename preserving original name (sanitized)
     const safeName = file.name
       .replace(/[^a-zA-Z0-9._-]/g, "_")
       .replace(/_+/g, "_");
@@ -46,15 +51,11 @@ export async function POST(req: NextRequest) {
     await fs.writeFile(path.join(uploadDir, filename), buffer);
 
     const url = `/uploads/documents/${filename}`;
-    console.log(`[upload] Document uploaded: ${filename} (${(file.size / 1024).toFixed(1)} KB)`);
+    console.log(`[upload] Document saved: ${filename} (${(file.size / 1024).toFixed(1)} KB)`);
 
-    return NextResponse.json({
-      url,
-      filename: file.name,
-      size: file.size,
-    });
+    return NextResponse.json({ url, filename: file.name, size: file.size });
   } catch (err) {
-    console.error("[upload] Document upload error:", err);
+    console.error("[upload] Error:", err);
     return NextResponse.json({ error: "Upload failed" }, { status: 500 });
   }
 }
