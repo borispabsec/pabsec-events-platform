@@ -5,6 +5,6 @@ import { redirect } from "next/navigation";
 
 export async function adminLogout() {
   const cookieStore = await cookies();
-  cookieStore.delete("admin_session");
+  cookieStore.set("admin_session", "", { path: "/", maxAge: 0 });
   redirect("/admin");
 }

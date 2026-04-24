@@ -12,7 +12,7 @@ async function loginAction(formData: FormData) {
     cookieStore.set("admin_session", "1", {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      path: "/admin",
+      path: "/",
       maxAge: 60 * 60 * 24 * 7,
     });
     redirect("/admin");
@@ -37,7 +37,7 @@ export default async function AdminDashboard({
       cookieStore.set("admin_session", "1", {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
-        path: "/admin",
+        path: "/",
         maxAge: 60 * 60 * 24 * 7,
       });
       redirect("/admin");
