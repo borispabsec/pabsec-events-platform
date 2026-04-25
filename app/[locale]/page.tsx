@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
+import { notFound } from "next/navigation";
 import { db } from "@/lib/db";
 import { PAST_ASSEMBLIES } from "@/lib/data/archive";
 import { HeroCard } from "@/components/events/hero-card";
@@ -19,6 +20,8 @@ export default async function HomePage({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
+
+  if (!["en", "ru", "tr"].includes(locale)) notFound();
 
   const [t, tUi, tHome, tCommittees] = await Promise.all([
     getTranslations({ locale, namespace: "events" }),

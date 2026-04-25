@@ -5,8 +5,9 @@ import { db } from "@/lib/db";
 import { EventForm } from "@/components/admin/event-form";
 import { DeleteEventButton } from "@/components/admin/delete-event-button";
 import { UpcomingEventForm } from "@/components/admin/upcoming-event-form";
+import { DeleteUpcomingEventButton } from "@/components/admin/delete-upcoming-event-button";
 import { createEvent, updateEvent } from "@/lib/admin/event-actions";
-import { createUpcomingEvent, updateUpcomingEvent, deleteUpcomingEvent } from "@/lib/admin/upcoming-event-actions";
+import { createUpcomingEvent, updateUpcomingEvent } from "@/lib/admin/upcoming-event-actions";
 
 async function requireAdmin() {
   const cookieStore = await cookies();
@@ -391,16 +392,7 @@ export default async function EventsPage({
                         </svg>
                         Edit
                       </Link>
-                      <form action={deleteUpcomingEvent}>
-                        <input type="hidden" name="upcomingEventId" value={ue.id} />
-                        <button
-                          type="submit"
-                          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-red-100 text-xs font-semibold text-red-500 hover:bg-red-50 transition"
-                          onClick={(e) => { if (!confirm(`Delete "${title}"?`)) e.preventDefault(); }}
-                        >
-                          Delete
-                        </button>
-                      </form>
+                      <DeleteUpcomingEventButton upcomingEventId={ue.id} title={title} />
                     </div>
                   </div>
                 </div>
