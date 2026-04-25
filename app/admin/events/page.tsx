@@ -102,12 +102,22 @@ export default async function EventsPage({
 
   // ── Event list ───────────────────────────────────────────────────────────────
   const events = await db.event.findMany({
-    orderBy: { startDate: "desc" },
+    orderBy: { startDate: "asc" },
     include: {
       translations: { where: { locale: "en" } },
       _count: { select: { registrations: true, documents: true } },
     },
   });
+
+  // Determine which event is currently shown on the homepage
+  const now = new Date();
+  const homepageEventId =
+    events
+      .filter((e) => e.status === "PUBLISHED" && e.startDate >= now)
+      .sort((a, b) => a.startDate.getTime() - b.startDate.getTime())[0]?.id ??
+    events
+      .filter((e) => e.status === "PUBLISHED")
+      .sort((a, b) => b.startDate.getTime() - a.startDate.getTime())[0]?.id;
 
   return (
     <div className="p-8">
@@ -159,6 +169,11 @@ export default async function EventsPage({
                       <span className={`text-[9px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full ${STATUS_COLORS[event.status] ?? ""}`}>
                         {event.status}
                       </span>
+                      {event.id === homepageEventId && (
+                        <span className="text-[9px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full bg-amber-50 text-amber-600 border border-amber-200">
+                          On Homepage
+                        </span>
+                      )}
                       <span className="text-[10px] text-gray-300 font-mono">{event.slug}</span>
                     </div>
                     <h3 className="text-navy font-bold text-sm truncate">{title}</h3>
@@ -168,6 +183,11 @@ export default async function EventsPage({
                     <div className="flex gap-4 mt-1.5 text-xs text-gray-400">
                       <span>{event._count.registrations} registrations</span>
                       <span>{event._count.documents} documents</span>
+                      {event.imageUrl ? (
+                        <span className="text-green-600">✓ hero image</span>
+                      ) : (
+                        <span className="text-red-400">✗ no hero image</span>
+                      )}
                     </div>
                   </div>
 
