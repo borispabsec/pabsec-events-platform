@@ -7,6 +7,7 @@ import { formatDateRange } from "@/lib/utils";
 import { RegistrationForm } from "@/components/events/registration-form";
 import { getSession } from "@/lib/auth/session";
 import { AuthGateClient } from "@/components/auth/auth-gate-client";
+import { DocViewButton } from "@/components/events/doc-view-button";
 
 async function getEvent(id: string, locale: string) {
   try {
@@ -222,19 +223,7 @@ export default async function EventDetailPage({
                       <span className="text-navy font-medium text-sm truncate">{doc.title}</span>
                     </div>
                     <div className="flex items-center gap-2 flex-shrink-0">
-                      <a
-                        href={doc.fileUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[12px] font-semibold text-white transition-opacity hover:opacity-90"
-                        style={{ background: "#C9A96E" }}
-                      >
-                        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                        </svg>
-                        View
-                      </a>
+                      <DocViewButton fileUrl={doc.fileUrl} label="View" />
                       <a
                         href={doc.fileUrl}
                         download
@@ -326,19 +315,7 @@ export default async function EventDetailPage({
                               <span className="text-navy font-medium text-sm truncate">{doc.title}</span>
                             </div>
                             <div className="flex items-center gap-2 flex-shrink-0">
-                              <a
-                                href={doc.fileUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[12px] font-semibold text-white transition-opacity hover:opacity-90"
-                                style={{ background: "#C9A96E" }}
-                              >
-                                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                </svg>
-                                View
-                              </a>
+                              <DocViewButton fileUrl={doc.fileUrl} label="View" />
                               <a
                                 href={doc.fileUrl}
                                 download

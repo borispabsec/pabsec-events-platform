@@ -4,6 +4,7 @@ import { getTranslations } from "next-intl/server";
 import { db } from "@/lib/db";
 import { PAST_ASSEMBLIES } from "@/lib/data/archive";
 import { HeroCard } from "@/components/events/hero-card";
+import { formatDateRange } from "@/lib/utils";
 
 export const metadata: Metadata = {
   title: "PABSEC Events Platform – Official Digital Gateway",
@@ -11,21 +12,12 @@ export const metadata: Metadata = {
     "Official registration and information platform for PABSEC General Assemblies, Committee Meetings, and official events of the Black Sea Economic Cooperation.",
 };
 
-function getDaysRemaining(): number {
-  const target = new Date("2026-06-30T00:00:00.000Z");
-  const now = new Date();
-  return Math.max(0, Math.ceil((target.getTime() - now.getTime()) / 86_400_000));
-}
-
-const EVENT_SLUG = "pabsec-67th-general-assembly";
-
 export default async function HomePage({
   params,
 }: {
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  const daysRemaining = getDaysRemaining();
 
   const [t, tUi, tHome, tCommittees] = await Promise.all([
     getTranslations({ locale, namespace: "events" }),
@@ -34,21 +26,77 @@ export default async function HomePage({
     getTranslations({ locale, namespace: "committees" }),
   ]);
 
-  // 67th GA hero text color from DB
-  let heroTextColor = "auto";
+  // ── Fetch current/upcoming published event from DB ───────────────────────
+  const now = new Date();
+  let heroEvent: {
+    slug: string;
+    heroTextColor: string;
+    imageUrl: string | null;
+    startDate: Date;
+    endDate: Date;
+    location: string;
+    translations: { title: string; location: string | null }[];
+  } | null = null;
+
   try {
-    const ev = await db.event.findUnique({
-      where: { slug: EVENT_SLUG },
-      select: { heroTextColor: true },
+    // Prefer next upcoming event; fall back to most recent past event
+    heroEvent = await db.event.findFirst({
+      where: { status: "PUBLISHED", startDate: { gte: now } },
+      orderBy: { startDate: "asc" },
+      select: {
+        slug: true,
+        heroTextColor: true,
+        imageUrl: true,
+        startDate: true,
+        endDate: true,
+        location: true,
+        translations: {
+          where: { locale: locale as "en" | "ru" | "tr" },
+          select: { title: true, location: true },
+        },
+      },
     });
-    if (ev) heroTextColor = ev.heroTextColor;
-  } catch { /* use default */ }
+    if (!heroEvent) {
+      heroEvent = await db.event.findFirst({
+        where: { status: "PUBLISHED" },
+        orderBy: { startDate: "desc" },
+        select: {
+          slug: true,
+          heroTextColor: true,
+          imageUrl: true,
+          startDate: true,
+          endDate: true,
+          location: true,
+          translations: {
+            where: { locale: locale as "en" | "ru" | "tr" },
+            select: { title: true, location: true },
+          },
+        },
+      });
+    }
+  } catch { /* use fallback labels */ }
+
+  const eventSlug      = heroEvent?.slug ?? "ga67";
+  const heroTextColor  = heroEvent?.heroTextColor ?? "auto";
+  const heroImageUrl   = heroEvent?.imageUrl ?? null;
+  const heroTranslation = heroEvent?.translations[0];
+  const heroTitle      = heroTranslation?.title ?? tHome("hero_event_title");
+  const heroLocation   = heroTranslation?.location ?? heroEvent?.location ?? "";
+  const heroDates      = heroEvent
+    ? formatDateRange(heroEvent.startDate, heroEvent.endDate, locale)
+    : "";
+  const heroDateLocation = heroEvent
+    ? `${heroDates} · ${heroLocation}`
+    : tHome("hero_event_date_location");
+  const daysRemaining = heroEvent
+    ? Math.max(0, Math.ceil((heroEvent.startDate.getTime() - now.getTime()) / 86_400_000))
+    : 0;
 
   // 68th GA data from DB — editable via admin panel
   let ga68 = { location: "Athens, Hellenic Republic", period: "November 2026" };
   try {
-    const event = await db.event.findUnique({
-      where: { slug: "pabsec-68th-general-assembly" },
+    const event = await db.event.findFirst({
+      where: { slug: { startsWith: "ga68" }, status: { not: "CANCELLED" } },
       select: { location: true, startDate: true },
     });
     if (event) {
@@ -90,7 +138,7 @@ export default async function HomePage({
       title: tHome("res_programme_title"),
       description: tHome("res_programme_desc"),
       cta: tHome("res_programme_cta"),
-      href: `/events/${EVENT_SLUG}?tab=programme`,
+      href: `/events/${eventSlug}?tab=programme`,
       icon: (
         <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={1.6} viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round"
@@ -103,7 +151,7 @@ export default async function HomePage({
       title: tHome("res_documents_title"),
       description: tHome("res_documents_desc"),
       cta: tHome("res_documents_cta"),
-      href: `/events/${EVENT_SLUG}?tab=documents`,
+      href: `/events/${eventSlug}?tab=documents`,
       icon: (
         <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={1.6} viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round"
@@ -116,7 +164,7 @@ export default async function HomePage({
       title: tHome("res_practical_title"),
       description: tHome("res_practical_desc"),
       cta: tHome("res_practical_cta"),
-      href: `/events/${EVENT_SLUG}?tab=info`,
+      href: `/events/${eventSlug}?tab=info`,
       icon: (
         <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={1.6} viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -130,7 +178,7 @@ export default async function HomePage({
       title: tHome("res_register_title"),
       description: tHome("res_register_desc"),
       cta: tHome("res_register_cta"),
-      href: `/events/${EVENT_SLUG}?tab=register`,
+      href: `/events/${eventSlug}?tab=register`,
       icon: (
         <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={1.6} viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round"
@@ -150,14 +198,15 @@ export default async function HomePage({
             textColorMode={heroTextColor}
             daysRemaining={daysRemaining}
             locale={locale}
-            eventSlug={EVENT_SLUG}
+            eventSlug={eventSlug}
+            imageUrl={heroImageUrl ?? undefined}
             labels={{
               gatewayLabel: tHome("gateway_label"),
               registrationOpen: tUi("registration_open"),
               daysRemaining: tUi("days_remaining"),
               registerNow: tUi("register_now"),
-              eventTitle: tHome("hero_event_title"),
-              eventDateLocation: tHome("hero_event_date_location"),
+              eventTitle: heroTitle,
+              eventDateLocation: heroDateLocation,
             }}
           />
         </div>

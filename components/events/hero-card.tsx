@@ -8,6 +8,7 @@ interface HeroCardProps {
   daysRemaining: number;
   locale: string;
   eventSlug: string;
+  imageUrl?: string;
   labels: {
     gatewayLabel: string;
     registrationOpen: string;
@@ -39,6 +40,7 @@ export function HeroCard({
   daysRemaining,
   locale,
   eventSlug,
+  imageUrl,
   labels,
 }: HeroCardProps) {
   // true = dark photo → use light/tinted badge style
@@ -134,8 +136,8 @@ export function HeroCard({
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           ref={imgRef}
-          src="/images/Stariy_Tbilisi.jpg"
-          alt="Tbilisi, Georgia"
+          src={imageUrl || "/images/Stariy_Tbilisi.jpg"}
+          alt="Event hero image"
           className="absolute inset-0 w-full h-full object-cover"
           crossOrigin="anonymous"
         />
