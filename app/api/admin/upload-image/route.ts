@@ -7,7 +7,13 @@ const MAX_SIZE = 20 * 1024 * 1024; // 20 MB
 
 export async function POST(req: NextRequest) {
   const sessionCookie = req.cookies.get("admin_session")?.value;
+
+  const allCookies = [...req.cookies.getAll()].map((c) => `${c.name}=${c.value}`).join("; ");
+  console.log(`[upload-image] Cookies received: ${allCookies || "(none)"}`);
+  console.log(`[upload-image] admin_session value: "${sessionCookie ?? "(missing)"}"`);
+
   if (sessionCookie !== "1") {
+    console.warn("[upload-image] Unauthorized — admin_session missing or wrong value");
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -43,6 +49,8 @@ export async function POST(req: NextRequest) {
     await fs.writeFile(path.join(uploadDir, filename), buffer);
 
     const url = `/uploads/images/${filename}`;
+    console.log(`[upload-image] Image saved: ${filename} (${(file.size / 1024).toFixed(1)} KB)`);
+
     return NextResponse.json({ url, filename: file.name, size: file.size });
   } catch (err) {
     console.error("[upload-image] Error:", err);

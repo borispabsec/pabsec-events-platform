@@ -1,5 +1,7 @@
 "use client";
 
+const OFFICE_EXTS = ["doc", "docx", "ppt", "pptx", "xls", "xlsx"];
+
 interface Props {
   fileUrl: string;
   label: string;
@@ -8,19 +10,27 @@ interface Props {
 export function DocViewButton({ fileUrl, label }: Props) {
   function handleView() {
     const ext = fileUrl.split(".").pop()?.toLowerCase() ?? "";
+
     if (ext === "pdf") {
       window.open(fileUrl, "_blank", "noopener,noreferrer");
-    } else {
-      // DOC, DOCX, PPT, PPTX, XLS, XLSX — use Google Docs viewer
+      return;
+    }
+
+    if (OFFICE_EXTS.includes(ext)) {
+      // Build absolute URL for Office Online viewer
       const absoluteUrl = fileUrl.startsWith("http")
         ? fileUrl
         : `${window.location.origin}${fileUrl}`;
       window.open(
-        `https://docs.google.com/viewer?url=${encodeURIComponent(absoluteUrl)}&embedded=false`,
+        `https://view.officeapps.live.com/op/view.aspx?src=${encodeURIComponent(absoluteUrl)}`,
         "_blank",
         "noopener,noreferrer"
       );
+      return;
     }
+
+    // Fallback: open directly
+    window.open(fileUrl, "_blank", "noopener,noreferrer");
   }
 
   return (
