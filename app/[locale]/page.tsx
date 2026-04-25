@@ -92,20 +92,62 @@ export default async function HomePage({
     ? Math.max(0, Math.ceil((heroEvent.startDate.getTime() - now.getTime()) / 86_400_000))
     : 0;
 
-  // 68th GA data from DB — editable via admin panel
-  let ga68 = { location: "Athens, Hellenic Republic", period: "November 2026" };
+  // Next event after the main hero (second-nearest upcoming published event)
+  let nextEvent: {
+    slug: string;
+    location: string;
+    startDate: Date;
+    endDate: Date;
+    imageUrl: string | null;
+    translations: { title: string; location: string | null }[];
+  } | null = null;
+
   try {
-    const event = await db.event.findFirst({
-      where: { slug: { startsWith: "ga68" }, status: { not: "CANCELLED" } },
-      select: { location: true, startDate: true },
+    nextEvent = await db.event.findFirst({
+      where: {
+        status: "PUBLISHED",
+        startDate: { gt: heroEvent?.startDate ?? now },
+      },
+      orderBy: { startDate: "asc" },
+      select: {
+        slug: true,
+        location: true,
+        startDate: true,
+        endDate: true,
+        imageUrl: true,
+        translations: {
+          where: { locale: locale as "en" | "ru" | "tr" },
+          select: { title: true, location: true },
+        },
+      },
     });
-    if (event) {
-      ga68 = {
-        location: event.location,
-        period: event.startDate.toLocaleDateString("en-US", { month: "long", year: "numeric" }),
-      };
+    if (!nextEvent) {
+      // Fall back to any non-cancelled future event
+      nextEvent = await db.event.findFirst({
+        where: { status: { not: "CANCELLED" }, startDate: { gt: now } },
+        orderBy: { startDate: "asc" },
+        select: {
+          slug: true,
+          location: true,
+          startDate: true,
+          endDate: true,
+          imageUrl: true,
+          translations: {
+            where: { locale: locale as "en" | "ru" | "tr" },
+            select: { title: true, location: true },
+          },
+        },
+      });
     }
   } catch { /* use fallback */ }
+
+  const nextTitle    = nextEvent?.translations[0]?.title ?? tHome("ga68_title");
+  const nextLocation = nextEvent?.translations[0]?.location ?? nextEvent?.location ?? "Athens, Hellenic Republic";
+  const nextPeriod   = nextEvent
+    ? formatDateRange(nextEvent.startDate, nextEvent.endDate, locale)
+    : "November 2026";
+  const nextImageUrl = nextEvent?.imageUrl ?? null;
+  const nextSlug     = nextEvent?.slug ?? "ga68";
 
   // Committee meetings — locale-specific
   const COMMITTEE_MEETINGS = [
@@ -308,15 +350,36 @@ export default async function HomePage({
           <p className="text-[10px] font-bold uppercase tracking-[0.22em] mb-4" style={{ color: "rgba(11,30,61,0.38)" }}>
             {tHome("ga68_section")}
           </p>
-          <div
-            className="relative rounded-2xl px-8 py-8 md:px-12 overflow-hidden"
-            style={{ background: "linear-gradient(135deg, #0B1E3D 0%, #132848 100%)" }}
-          >
-            <div
-              className="absolute top-[-40px] right-[-40px] w-64 h-64 rounded-full pointer-events-none"
-              style={{ background: "radial-gradient(circle, rgba(201,168,76,0.08), transparent 70%)" }}
-            />
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 relative z-10">
+          <div className="relative rounded-2xl overflow-hidden">
+            {/* Background: hero image or navy gradient fallback */}
+            {nextImageUrl ? (
+              <>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={nextImageUrl}
+                  alt=""
+                  aria-hidden="true"
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+                <div
+                  className="absolute inset-0"
+                  style={{ background: "linear-gradient(135deg, rgba(11,30,61,0.88) 0%, rgba(19,40,72,0.78) 100%)" }}
+                />
+              </>
+            ) : (
+              <>
+                <div
+                  className="absolute inset-0"
+                  style={{ background: "linear-gradient(135deg, #0B1E3D 0%, #132848 100%)" }}
+                />
+                <div
+                  className="absolute top-[-40px] right-[-40px] w-64 h-64 rounded-full pointer-events-none"
+                  style={{ background: "radial-gradient(circle, rgba(201,168,76,0.08), transparent 70%)" }}
+                />
+              </>
+            )}
+
+            <div className="relative z-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 px-8 py-8 md:px-12">
               <div>
                 <div className="flex items-center gap-2.5 mb-3">
                   <span
@@ -326,12 +389,13 @@ export default async function HomePage({
                     {tUi("upcoming_save_date")}
                   </span>
                 </div>
-                <h3 className="text-white font-bold text-xl mb-1">{tHome("ga68_title")}</h3>
+                <h3 className="text-white font-bold text-xl mb-1">{nextTitle}</h3>
                 <p className="text-sm" style={{ color: "rgba(255,255,255,0.55)" }}>
-                  {ga68.location} · {ga68.period}
+                  {nextLocation} · {nextPeriod}
                 </p>
               </div>
-              <div
+              <Link
+                href={`/${locale}/events/${nextSlug}`}
                 className="flex-shrink-0 inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-medium cursor-default"
                 style={{ background: "rgba(255,255,255,0.07)", color: "rgba(255,255,255,0.32)", border: "1px solid rgba(255,255,255,0.10)" }}
               >
@@ -340,7 +404,7 @@ export default async function HomePage({
                     d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 {tUi("registration_not_open")}
-              </div>
+              </Link>
             </div>
           </div>
         </div>
