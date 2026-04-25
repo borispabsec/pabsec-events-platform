@@ -161,7 +161,8 @@
     "doc_bureau_restricted": "Bureau documents — visible to Bureau members only.",
     "doc_committee_restricted": "Standing Committee documents — visible to committee members and Bureau.",
     "doc_download": "Download",
-    "doc_no_docs": "No documents have been uploaded for this language yet."
+    "doc_no_docs": "No documents have been uploaded for this language yet.",
+    "practical_coming_soon": "Practical information will be available soon."
   },
   "about_page": {
     "eyebrow": "Organisation",
