@@ -3,10 +3,11 @@
 import { useState, useRef } from "react";
 
 const CATEGORIES = [
-  { id: "programme",  label: "Programme" },
-  { id: "hotel",      label: "Hotel Information" },
-  { id: "practical",  label: "Practical Info" },
-  { id: "official",   label: "Official Documents" },
+  { id: "programme",         label: "Programme" },
+  { id: "practical",         label: "Practical Info" },
+  { id: "bureau",            label: "Bureau Documents" },
+  { id: "standing_committee", label: "Standing Committee Documents" },
+  { id: "general_assembly",  label: "General Assembly Documents" },
 ];
 
 interface Props {

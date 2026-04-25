@@ -52,10 +52,10 @@ export default async function EventDetailPage({
   searchParams,
 }: {
   params: Promise<{ locale: string; id: string }>;
-  searchParams: Promise<{ tab?: string }>;
+  searchParams: Promise<{ tab?: string; dtab?: string }>;
 }) {
   const { locale, id } = await params;
-  const { tab: rawTab } = await searchParams;
+  const { tab: rawTab, dtab: rawDtab } = await searchParams;
 
   const validTab = TABS.some((t) => t.id === rawTab);
   const activeTab: TabId = validTab ? (rawTab as TabId) : "programme";
@@ -271,70 +271,101 @@ export default async function EventDetailPage({
         {/* DOCUMENTS */}
         {activeTab === "documents" && !isAuthenticated && <AuthGate locale={locale} />}
         {activeTab === "documents" && isAuthenticated && (() => {
-          const DOC_CATEGORIES = [
-            { id: "programme", label: tPage("doc_cat_programme") },
-            { id: "hotel",     label: tPage("doc_cat_hotel") },
-            { id: "practical", label: tPage("doc_cat_practical") },
-            { id: "official",  label: tPage("doc_cat_official") },
-          ];
-          const docs = event.documents ?? [];
-          const hasDocs = docs.length > 0;
+          const userRole = session!.role ?? "";
+          const canSeeBureau = userRole.includes("bureau") || userRole === "admin";
+          const canSeeCommittee = userRole.includes("committee") || userRole.includes("bureau") || userRole === "admin";
+
+          const DOC_SUBTABS = [
+            { id: "general_assembly", label: tPage("doc_cat_general_assembly"), allowed: true },
+            { id: "standing_committee", label: tPage("doc_cat_standing_committee"), allowed: canSeeCommittee },
+            { id: "bureau", label: tPage("doc_cat_bureau"), allowed: canSeeBureau },
+          ] as const;
+
+          const activeDtab = DOC_SUBTABS.find((s) => s.id === rawDtab && s.allowed)?.id ?? "general_assembly";
+
+          const docs = (event.documents ?? []).filter((d) =>
+            d.category === activeDtab ||
+            // Legacy: map "official" → general_assembly
+            (activeDtab === "general_assembly" && d.category === "official")
+          );
+
+          const DocRow = ({ doc }: { doc: typeof docs[0] }) => (
+            <div
+              className="flex items-center justify-between gap-4 px-5 py-4 rounded-xl border border-gray-100 bg-white"
+              style={{ boxShadow: "0 1px 4px rgba(0,0,0,0.04)" }}
+            >
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: "rgba(11,30,61,0.05)" }}>
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={1.6} viewBox="0 0 24 24" style={{ color: "#0B1E3D" }}>
+                    <path strokeLinecap="round" strokeLinejoin="round"
+                      d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+                  </svg>
+                </div>
+                <span className="text-navy font-medium text-sm truncate">{doc.title}</span>
+              </div>
+              <div className="flex items-center gap-2 flex-shrink-0">
+                <DocViewButton fileUrl={doc.fileUrl} label="View" />
+                <a
+                  href={doc.fileUrl}
+                  download
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[12px] font-semibold border transition-colors hover:bg-gray-50"
+                  style={{ borderColor: "rgba(11,30,61,0.15)", color: "#0B1E3D" }}
+                >
+                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                      d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                  </svg>
+                  {tPage("doc_download")}
+                </a>
+              </div>
+            </div>
+          );
+
           return (
           <div>
-            <div className="flex items-center gap-3 mb-8">
+            <div className="flex items-center gap-3 mb-6">
               <div className="h-px w-8 bg-gold" />
               <span className="text-[10px] font-semibold uppercase tracking-[0.38em] text-gold">
                 {tPage("tab_documents")}
               </span>
             </div>
 
-            {hasDocs ? (
-              <div className="space-y-8">
-                {DOC_CATEGORIES.map((cat) => {
-                  const catDocs = docs.filter((d) => d.category === cat.id);
-                  if (catDocs.length === 0) return null;
-                  return (
-                    <div key={cat.id}>
-                      <h3 className="text-[10px] font-semibold uppercase tracking-[0.25em] text-gray-400 mb-3">
-                        {cat.label}
-                      </h3>
-                      <div className="space-y-2">
-                        {catDocs.map((doc) => (
-                          <div
-                            key={doc.id}
-                            className="flex items-center justify-between gap-4 px-5 py-4 rounded-xl border border-gray-100 bg-white"
-                            style={{ boxShadow: "0 1px 4px rgba(0,0,0,0.04)" }}
-                          >
-                            <div className="flex items-center gap-3 min-w-0">
-                              <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: "rgba(11,30,61,0.05)" }}>
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={1.6} viewBox="0 0 24 24" style={{ color: "#0B1E3D" }}>
-                                  <path strokeLinecap="round" strokeLinejoin="round"
-                                    d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
-                                </svg>
-                              </div>
-                              <span className="text-navy font-medium text-sm truncate">{doc.title}</span>
-                            </div>
-                            <div className="flex items-center gap-2 flex-shrink-0">
-                              <DocViewButton fileUrl={doc.fileUrl} label="View" />
-                              <a
-                                href={doc.fileUrl}
-                                download
-                                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[12px] font-semibold border transition-colors hover:bg-gray-50"
-                                style={{ borderColor: "rgba(11,30,61,0.15)", color: "#0B1E3D" }}
-                              >
-                                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                                </svg>
-                                {tPage("doc_download")}
-                              </a>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  );
-                })}
+            {/* Sub-tab navigation */}
+            <div className="flex rounded-xl border border-gray-200 overflow-hidden mb-8 w-fit">
+              {DOC_SUBTABS.filter((s) => s.allowed).map((sub) => (
+                <Link
+                  key={sub.id}
+                  href={`${basePath}?tab=documents&dtab=${sub.id}`}
+                  className={`px-5 py-2.5 text-xs font-semibold transition ${
+                    activeDtab === sub.id ? "bg-navy text-white" : "text-gray-500 hover:bg-gray-50"
+                  }`}
+                >
+                  {sub.label}
+                </Link>
+              ))}
+            </div>
+
+            {/* Restricted access notice for committee/bureau tabs */}
+            {activeDtab === "bureau" && (
+              <div className="flex items-center gap-2 mb-5 px-4 py-2.5 rounded-xl bg-amber-50 border border-amber-100">
+                <svg className="w-4 h-4 text-amber-600 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+                </svg>
+                <p className="text-xs text-amber-700 font-medium">{tPage("doc_bureau_restricted")}</p>
+              </div>
+            )}
+            {activeDtab === "standing_committee" && (
+              <div className="flex items-center gap-2 mb-5 px-4 py-2.5 rounded-xl bg-blue-50 border border-blue-100">
+                <svg className="w-4 h-4 text-blue-600 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+                </svg>
+                <p className="text-xs text-blue-700 font-medium">{tPage("doc_committee_restricted")}</p>
+              </div>
+            )}
+
+            {docs.length > 0 ? (
+              <div className="space-y-2">
+                {docs.map((doc) => <DocRow key={doc.id} doc={doc} />)}
               </div>
             ) : (
               <div className="rounded-2xl p-10 text-center border border-gray-100" style={{ background: "rgba(11,30,61,0.02)" }}>
@@ -345,15 +376,7 @@ export default async function EventDetailPage({
                   </svg>
                 </div>
                 <h3 className="text-navy font-bold text-base mb-2">{tPage("documents_title")}</h3>
-                <p className="text-gray-500 text-sm leading-relaxed max-w-md mx-auto mb-2">{tPage("doc_no_docs")}</p>
-                <p className="text-gray-400 text-sm leading-relaxed max-w-md mx-auto">{tPage("documents_desc")}</p>
-                <a href="https://www.pabsec.org/page-detail/pabsec-general-assemblies/8" target="_blank" rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 mt-6 text-sm font-semibold transition-colors hover:text-gold" style={{ color: "#1A5FA8" }}>
-                  {tUi("view_on_pabsec")}
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                  </svg>
-                </a>
+                <p className="text-gray-500 text-sm leading-relaxed max-w-md mx-auto">{tPage("doc_no_docs")}</p>
               </div>
             )}
           </div>

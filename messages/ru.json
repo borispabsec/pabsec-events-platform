@@ -155,6 +155,11 @@
     "doc_cat_hotel": "Информация о гостинице",
     "doc_cat_practical": "Практическая информация",
     "doc_cat_official": "Официальные документы",
+    "doc_cat_general_assembly": "Генеральная Ассамблея",
+    "doc_cat_standing_committee": "Постоянные комитеты",
+    "doc_cat_bureau": "Бюро",
+    "doc_bureau_restricted": "Документы Бюро — доступны только членам Бюро.",
+    "doc_committee_restricted": "Документы постоянных комитетов — доступны членам комитетов и Бюро.",
     "doc_download": "Скачать",
     "doc_no_docs": "Документы для данного языка ещё не загружены."
   },

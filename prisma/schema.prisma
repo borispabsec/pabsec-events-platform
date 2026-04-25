@@ -8,16 +8,18 @@ datasource db {
 }
 
 model Event {
-  id          String      @id @default(cuid())
-  slug        String      @unique
-  status      EventStatus @default(DRAFT)
-  startDate   DateTime
-  endDate     DateTime
-  location    String
-  imageUrl      String?
-  heroTextColor String      @default("auto")
-  createdAt     DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
+  id               String      @id @default(cuid())
+  slug             String      @unique
+  status           EventStatus @default(DRAFT)
+  startDate        DateTime
+  endDate          DateTime
+  location         String
+  imageUrl         String?
+  heroTextColor    String      @default("auto")
+  dateFlexible     Boolean     @default(false)
+  dateFlexibleText String?
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
 
   translations  EventTranslation[]
   registrations Registration[]
@@ -25,6 +27,37 @@ model Event {
   documents     EventDocument[]
 
   @@map("events")
+}
+
+model UpcomingEvent {
+  id               String   @id @default(cuid())
+  category         String   // "committee_economic" | "committee_legal" | "committee_social"
+  session          String?
+  status           String   @default("SAVE_THE_DATE")
+  dateFlexible     Boolean  @default(true)
+  dateFlexibleText String?
+  startDate        DateTime?
+  endDate          DateTime?
+  location         String   @default("TBA")
+  sortOrder        Int      @default(0)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  translations UpcomingEventTranslation[]
+
+  @@map("upcoming_events")
+}
+
+model UpcomingEventTranslation {
+  id              String @id @default(cuid())
+  upcomingEventId String
+  locale          Locale
+  title           String
+
+  upcomingEvent UpcomingEvent @relation(fields: [upcomingEventId], references: [id], onDelete: Cascade)
+
+  @@unique([upcomingEventId, locale])
+  @@map("upcoming_event_translations")
 }
 
 model EventMedia {

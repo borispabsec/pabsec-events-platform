@@ -155,6 +155,11 @@
     "doc_cat_hotel": "Hotel Information",
     "doc_cat_practical": "Practical Information",
     "doc_cat_official": "Official Documents",
+    "doc_cat_general_assembly": "General Assembly",
+    "doc_cat_standing_committee": "Standing Committees",
+    "doc_cat_bureau": "Bureau",
+    "doc_bureau_restricted": "Bureau documents — visible to Bureau members only.",
+    "doc_committee_restricted": "Standing Committee documents — visible to committee members and Bureau.",
     "doc_download": "Download",
     "doc_no_docs": "No documents have been uploaded for this language yet."
   },

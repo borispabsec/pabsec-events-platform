@@ -155,6 +155,11 @@
     "doc_cat_hotel": "Otel Bilgisi",
     "doc_cat_practical": "Pratik Bilgiler",
     "doc_cat_official": "Resmi Belgeler",
+    "doc_cat_general_assembly": "Genel Kurul",
+    "doc_cat_standing_committee": "Daimi Komiteler",
+    "doc_cat_bureau": "Büro",
+    "doc_bureau_restricted": "Büro belgeleri — yalnızca Büro üyelerine görünür.",
+    "doc_committee_restricted": "Daimi Komite belgeleri — komite üyelerine ve Büro'ya görünür.",
     "doc_download": "İndir",
     "doc_no_docs": "Bu dil için henüz belge yüklenmemiştir."
   },

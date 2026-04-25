@@ -35,17 +35,27 @@ async function cleanupOldHeroImages() {
   }
 }
 
+function parseDates(formData: FormData) {
+  const startStr = (formData.get("startDate") as string) || "";
+  const endStr   = (formData.get("endDate")   as string) || "";
+  return {
+    startDate: startStr ? new Date(startStr) : new Date("2099-01-01"),
+    endDate:   endStr   ? new Date(endStr)   : new Date("2099-12-31"),
+  };
+}
+
 export async function createEvent(formData: FormData) {
   await requireAdmin();
 
   const assemblyNumber = (formData.get("assemblyNumber") as string).trim();
   const slug = `ga${assemblyNumber}`;
-  const startDate = new Date(formData.get("startDate") as string);
-  const endDate = new Date(formData.get("endDate") as string);
-  const location = (formData.get("location") as string).trim();
+  const { startDate, endDate } = parseDates(formData);
+  const location = (formData.get("location") as string).trim() || "TBA";
   const status = formData.get("status") as string;
   const heroTextColor = (formData.get("heroTextColor") as string) || "auto";
   const imageUrl = (formData.get("imageUrl") as string) || null;
+  const dateFlexible = formData.get("dateFlexible") === "on";
+  const dateFlexibleText = dateFlexible ? ((formData.get("dateFlexibleText") as string).trim() || null) : null;
 
   await db.event.create({
     data: {
@@ -56,6 +66,8 @@ export async function createEvent(formData: FormData) {
       status: status as "DRAFT" | "PUBLISHED" | "CANCELLED" | "COMPLETED",
       heroTextColor,
       imageUrl,
+      dateFlexible,
+      dateFlexibleText,
       translations: {
         create: (["en", "ru", "tr"] as const).map((locale) => ({
           locale,
@@ -79,12 +91,13 @@ export async function updateEvent(formData: FormData) {
   await requireAdmin();
 
   const id = (formData.get("eventId") as string).trim();
-  const startDate = new Date(formData.get("startDate") as string);
-  const endDate = new Date(formData.get("endDate") as string);
-  const location = (formData.get("location") as string).trim();
+  const { startDate, endDate } = parseDates(formData);
+  const location = (formData.get("location") as string).trim() || "TBA";
   const status = formData.get("status") as string;
   const heroTextColor = (formData.get("heroTextColor") as string) || "auto";
   const imageUrl = (formData.get("imageUrl") as string) || null;
+  const dateFlexible = formData.get("dateFlexible") === "on";
+  const dateFlexibleText = dateFlexible ? ((formData.get("dateFlexibleText") as string).trim() || null) : null;
 
   // If image was replaced, delete the old file
   const existing = await db.event.findUnique({ where: { id }, select: { imageUrl: true } });
@@ -101,6 +114,8 @@ export async function updateEvent(formData: FormData) {
       status: status as "DRAFT" | "PUBLISHED" | "CANCELLED" | "COMPLETED",
       heroTextColor,
       imageUrl,
+      dateFlexible,
+      dateFlexibleText,
     },
   });
 

@@ -59,12 +59,12 @@ ssh "$SERVER" "cd $APP_DIR && npx prisma generate" \
   || abort "prisma generate failed"
 ok "Prisma client generated"
 
-# ── Prisma: run migrations (optional) ───────────────────────────────────────
+# ── Prisma: push schema changes to DB ───────────────────────────────────────
 if [[ "$RUN_MIGRATE" == true ]]; then
-  step "Running database migrations"
-  ssh "$SERVER" "cd $APP_DIR && npx prisma migrate deploy" \
-    && ok "Migrations applied" \
-    || warn "No pending migrations (or prisma migrate deploy not applicable)"
+  step "Pushing schema changes to database (prisma db push)"
+  ssh "$SERVER" "cd $APP_DIR && npx prisma db push --accept-data-loss" \
+    && ok "Schema pushed" \
+    || warn "prisma db push failed — check DB connectivity"
 fi
 
 # ── Prisma: seed (safe — all entries use upsert with update:{}) ──────────────

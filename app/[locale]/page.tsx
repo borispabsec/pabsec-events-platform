@@ -150,30 +150,56 @@ export default async function HomePage({
   const nextImageUrl = nextEvent?.imageUrl ?? null;
   const nextSlug     = nextEvent?.slug ?? "ga68";
 
-  // Committee meetings — locale-specific
-  const COMMITTEE_MEETINGS = [
-    {
-      id: "econ",
-      session: "67",
-      committee: tCommittees("economic"),
-      period: "September / October 2026",
-      location: "Sofia, Bulgaria",
-    },
-    {
-      id: "legal",
-      session: "68",
-      committee: tCommittees("legal"),
-      period: "September / October 2026",
-      location: "TBA",
-    },
-    {
-      id: "social",
-      session: "67",
-      committee: tCommittees("social"),
-      period: "September / October 2026",
-      location: "Yerevan, Armenia",
-    },
-  ];
+  // Committee meetings from DB
+  let dbMeetings: {
+    id: string;
+    category: string;
+    session: string | null;
+    dateFlexible: boolean;
+    dateFlexibleText: string | null;
+    startDate: Date | null;
+    endDate: Date | null;
+    location: string;
+    translations: { title: string }[];
+  }[] = [];
+  try {
+    dbMeetings = await db.upcomingEvent.findMany({
+      where: { status: { not: "CANCELLED" } },
+      orderBy: [{ sortOrder: "asc" }, { createdAt: "asc" }],
+      select: {
+        id: true,
+        category: true,
+        session: true,
+        dateFlexible: true,
+        dateFlexibleText: true,
+        startDate: true,
+        endDate: true,
+        location: true,
+        translations: {
+          where: { locale: locale as "en" | "ru" | "tr" },
+          select: { title: true },
+        },
+      },
+    });
+  } catch { /* keep empty */ }
+
+  const COMMITTEE_CATEGORY_LABELS: Record<string, string> = {
+    committee_economic: tCommittees("economic"),
+    committee_legal:    tCommittees("legal"),
+    committee_social:   tCommittees("social"),
+  };
+
+  const COMMITTEE_MEETINGS = dbMeetings.map((m) => ({
+    id: m.id,
+    session: m.session ?? "",
+    committee: m.translations[0]?.title ?? COMMITTEE_CATEGORY_LABELS[m.category] ?? m.category,
+    period: m.dateFlexible && m.dateFlexibleText
+      ? m.dateFlexibleText
+      : m.startDate
+        ? formatDateRange(m.startDate, m.endDate ?? m.startDate, locale)
+        : "TBD",
+    location: m.location,
+  }));
 
   const RESOURCE_CARDS = [
     {

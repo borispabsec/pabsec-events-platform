@@ -11,6 +11,8 @@ interface EventData {
   status: string;
   heroTextColor: string;
   imageUrl: string | null;
+  dateFlexible: boolean;
+  dateFlexibleText: string | null;
   translations: Array<{
     locale: string;
     title: string;
@@ -62,6 +64,8 @@ export function EventForm({ mode, event, createAction, updateAction }: Props) {
   const [activeTab, setActiveTab] = useState<"en" | "ru" | "tr">("en");
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
+  const [dateFlexible, setDateFlexible] = useState(event?.dateFlexible ?? false);
+  const [locationTba, setLocationTba] = useState(event?.location === "TBA");
   const imageRef = useRef<HTMLInputElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -92,6 +96,10 @@ export function EventForm({ mode, event, createAction, updateAction }: Props) {
     setSubmitError("");
     const fd = new FormData(e.currentTarget);
     fd.set("imageUrl", imageUrl);
+    // Explicit boolean fields (checkboxes omit themselves when unchecked)
+    fd.set("dateFlexible", dateFlexible ? "on" : "");
+    // Location override
+    if (locationTba) fd.set("location", "TBA");
     try {
       if (isEdit) {
         await updateAction(fd);
@@ -145,25 +153,53 @@ export function EventForm({ mode, event, createAction, updateAction }: Props) {
               />
             </div>
           )}
-          <div>
-            <label className="block text-xs font-semibold text-navy mb-1.5">Start Date</label>
-            <input
-              type="date"
-              name="startDate"
-              required
-              defaultValue={event ? toDateInputValue(new Date(event.startDate)) : ""}
-              className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm text-navy focus:outline-none focus:border-gold"
-            />
-          </div>
-          <div>
-            <label className="block text-xs font-semibold text-navy mb-1.5">End Date</label>
-            <input
-              type="date"
-              name="endDate"
-              required
-              defaultValue={event ? toDateInputValue(new Date(event.endDate)) : ""}
-              className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm text-navy focus:outline-none focus:border-gold"
-            />
+          <div className="col-span-2">
+            <label className="flex items-center gap-2 cursor-pointer mb-2">
+              <input
+                type="checkbox"
+                name="dateFlexible"
+                checked={dateFlexible}
+                onChange={(e) => setDateFlexible(e.target.checked)}
+                className="w-4 h-4 accent-gold"
+              />
+              <span className="text-xs font-semibold text-navy">Flexible date (month range, exact dates TBD)</span>
+            </label>
+            {dateFlexible && (
+              <div className="mb-3">
+                <input
+                  type="text"
+                  name="dateFlexibleText"
+                  defaultValue={event?.dateFlexibleText ?? ""}
+                  placeholder="e.g. September / October 2026"
+                  className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm text-navy focus:outline-none focus:border-gold"
+                />
+                <p className="text-[10px] text-gray-400 mt-1">Shown to users. Set approximate dates below for sorting.</p>
+              </div>
+            )}
+            <div className={`grid grid-cols-2 gap-3${dateFlexible ? " opacity-60" : ""}`}>
+              <div>
+                <label className="block text-xs font-semibold text-navy mb-1.5">
+                  {dateFlexible ? "Approx. Start (ordering)" : "Start Date"}
+                </label>
+                <input
+                  type="date"
+                  name="startDate"
+                  defaultValue={event ? toDateInputValue(new Date(event.startDate)) : ""}
+                  className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm text-navy focus:outline-none focus:border-gold"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-navy mb-1.5">
+                  {dateFlexible ? "Approx. End (ordering)" : "End Date"}
+                </label>
+                <input
+                  type="date"
+                  name="endDate"
+                  defaultValue={event ? toDateInputValue(new Date(event.endDate)) : ""}
+                  className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm text-navy focus:outline-none focus:border-gold"
+                />
+              </div>
+            </div>
           </div>
           <div className="col-span-2 sm:col-span-1">
             <label className="block text-xs font-semibold text-navy mb-1.5">Status</label>
@@ -197,15 +233,32 @@ export function EventForm({ mode, event, createAction, updateAction }: Props) {
         <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-4">Location</p>
         <div className="space-y-3">
           <div>
-            <label className="block text-xs font-semibold text-navy mb-1.5">Base Location (City, Country)</label>
-            <input
-              type="text"
-              name="location"
-              required
-              defaultValue={event?.location ?? ""}
-              placeholder="e.g. Tbilisi, Georgia"
-              className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm text-navy focus:outline-none focus:border-gold"
-            />
+            <div className="flex items-center justify-between mb-1.5">
+              <label className="text-xs font-semibold text-navy">Base Location (City, Country)</label>
+              <label className="flex items-center gap-1.5 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={locationTba}
+                  onChange={(e) => setLocationTba(e.target.checked)}
+                  className="w-3.5 h-3.5 accent-gold"
+                />
+                <span className="text-[10px] font-semibold text-gray-400">TBA (venue not yet determined)</span>
+              </label>
+            </div>
+            {locationTba ? (
+              <div className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm text-gray-400 bg-gray-50 select-none">
+                TBA
+              </div>
+            ) : (
+              <input
+                type="text"
+                name="location"
+                required
+                defaultValue={event?.location === "TBA" ? "" : (event?.location ?? "")}
+                placeholder="e.g. Tbilisi, Georgia"
+                className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm text-navy focus:outline-none focus:border-gold"
+              />
+            )}
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             {LOCALES.map(({ key, label }) => (

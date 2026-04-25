@@ -66,6 +66,24 @@ async function unlockUser(formData: FormData) {
   redirect("/admin/users");
 }
 
+async function updateRole(formData: FormData) {
+  "use server";
+  await requireAdmin();
+  const id = formData.get("userId") as string;
+  const role = (formData.get("role") as string).trim();
+  if (!id || !role) return;
+  await db.authUser.update({ where: { id }, data: { role } });
+  redirect("/admin/users");
+}
+
+const ROLES = [
+  { value: "delegate",            label: "Delegate" },
+  { value: "bureau_member",       label: "Bureau Member" },
+  { value: "committee_member",    label: "Standing Committee Member" },
+  { value: "secretary_general",   label: "Secretary General" },
+  { value: "observer",            label: "Observer" },
+];
+
 const STATUS_FILTERS = [
   { value: "all",      label: "All" },
   { value: "pending",  label: "Pending" },
@@ -202,6 +220,25 @@ export default async function UsersPage({
               </div>
 
               <div className="px-6 pb-5 flex flex-wrap gap-3 border-t border-gray-50 pt-4">
+                {/* Edit Role */}
+                <form action={updateRole} className="flex items-center gap-2">
+                  <input type="hidden" name="userId" value={u.id} />
+                  <select
+                    name="role"
+                    defaultValue={u.role}
+                    className="px-2.5 py-1.5 rounded-lg border border-gray-200 text-xs text-navy focus:outline-none focus:border-gold"
+                  >
+                    {ROLES.map((r) => (
+                      <option key={r.value} value={r.value}>{r.label}</option>
+                    ))}
+                    {!ROLES.find((r) => r.value === u.role) && (
+                      <option value={u.role}>{u.role}</option>
+                    )}
+                  </select>
+                  <button type="submit" className="px-3 py-1.5 rounded-xl bg-navy/10 text-navy text-xs font-semibold hover:bg-navy/20 transition">
+                    Set Role
+                  </button>
+                </form>
                 {u.status === "PENDING" && (
                   <>
                     <form action={approveUser} className="flex items-end gap-2">
