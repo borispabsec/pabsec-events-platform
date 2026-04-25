@@ -29,6 +29,8 @@ export async function createUpcomingEvent(formData: FormData) {
   const titleRu = (formData.get("title_ru") as string).trim();
   const titleTr = (formData.get("title_tr") as string).trim();
 
+  const imageUrl = (formData.get("imageUrl") as string) || null;
+
   await db.upcomingEvent.create({
     data: {
       category,
@@ -40,6 +42,7 @@ export async function createUpcomingEvent(formData: FormData) {
       dateFlexibleText,
       startDate,
       endDate,
+      imageUrl,
       translations: {
         create: (["en", "ru", "tr"] as const)
           .map((locale) => {
@@ -73,9 +76,11 @@ export async function updateUpcomingEvent(formData: FormData) {
   const startDate = startDateStr ? new Date(startDateStr) : null;
   const endDate   = endDateStr   ? new Date(endDateStr)   : null;
 
+  const imageUrl = (formData.get("imageUrl") as string) || null;
+
   await db.upcomingEvent.update({
     where: { id },
-    data: { category, session, status, location, sortOrder, dateFlexible, dateFlexibleText, startDate, endDate },
+    data: { category, session, status, location, sortOrder, dateFlexible, dateFlexibleText, startDate, endDate, imageUrl },
   });
 
   for (const locale of ["en", "ru", "tr"] as const) {

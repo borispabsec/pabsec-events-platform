@@ -3,19 +3,20 @@
 import { useState, useRef } from "react";
 
 const CATEGORIES = [
-  { id: "programme",         label: "Programme" },
-  { id: "practical",         label: "Practical Info" },
-  { id: "bureau",            label: "Bureau Documents" },
+  { id: "programme",          label: "Programme" },
+  { id: "practical",          label: "Practical Info" },
+  { id: "bureau",             label: "Bureau Documents" },
   { id: "standing_committee", label: "Standing Committee Documents" },
-  { id: "general_assembly",  label: "General Assembly Documents" },
+  { id: "general_assembly",   label: "General Assembly Documents" },
 ];
 
 interface Props {
   eventId: string;
   addDocumentAction: (formData: FormData) => Promise<void>;
+  defaultCategory?: string;
 }
 
-export function AddDocumentForm({ eventId, addDocumentAction }: Props) {
+export function AddDocumentForm({ eventId, addDocumentAction, defaultCategory }: Props) {
   const [mode, setMode] = useState<"file" | "url">("file");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
@@ -105,7 +106,7 @@ export function AddDocumentForm({ eventId, addDocumentAction }: Props) {
       <form ref={formRef} onSubmit={handleSubmit} className="space-y-3">
         <input type="hidden" name="eventId" value={eventId} />
 
-        <div className="grid grid-cols-2 gap-3">
+        <div className={`grid gap-3 ${defaultCategory ? "grid-cols-1" : "grid-cols-2"}`}>
           <select
             name="locale"
             required
@@ -115,15 +116,19 @@ export function AddDocumentForm({ eventId, addDocumentAction }: Props) {
             <option value="ru">RU – Русский</option>
             <option value="tr">TR – Türkçe</option>
           </select>
-          <select
-            name="category"
-            required
-            className="px-3 py-2 rounded-lg border border-gray-200 text-xs text-navy focus:outline-none focus:border-gold"
-          >
-            {CATEGORIES.map((c) => (
-              <option key={c.id} value={c.id}>{c.label}</option>
-            ))}
-          </select>
+          {defaultCategory ? (
+            <input type="hidden" name="category" value={defaultCategory} />
+          ) : (
+            <select
+              name="category"
+              required
+              className="px-3 py-2 rounded-lg border border-gray-200 text-xs text-navy focus:outline-none focus:border-gold"
+            >
+              {CATEGORIES.map((c) => (
+                <option key={c.id} value={c.id}>{c.label}</option>
+              ))}
+            </select>
+          )}
         </div>
 
         <input

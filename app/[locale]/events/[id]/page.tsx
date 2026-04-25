@@ -272,13 +272,16 @@ export default async function EventDetailPage({
         {activeTab === "documents" && !isAuthenticated && <AuthGate locale={locale} />}
         {activeTab === "documents" && isAuthenticated && (() => {
           const userRole = session!.role ?? "";
-          const canSeeBureau = userRole.includes("bureau") || userRole === "admin";
-          const canSeeCommittee = userRole.includes("committee") || userRole.includes("bureau") || userRole === "admin";
+          // Bureau & Standing Committee docs restricted to bureau-level roles and secretariat
+          const canSeeRestricted =
+            userRole.includes("bureau") ||
+            userRole === "secretary_general" ||
+            userRole === "admin";
 
           const DOC_SUBTABS = [
-            { id: "general_assembly", label: tPage("doc_cat_general_assembly"), allowed: true },
-            { id: "standing_committee", label: tPage("doc_cat_standing_committee"), allowed: canSeeCommittee },
-            { id: "bureau", label: tPage("doc_cat_bureau"), allowed: canSeeBureau },
+            { id: "general_assembly",   label: tPage("doc_cat_general_assembly"),   allowed: true },
+            { id: "standing_committee", label: tPage("doc_cat_standing_committee"), allowed: canSeeRestricted },
+            { id: "bureau",             label: tPage("doc_cat_bureau"),             allowed: canSeeRestricted },
           ] as const;
 
           const activeDtab = DOC_SUBTABS.find((s) => s.id === rawDtab && s.allowed)?.id ?? "general_assembly";
@@ -355,11 +358,11 @@ export default async function EventDetailPage({
               </div>
             )}
             {activeDtab === "standing_committee" && (
-              <div className="flex items-center gap-2 mb-5 px-4 py-2.5 rounded-xl bg-blue-50 border border-blue-100">
-                <svg className="w-4 h-4 text-blue-600 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24">
+              <div className="flex items-center gap-2 mb-5 px-4 py-2.5 rounded-xl bg-amber-50 border border-amber-100">
+                <svg className="w-4 h-4 text-amber-600 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
                 </svg>
-                <p className="text-xs text-blue-700 font-medium">{tPage("doc_committee_restricted")}</p>
+                <p className="text-xs text-amber-700 font-medium">{tPage("doc_committee_restricted")}</p>
               </div>
             )}
 

@@ -169,6 +169,7 @@ export default async function EventsPage({
             startDate: ue.startDate,
             endDate: ue.endDate,
             location: ue.location,
+            imageUrl: ue.imageUrl,
             sortOrder: ue.sortOrder,
             translations: ue.translations.map((t) => ({ locale: t.locale, title: t.title })),
           }}
@@ -370,8 +371,15 @@ export default async function EventsPage({
                       </div>
                       <h3 className="text-navy font-bold text-sm truncate">{title}</h3>
                       <p className="text-gray-400 text-xs mt-0.5">
-                        {ue.session && `Session ${ue.session} · `}{ue.location} · {dateDisplay}
+                        {ue.session && `${ue.session}. Meeting · `}{ue.location} · {dateDisplay}
                       </p>
+                      <div className="mt-1 text-xs">
+                        {ue.imageUrl ? (
+                          <span className="text-green-600">✓ hero image</span>
+                        ) : (
+                          <span className="text-gray-300">✗ no image</span>
+                        )}
+                      </div>
                     </div>
                     <div className="flex items-center gap-2 flex-shrink-0">
                       <Link

@@ -84,7 +84,82 @@ async function main() {
     },
   });
 
-  console.log("Seeded:", ga67.slug, ga68.slug);
+  // ── Committee meetings (upsert by slug) ───────────────────────────────────
+
+  const meetingEcon = await prisma.upcomingEvent.upsert({
+    where: { slug: "committee-economic-67" },
+    update: {},
+    create: {
+      slug: "committee-economic-67",
+      category: "committee_economic",
+      session: "67",
+      status: "SAVE_THE_DATE",
+      dateFlexible: true,
+      dateFlexibleText: "September / October 2026",
+      location: "Sofia, Bulgaria",
+      sortOrder: 1,
+      translations: {
+        create: [
+          { locale: "en", title: "Committee on Economic and Development Policy" },
+          { locale: "ru", title: "Комитет по экономической политике и развитию" },
+          { locale: "tr", title: "Ekonomik ve Kalkınma Politikası Komitesi" },
+        ],
+      },
+    },
+  });
+
+  const meetingLegal = await prisma.upcomingEvent.upsert({
+    where: { slug: "committee-legal-68" },
+    update: {},
+    create: {
+      slug: "committee-legal-68",
+      category: "committee_legal",
+      session: "68",
+      status: "SAVE_THE_DATE",
+      dateFlexible: true,
+      dateFlexibleText: "September / October 2026",
+      location: "TBA",
+      sortOrder: 2,
+      translations: {
+        create: [
+          { locale: "en", title: "Committee on Legal Affairs and International Cooperation" },
+          { locale: "ru", title: "Комитет по правовым вопросам и международному сотрудничеству" },
+          { locale: "tr", title: "Hukuki İşler ve Uluslararası İşbirliği Komitesi" },
+        ],
+      },
+    },
+  });
+
+  const meetingSocial = await prisma.upcomingEvent.upsert({
+    where: { slug: "committee-social-67" },
+    update: {},
+    create: {
+      slug: "committee-social-67",
+      category: "committee_social",
+      session: "67",
+      status: "SAVE_THE_DATE",
+      dateFlexible: true,
+      dateFlexibleText: "September / October 2026",
+      location: "Yerevan, Armenia",
+      sortOrder: 3,
+      translations: {
+        create: [
+          { locale: "en", title: "Committee on Social and Humanitarian Policy" },
+          { locale: "ru", title: "Комитет по социальной и гуманитарной политике" },
+          { locale: "tr", title: "Sosyal ve İnsancıl Politika Komitesi" },
+        ],
+      },
+    },
+  });
+
+  console.log(
+    "Seeded:",
+    ga67.slug,
+    ga68.slug,
+    meetingEcon.slug,
+    meetingLegal.slug,
+    meetingSocial.slug
+  );
 }
 
 main()

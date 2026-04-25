@@ -12,6 +12,7 @@ interface UpcomingEventData {
   startDate: Date | null;
   endDate: Date | null;
   location: string;
+  imageUrl: string | null;
   sortOrder: number;
   translations: Array<{ locale: string; title: string }>;
 }
@@ -24,14 +25,15 @@ interface Props {
 }
 
 const CATEGORIES = [
-  { value: "committee_economic", label: "Economic Committee" },
-  { value: "committee_legal",    label: "Legal & Political Committee" },
-  { value: "committee_social",   label: "Social & Cultural Committee" },
+  { value: "committee_economic", label: "Committee on Economic and Development Policy" },
+  { value: "committee_legal",    label: "Committee on Legal Affairs and International Cooperation" },
+  { value: "committee_social",   label: "Committee on Social and Humanitarian Policy" },
 ];
 
 const STATUSES = [
   { value: "SAVE_THE_DATE", label: "Save the Date" },
-  { value: "CONFIRMED",     label: "Confirmed" },
+  { value: "CONFIRMED",     label: "Confirmed / Upcoming" },
+  { value: "COMPLETED",     label: "Completed" },
   { value: "CANCELLED",     label: "Cancelled" },
 ];
 
@@ -50,11 +52,34 @@ export function UpcomingEventForm({ mode, event, createAction, updateAction }: P
   const getTranslation = (locale: string) => event?.translations.find((t) => t.locale === locale);
 
   const [dateFlexible, setDateFlexible] = useState(event?.dateFlexible ?? true);
-  const [locationTba, setLocationTba] = useState(event?.location === "TBA" || !event);
+  const [locationTba, setLocationTba] = useState(!event || event?.location === "TBA");
   const [activeTab, setActiveTab] = useState<"en" | "ru" | "tr">("en");
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
+  const [imageUrl, setImageUrl] = useState(event?.imageUrl ?? "");
+  const [imagePreview, setImagePreview] = useState(event?.imageUrl ?? "");
+  const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState("");
+  const imageRef = useRef<HTMLInputElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
+
+  async function handleImageUpload(file: File) {
+    setUploading(true);
+    setUploadError("");
+    try {
+      const fd = new FormData();
+      fd.append("file", file);
+      const res = await fetch("/api/admin/upload-image", { method: "POST", body: fd });
+      const data = await res.json();
+      if (!res.ok) { setUploadError(data.error ?? "Upload failed"); return; }
+      setImageUrl(data.url);
+      setImagePreview(data.url);
+    } catch {
+      setUploadError("Image upload failed.");
+    } finally {
+      setUploading(false);
+    }
+  }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -62,6 +87,7 @@ export function UpcomingEventForm({ mode, event, createAction, updateAction }: P
     setSubmitError("");
     const fd = new FormData(e.currentTarget);
     fd.set("dateFlexible", dateFlexible ? "on" : "");
+    fd.set("imageUrl", imageUrl);
     if (locationTba) fd.set("location", "TBA");
     try {
       if (isEdit) {
@@ -82,9 +108,9 @@ export function UpcomingEventForm({ mode, event, createAction, updateAction }: P
     <form ref={formRef} onSubmit={handleSubmit} className="space-y-5 mt-5">
       {isEdit && <input type="hidden" name="upcomingEventId" value={event!.id} />}
 
-      {/* Basic fields */}
+      {/* Committee & session */}
       <div className="grid grid-cols-2 gap-3">
-        <div>
+        <div className="col-span-2 sm:col-span-1">
           <label className="block text-xs font-semibold text-navy mb-1.5">Committee</label>
           <select
             name="category"
@@ -139,7 +165,7 @@ export function UpcomingEventForm({ mode, event, createAction, updateAction }: P
             onChange={(e) => setDateFlexible(e.target.checked)}
             className="w-3.5 h-3.5 accent-gold"
           />
-          <span className="text-xs font-semibold text-navy">Flexible date</span>
+          <span className="text-xs font-semibold text-navy">Flexible date (month range, exact dates TBD)</span>
         </label>
         {dateFlexible && (
           <div className="mb-3">
@@ -150,6 +176,7 @@ export function UpcomingEventForm({ mode, event, createAction, updateAction }: P
               placeholder="e.g. September / October 2026"
               className="w-full px-3 py-2 rounded-lg border border-gray-200 text-xs text-navy focus:outline-none focus:border-gold"
             />
+            <p className="text-[10px] text-gray-400 mt-1">Shown to users. Add approximate dates below for ordering.</p>
           </div>
         )}
         <div className={`grid grid-cols-2 gap-3${dateFlexible ? " opacity-60" : ""}`}>
@@ -193,9 +220,48 @@ export function UpcomingEventForm({ mode, event, createAction, updateAction }: P
         )}
       </div>
 
+      {/* Hero Image */}
+      <div>
+        <p className="text-xs font-semibold text-navy mb-2">Hero Image (optional)</p>
+        {imagePreview && (
+          <div className="relative rounded-xl overflow-hidden mb-2" style={{ height: 120 }}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
+            <button
+              type="button"
+              onClick={() => { setImageUrl(""); setImagePreview(""); }}
+              className="absolute top-2 right-2 w-7 h-7 rounded-full bg-black/60 text-white flex items-center justify-center hover:bg-black/80 transition"
+            >
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        )}
+        <div
+          className="flex items-center gap-3 px-4 py-2.5 rounded-xl border-2 border-dashed border-gray-200 cursor-pointer hover:border-navy/30 hover:bg-gray-50 transition"
+          onClick={() => imageRef.current?.click()}
+        >
+          <div className="w-7 h-7 rounded-lg bg-navy/5 flex items-center justify-center flex-shrink-0">
+            <svg className="w-3.5 h-3.5 text-navy/40" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+            </svg>
+          </div>
+          <p className="text-xs font-semibold text-navy">{uploading ? "Uploading…" : "Upload image"}</p>
+        </div>
+        <input
+          ref={imageRef}
+          type="file"
+          accept=".jpg,.jpeg,.png,.webp,.avif"
+          className="sr-only"
+          onChange={(e) => { const f = e.target.files?.[0]; if (f) handleImageUpload(f); }}
+        />
+        {uploadError && <p className="text-red-500 text-xs mt-1">{uploadError}</p>}
+      </div>
+
       {/* Titles per locale */}
       <div>
-        <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">Titles</p>
+        <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">Committee Name / Titles</p>
         <div className="flex rounded-xl border border-gray-200 overflow-hidden mb-3 w-fit">
           {LOCALES.map(({ key, label }) => (
             <button
@@ -233,7 +299,7 @@ export function UpcomingEventForm({ mode, event, createAction, updateAction }: P
       <div className="flex items-center gap-3">
         <button
           type="submit"
-          disabled={submitting}
+          disabled={submitting || uploading}
           className="px-5 py-2 rounded-xl bg-navy text-white text-xs font-semibold hover:bg-navy/90 transition disabled:opacity-50"
         >
           {submitting ? "Saving…" : isEdit ? "Save Changes" : "Add Meeting"}
