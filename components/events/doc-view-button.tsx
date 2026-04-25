@@ -12,7 +12,10 @@ export function DocViewButton({ fileUrl, label }: Props) {
     const ext = fileUrl.split(".").pop()?.toLowerCase() ?? "";
 
     if (ext === "pdf") {
-      window.open(fileUrl, "_blank", "noopener,noreferrer");
+      const absoluteUrl = fileUrl.startsWith("http")
+        ? fileUrl
+        : `${window.location.origin}${fileUrl}`;
+      window.open(absoluteUrl, "_blank", "noopener,noreferrer");
       return;
     }
 
