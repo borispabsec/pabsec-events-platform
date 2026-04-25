@@ -1,13 +1,46 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import path from "path";
+import fs from "fs/promises";
 
 async function requireAdmin() {
   const cookieStore = await cookies();
   if (cookieStore.get("admin_session")?.value !== "1") redirect("/admin");
 }
 
+async function dirStats(dir: string) {
+  try {
+    const entries = await fs.readdir(dir);
+    let bytes = 0;
+    let count = 0;
+    for (const name of entries) {
+      try {
+        const stat = await fs.stat(path.join(dir, name));
+        if (stat.isFile()) { bytes += stat.size; count++; }
+      } catch { /* skip */ }
+    }
+    return { count, bytes };
+  } catch {
+    return { count: 0, bytes: 0 };
+  }
+}
+
+function fmtBytes(b: number) {
+  if (b === 0) return "0 B";
+  if (b < 1024) return `${b} B`;
+  if (b < 1024 * 1024) return `${(b / 1024).toFixed(1)} KB`;
+  return `${(b / (1024 * 1024)).toFixed(1)} MB`;
+}
+
 export default async function SettingsPage() {
   await requireAdmin();
+
+  const uploadsRoot = path.join(process.cwd(), "public", "uploads");
+  const [imagesStats, docsStats] = await Promise.all([
+    dirStats(path.join(uploadsRoot, "images")),
+    dirStats(path.join(uploadsRoot, "documents")),
+  ]);
+  const totalBytes = imagesStats.bytes + docsStats.bytes;
 
   const settings = [
     {
@@ -59,6 +92,33 @@ export default async function SettingsPage() {
         <p className="text-gray-400 text-sm mt-1">Environment configuration and platform settings.</p>
       </div>
 
+      {/* Storage */}
+      <div className="bg-white rounded-2xl border border-gray-100 p-6 mb-6" style={{ boxShadow: "0 1px 4px rgba(0,0,0,0.04)" }}>
+        <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-4">Storage</p>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="bg-gray-50 rounded-xl p-4">
+            <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">Hero Images</p>
+            <p className="text-navy font-bold text-lg">{fmtBytes(imagesStats.bytes)}</p>
+            <p className="text-xs text-gray-400 mt-0.5">{imagesStats.count} file{imagesStats.count !== 1 ? "s" : ""}</p>
+          </div>
+          <div className="bg-gray-50 rounded-xl p-4">
+            <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">Documents</p>
+            <p className="text-navy font-bold text-lg">{fmtBytes(docsStats.bytes)}</p>
+            <p className="text-xs text-gray-400 mt-0.5">{docsStats.count} file{docsStats.count !== 1 ? "s" : ""}</p>
+          </div>
+          <div className="bg-navy/5 rounded-xl p-4">
+            <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">Total Uploads</p>
+            <p className="text-navy font-bold text-lg">{fmtBytes(totalBytes)}</p>
+            <p className="text-xs text-gray-400 mt-0.5">{imagesStats.count + docsStats.count} files total</p>
+          </div>
+        </div>
+        <p className="text-[10px] text-gray-300 mt-3">
+          Hero images: auto-cleanup keeps the {10} newest events only.
+          Files are deleted automatically when an event is deleted.
+        </p>
+      </div>
+
+      {/* Environment */}
       <div className="bg-white rounded-2xl border border-gray-100 divide-y divide-gray-50 mb-8" style={{ boxShadow: "0 1px 4px rgba(0,0,0,0.04)" }}>
         {settings.map((s) => (
           <div key={s.label} className="px-6 py-5">

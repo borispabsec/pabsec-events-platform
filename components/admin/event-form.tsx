@@ -61,6 +61,7 @@ export function EventForm({ mode, event, createAction, updateAction }: Props) {
   const [uploadError, setUploadError] = useState("");
   const [activeTab, setActiveTab] = useState<"en" | "ru" | "tr">("en");
   const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
   const imageRef = useRef<HTMLInputElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -88,6 +89,7 @@ export function EventForm({ mode, event, createAction, updateAction }: Props) {
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setSubmitting(true);
+    setSubmitError("");
     const fd = new FormData(e.currentTarget);
     fd.set("imageUrl", imageUrl);
     try {
@@ -96,6 +98,13 @@ export function EventForm({ mode, event, createAction, updateAction }: Props) {
       } else {
         await createAction(fd);
       }
+    } catch (err: unknown) {
+      // Re-throw Next.js redirect errors so the router can handle navigation
+      const digest = (err as Record<string, unknown>)?.digest;
+      if (typeof digest === "string" && digest.startsWith("NEXT_REDIRECT")) throw err;
+      setSubmitError(
+        "Save failed — hard-refresh this page (Ctrl+F5 or Cmd+Shift+R) and try again."
+      );
     } finally {
       setSubmitting(false);
     }
@@ -321,20 +330,27 @@ export function EventForm({ mode, event, createAction, updateAction }: Props) {
       </div>
 
       {/* Submit */}
-      <div className="flex items-center gap-3">
-        <button
-          type="submit"
-          disabled={submitting || uploading}
-          className="px-6 py-2.5 rounded-xl bg-navy text-white text-sm font-semibold hover:bg-navy/90 transition disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          {submitting ? "Saving…" : isEdit ? "Save Changes" : "Create Event"}
-        </button>
-        <a
-          href="/admin/events"
-          className="px-6 py-2.5 rounded-xl border border-gray-200 text-sm font-semibold text-gray-500 hover:bg-gray-50 transition"
-        >
-          Cancel
-        </a>
+      <div className="space-y-3">
+        {submitError && (
+          <div className="px-4 py-3 rounded-xl bg-red-50 border border-red-100 text-red-600 text-xs font-medium">
+            {submitError}
+          </div>
+        )}
+        <div className="flex items-center gap-3">
+          <button
+            type="submit"
+            disabled={submitting || uploading}
+            className="px-6 py-2.5 rounded-xl bg-navy text-white text-sm font-semibold hover:bg-navy/90 transition disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {submitting ? "Saving…" : isEdit ? "Save Changes" : "Create Event"}
+          </button>
+          <a
+            href="/admin/events"
+            className="px-6 py-2.5 rounded-xl border border-gray-200 text-sm font-semibold text-gray-500 hover:bg-gray-50 transition"
+          >
+            Cancel
+          </a>
+        </div>
       </div>
     </form>
   );
