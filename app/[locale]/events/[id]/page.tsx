@@ -207,12 +207,9 @@ export default async function EventDetailPage({
             {programmeDocs.length > 0 ? (
               <div className="space-y-2 mb-10">
                 {programmeDocs.map((doc) => (
-                  <a
+                  <div
                     key={doc.id}
-                    href={doc.fileUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center justify-between gap-4 px-5 py-4 rounded-xl border border-gray-100 bg-white hover:border-gold/20 hover:-translate-y-0.5 transition-all duration-200 group"
+                    className="flex items-center justify-between gap-4 px-5 py-4 rounded-xl border border-gray-100 bg-white"
                     style={{ boxShadow: "0 1px 4px rgba(0,0,0,0.04)" }}
                   >
                     <div className="flex items-center gap-3 min-w-0">
@@ -224,17 +221,34 @@ export default async function EventDetailPage({
                       </div>
                       <span className="text-navy font-medium text-sm truncate">{doc.title}</span>
                     </div>
-                    <span
-                      className="flex-shrink-0 inline-flex items-center gap-1.5 text-[12px] font-semibold group-hover:text-gold transition-colors"
-                      style={{ color: "#1A5FA8" }}
-                    >
-                      {tPage("doc_download")}
-                      <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                          d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                      </svg>
-                    </span>
-                  </a>
+                    <div className="flex items-center gap-2 flex-shrink-0">
+                      <a
+                        href={doc.fileUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[12px] font-semibold text-white transition-opacity hover:opacity-90"
+                        style={{ background: "#C9A96E" }}
+                      >
+                        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                        View
+                      </a>
+                      <a
+                        href={doc.fileUrl}
+                        download
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[12px] font-semibold border transition-colors hover:bg-gray-50"
+                        style={{ borderColor: "rgba(11,30,61,0.15)", color: "#0B1E3D" }}
+                      >
+                        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                            d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                        </svg>
+                        {tPage("doc_download")}
+                      </a>
+                    </div>
+                  </div>
                 ))}
               </div>
             ) : translation?.agenda ? (
@@ -297,12 +311,9 @@ export default async function EventDetailPage({
                       </h3>
                       <div className="space-y-2">
                         {catDocs.map((doc) => (
-                          <a
+                          <div
                             key={doc.id}
-                            href={doc.fileUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex items-center justify-between gap-4 px-5 py-4 rounded-xl border border-gray-100 bg-white hover:border-gold/20 hover:-translate-y-0.5 transition-all duration-200 group"
+                            className="flex items-center justify-between gap-4 px-5 py-4 rounded-xl border border-gray-100 bg-white"
                             style={{ boxShadow: "0 1px 4px rgba(0,0,0,0.04)" }}
                           >
                             <div className="flex items-center gap-3 min-w-0">
@@ -314,17 +325,34 @@ export default async function EventDetailPage({
                               </div>
                               <span className="text-navy font-medium text-sm truncate">{doc.title}</span>
                             </div>
-                            <span
-                              className="flex-shrink-0 inline-flex items-center gap-1.5 text-[12px] font-semibold group-hover:text-gold transition-colors"
-                              style={{ color: "#1A5FA8" }}
-                            >
-                              {tPage("doc_download")}
-                              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                                  d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                              </svg>
-                            </span>
-                          </a>
+                            <div className="flex items-center gap-2 flex-shrink-0">
+                              <a
+                                href={doc.fileUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[12px] font-semibold text-white transition-opacity hover:opacity-90"
+                                style={{ background: "#C9A96E" }}
+                              >
+                                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                </svg>
+                                View
+                              </a>
+                              <a
+                                href={doc.fileUrl}
+                                download
+                                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[12px] font-semibold border transition-colors hover:bg-gray-50"
+                                style={{ borderColor: "rgba(11,30,61,0.15)", color: "#0B1E3D" }}
+                              >
+                                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                </svg>
+                                {tPage("doc_download")}
+                              </a>
+                            </div>
+                          </div>
                         ))}
                       </div>
                     </div>
