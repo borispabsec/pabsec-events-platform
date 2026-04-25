@@ -95,8 +95,8 @@ export function HeroCard({
   const labelMuted = imageDark ? "rgba(255,255,255,0.45)" : "rgba(11,30,61,0.50)";
 
   const overlay = imageDark
-    ? "linear-gradient(to bottom, rgba(0,0,0,0.25) 0%, rgba(5,12,28,0.65) 50%, rgba(5,12,28,0.93) 100%)"
-    : "linear-gradient(to bottom, rgba(255,255,255,0.0) 0%, rgba(248,249,250,0.30) 50%, rgba(248,249,250,0.82) 100%)";
+    ? "linear-gradient(to top, rgba(0,0,0,0.65) 0%, transparent 65%)"
+    : "linear-gradient(to top, rgba(248,249,250,0.80) 0%, transparent 65%)";
 
   // ── Badge styles ───────────────────────────────────────────────────────────
   // Dark photo → semi-transparent coloured tint, blur(8px)

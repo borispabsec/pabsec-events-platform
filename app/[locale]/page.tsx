@@ -4,6 +4,7 @@ import { getTranslations } from "next-intl/server";
 import { db } from "@/lib/db";
 import { PAST_ASSEMBLIES } from "@/lib/data/archive";
 import { HeroCard } from "@/components/events/hero-card";
+import { NextEventCard } from "@/components/events/next-event-card";
 import { formatDateRange } from "@/lib/utils";
 
 export const metadata: Metadata = {
@@ -350,63 +351,18 @@ export default async function HomePage({
           <p className="text-[10px] font-bold uppercase tracking-[0.22em] mb-4" style={{ color: "rgba(11,30,61,0.38)" }}>
             {tHome("ga68_section")}
           </p>
-          <div className="relative rounded-2xl overflow-hidden">
-            {/* Background: hero image or navy gradient fallback */}
-            {nextImageUrl ? (
-              <>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={nextImageUrl}
-                  alt=""
-                  aria-hidden="true"
-                  className="absolute inset-0 w-full h-full object-cover"
-                />
-                <div
-                  className="absolute inset-0"
-                  style={{ background: "linear-gradient(135deg, rgba(11,30,61,0.88) 0%, rgba(19,40,72,0.78) 100%)" }}
-                />
-              </>
-            ) : (
-              <>
-                <div
-                  className="absolute inset-0"
-                  style={{ background: "linear-gradient(135deg, #0B1E3D 0%, #132848 100%)" }}
-                />
-                <div
-                  className="absolute top-[-40px] right-[-40px] w-64 h-64 rounded-full pointer-events-none"
-                  style={{ background: "radial-gradient(circle, rgba(201,168,76,0.08), transparent 70%)" }}
-                />
-              </>
-            )}
-
-            <div className="relative z-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 px-8 py-8 md:px-12">
-              <div>
-                <div className="flex items-center gap-2.5 mb-3">
-                  <span
-                    className="text-[9px] tracking-[0.32em] uppercase font-semibold px-3 py-1.5 rounded-full"
-                    style={{ background: "rgba(201,168,76,0.15)", color: "#C9A84C", border: "1px solid rgba(201,168,76,0.25)" }}
-                  >
-                    {tUi("upcoming_save_date")}
-                  </span>
-                </div>
-                <h3 className="text-white font-bold text-xl mb-1">{nextTitle}</h3>
-                <p className="text-sm" style={{ color: "rgba(255,255,255,0.55)" }}>
-                  {nextLocation} · {nextPeriod}
-                </p>
-              </div>
-              <Link
-                href={`/${locale}/events/${nextSlug}`}
-                className="flex-shrink-0 inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-medium cursor-default"
-                style={{ background: "rgba(255,255,255,0.07)", color: "rgba(255,255,255,0.32)", border: "1px solid rgba(255,255,255,0.10)" }}
-              >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8}
-                    d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                {tUi("registration_not_open")}
-              </Link>
-            </div>
-          </div>
+          <NextEventCard
+            imageUrl={nextImageUrl}
+            title={nextTitle}
+            location={nextLocation}
+            period={nextPeriod}
+            locale={locale}
+            slug={nextSlug}
+            labels={{
+              saveTheDate: tUi("upcoming_save_date"),
+              registrationNotOpen: tUi("registration_not_open"),
+            }}
+          />
         </div>
       </section>
 
