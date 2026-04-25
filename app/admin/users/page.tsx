@@ -77,11 +77,13 @@ async function updateRole(formData: FormData) {
 }
 
 const ROLES = [
-  { value: "delegate",            label: "Delegate" },
-  { value: "bureau_member",       label: "Bureau Member" },
-  { value: "committee_member",    label: "Standing Committee Member" },
-  { value: "secretary_general",   label: "Secretary General" },
-  { value: "observer",            label: "Observer" },
+  { value: "president",            label: "President of PABSEC" },
+  { value: "vice_president",       label: "Vice-President of PABSEC" },
+  { value: "bureau_member",        label: "Member of PABSEC Bureau" },
+  { value: "standing_committee",   label: "Member of Standing Committee" },
+  { value: "member",               label: "Member of PABSEC" },
+  { value: "secretary_delegation", label: "Secretary of National Delegation" },
+  { value: "secretariat",          label: "Member of International Secretariat" },
 ];
 
 const STATUS_FILTERS = [

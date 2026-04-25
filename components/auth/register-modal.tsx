@@ -1,16 +1,17 @@
 "use client";
 
 import { useState } from "react";
+import { useParams } from "next/navigation";
 import { ModalShell } from "./login-modal";
 
 const PABSEC_ROLES = [
-  "President of PABSEC",
-  "Vice-President of PABSEC",
-  "Member of PABSEC Bureau",
-  "Member of Standing Committee",
-  "Member of PABSEC",
-  "Secretary of National Delegation",
-  "Member of International Secretariat",
+  { value: "president",             en: "President of PABSEC",              ru: "Президент ПАЧЭС",                          tr: "PABSEC Başkanı" },
+  { value: "vice_president",        en: "Vice-President of PABSEC",         ru: "Вице-президент ПАЧЭС",                      tr: "PABSEC Başkan Yardımcısı" },
+  { value: "bureau_member",         en: "Member of PABSEC Bureau",          ru: "Член Бюро ПАЧЭС",                          tr: "PABSEC Büro Üyesi" },
+  { value: "standing_committee",    en: "Member of Standing Committee",     ru: "Член Стендинг Комитети",                   tr: "Daimi Komite Üyesi" },
+  { value: "member",                en: "Member of PABSEC",                 ru: "Член ПАЧЭС",                               tr: "PABSEC Üyesi" },
+  { value: "secretary_delegation",  en: "Secretary of National Delegation", ru: "Секретарь делегации",                      tr: "Delegasyon Sekreteri" },
+  { value: "secretariat",           en: "Member of International Secretariat", ru: "Член Международного секретариата",      tr: "Uluslararası Sekreterya Üyesi" },
 ] as const;
 
 const PABSEC_COUNTRIES = [
@@ -25,6 +26,10 @@ interface Props {
 }
 
 export function RegisterModal({ onClose, onOpenLogin }: Props) {
+  const params = useParams();
+  const locale = (params?.locale as string) ?? "en";
+  const roleLang: "en" | "ru" | "tr" = locale === "ru" ? "ru" : locale === "tr" ? "tr" : "en";
+
   const [step, setStep] = useState<"form" | "success">("form");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -175,7 +180,7 @@ export function RegisterModal({ onClose, onOpenLogin }: Props) {
             <select required value={form.role} onChange={field("role")} className={inputClass}>
               <option value="">Select role…</option>
               {PABSEC_ROLES.map((r) => (
-                <option key={r} value={r}>{r}</option>
+                <option key={r.value} value={r.value}>{r[roleLang]}</option>
               ))}
             </select>
             {fieldErrors.role && <p className="text-red-500 text-[11px] mt-0.5">{fieldErrors.role[0]}</p>}

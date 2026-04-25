@@ -272,11 +272,11 @@ export default async function EventDetailPage({
         {activeTab === "documents" && !isAuthenticated && <AuthGate locale={locale} />}
         {activeTab === "documents" && isAuthenticated && (() => {
           const userRole = session!.role ?? "";
-          // Bureau & Standing Committee docs restricted to bureau-level roles and secretariat
-          const canSeeRestricted =
-            userRole.includes("bureau") ||
-            userRole === "secretary_general" ||
-            userRole === "admin";
+          const RESTRICTED_ROLES = new Set([
+            "president", "vice_president", "bureau_member", "standing_committee",
+            "secretary_delegation", "secretariat",
+          ]);
+          const canSeeRestricted = RESTRICTED_ROLES.has(userRole) || userRole === "admin";
 
           const DOC_SUBTABS = [
             { id: "general_assembly",   label: tPage("doc_cat_general_assembly"),   allowed: true },
