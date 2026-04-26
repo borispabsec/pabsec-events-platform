@@ -52,12 +52,20 @@ export function HeroCard({
 
         {/* Top row: gateway label */}
         <div>
-          <p
-            className="text-[11px] font-semibold uppercase"
-            style={{ color: "#C9A84C", letterSpacing: "3px" }}
+          <span
+            className="inline-block text-[10px] font-semibold uppercase"
+            style={{
+              letterSpacing: "2.5px",
+              color: "#C9A84C",
+              background: "rgba(7,15,26,0.55)",
+              borderRadius: 4,
+              padding: "4px 12px",
+              backdropFilter: "blur(4px)",
+              border: "1px solid rgba(201,168,76,0.25)",
+            }}
           >
             {labels.gatewayLabel}
-          </p>
+          </span>
         </div>
 
         {/* Bottom content: title + meta + badges */}

@@ -79,10 +79,15 @@ export function Navbar() {
             <div className="font-playfair font-bold text-[1.4rem] sm:text-[1.55rem] leading-none" style={{ color: GOLD }}>
               {tFooter("abbr")}
             </div>
-            {/* Desktop subtitle */}
+            {/* Subtitle — visible on all sizes */}
             <div
-              className="text-[7px] leading-none mt-[4px] font-medium uppercase tracking-[0.14em] hidden lg:block"
-              style={{ color: "rgba(200,210,220,0.85)" }}
+              className="text-[7px] lg:text-[7px] leading-tight mt-[4px] font-medium uppercase tracking-[0.10em]"
+              style={{
+                color: "rgba(255,255,255,1.0)",
+                fontWeight: 500,
+                textShadow: "0 1px 3px rgba(0,0,0,0.8)",
+                maxWidth: "14rem",
+              }}
             >
               {tFooter("org_name")}
             </div>
