@@ -1,10 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 
 interface HeroCardProps {
-  textColorMode: string; // "auto" | "white" | "dark"
+  textColorMode: string;
   daysRemaining: number;
   locale: string;
   eventSlug: string;
@@ -19,193 +18,129 @@ interface HeroCardProps {
   };
 }
 
-function sampleBrightness(
-  ctx: CanvasRenderingContext2D,
-  x: number,
-  y: number,
-  w: number,
-  h: number
-): number {
-  const data = ctx.getImageData(x, y, w, h).data;
-  let total = 0;
-  const pixels = data.length / 4;
-  for (let i = 0; i < data.length; i += 4) {
-    total += 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2];
-  }
-  return total / pixels; // 0–255
-}
-
 export function HeroCard({
-  textColorMode,
   daysRemaining,
   locale,
   eventSlug,
   imageUrl,
   labels,
 }: HeroCardProps) {
-  // true = dark photo → use light/tinted badge style
-  // false = light photo → use solid colored badge style
-  const [imageDark, setImageDark] = useState(false);
-  const imgRef = useRef<HTMLImageElement>(null);
-
-  useEffect(() => {
-    if (textColorMode === "white") { setImageDark(true);  return; }
-    if (textColorMode === "dark")  { setImageDark(false); return; }
-
-    const img = imgRef.current;
-    if (!img) return;
-
-    const detect = () => {
-      try {
-        const canvas = document.createElement("canvas");
-        const w = img.naturalWidth  || img.width;
-        const h = img.naturalHeight || img.height;
-        canvas.width  = w;
-        canvas.height = h;
-        const ctx = canvas.getContext("2d");
-        if (!ctx) return;
-        ctx.drawImage(img, 0, 0, w, h);
-
-        // Sample two regions and average them:
-        // 1. Badge area: top-right 30% × top 50%
-        const badgeX = Math.floor(w * 0.65);
-        const badgeW = w - badgeX;
-        const badgeH = Math.floor(h * 0.50);
-        const b1 = sampleBrightness(ctx, badgeX, 0, badgeW, badgeH);
-
-        // 2. Title area: bottom 40%
-        const titleY = Math.floor(h * 0.60);
-        const titleH = h - titleY;
-        const b2 = sampleBrightness(ctx, 0, titleY, w, titleH);
-
-        const avg = (b1 + b2) / 2;
-        setImageDark(avg < 128);
-      } catch {
-        // canvas blocked — keep default
-      }
-    };
-
-    if (img.complete && img.naturalWidth > 0) detect();
-    else img.addEventListener("load", detect, { once: true });
-  }, [textColorMode]);
-
-  // ── Text colours for title / date / label ─────────────────────────────────
-  const textClass  = imageDark ? "text-white"     : "text-[#0B1E3D]";
-  const textMuted  = imageDark ? "rgba(255,255,255,0.88)" : "rgba(11,30,61,0.82)";
-  const labelMuted = imageDark ? "rgba(255,255,255,0.45)" : "rgba(11,30,61,0.50)";
-
-  const overlay = imageDark
-    ? "linear-gradient(to top, rgba(0,0,0,0.65) 0%, transparent 65%)"
-    : "linear-gradient(to top, rgba(248,249,250,0.80) 0%, transparent 65%)";
-
-  // ── Badge styles ───────────────────────────────────────────────────────────
-  // Dark photo → semi-transparent coloured tint, blur(8px)
-  // Light photo → solid saturated colour, blur(4px)
-  const blur   = imageDark ? "blur(8px)" : "blur(4px)";
-  const badgeBase: React.CSSProperties = {
-    minWidth: "195px",
-    padding: "10px 18px",
-    borderRadius: "30px",
-    fontSize: "14px",
-    fontWeight: 600,
-    transition: "all 0.3s ease",
-    backdropFilter: blur,
-    WebkitBackdropFilter: blur,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: "8px",
-    textAlign: "center",
-  };
-
-  const greenStyle: React.CSSProperties = imageDark
-    ? { ...badgeBase, background: "rgba(34,197,94,0.20)",  border: "1px solid rgba(34,197,94,0.60)",  color: "#fff" }
-    : { ...badgeBase, background: "rgba(21,128,61,0.85)",  border: "1px solid #15803d",               color: "#fff" };
-
-  const redStyle: React.CSSProperties = imageDark
-    ? { ...badgeBase, background: "rgba(220,38,38,0.20)",  border: "1px solid rgba(220,38,38,0.60)",  color: "#fff" }
-    : { ...badgeBase, background: "rgba(185,28,28,0.85)",  border: "1px solid #b91c1c",               color: "#fff" };
-
-  const blueStyle: React.CSSProperties = imageDark
-    ? { ...badgeBase, background: "rgba(59,130,246,0.20)", border: "1px solid rgba(59,130,246,0.60)", color: "#fff" }
-    : { ...badgeBase, background: "rgba(29,78,216,0.85)",  border: "1px solid #1d4ed8",               color: "#fff" };
+  const [datePart, locationPart] = labels.eventDateLocation.split(" · ");
 
   return (
-    <div className="rounded-2xl overflow-hidden shadow-2xl">
-      <div className="relative h-[500px] overflow-hidden">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          ref={imgRef}
-          src={imageUrl || "/images/Stariy_Tbilisi.jpg"}
-          alt="Event hero image"
-          className="absolute inset-0 w-full h-full object-cover"
-          crossOrigin="anonymous"
-        />
+    <div className="relative overflow-hidden" style={{ minHeight: "clamp(520px, 70vh, 720px)" }}>
+      {/* Background image */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={imageUrl || "/images/Stariy_Tbilisi.jpg"}
+        alt=""
+        aria-hidden="true"
+        className="absolute inset-0 w-full h-full object-cover"
+      />
 
-        {/* Adaptive gradient overlay */}
-        <div className="absolute inset-0" style={{ background: overlay }} />
+      {/* Cinematic dark gradient overlay */}
+      <div
+        className="absolute inset-0"
+        style={{
+          background:
+            "linear-gradient(to bottom, rgba(7,15,26,0.25) 0%, rgba(7,15,26,0.62) 55%, rgba(7,15,26,0.96) 100%)",
+        }}
+      />
 
-        {/* Top centre: platform label */}
-        <div className="absolute top-5 left-0 right-0 flex justify-center pointer-events-none">
+      {/* Content */}
+      <div className="relative z-10 h-full flex flex-col justify-between px-6 md:px-14 lg:px-20 py-10" style={{ minHeight: "clamp(520px, 70vh, 720px)" }}>
+
+        {/* Top row: gateway label */}
+        <div>
           <p
-            className="text-[11px] font-light tracking-[0.24em] uppercase"
-            style={{ color: labelMuted }}
+            className="text-[11px] font-semibold uppercase"
+            style={{ color: "#C9A84C", letterSpacing: "3px" }}
           >
             {labels.gatewayLabel}
           </p>
         </div>
 
-        {/* Right-side badges — adapt to photo brightness */}
-        <div className="absolute top-12 right-5 flex flex-col gap-3">
-
-          {/* Registration Open */}
-          <div style={greenStyle}>
-            <span
-              className="w-2 h-2 rounded-full animate-pulse flex-shrink-0"
-              style={{ background: "#22c55e" }}
-            />
-            <span>{labels.registrationOpen}</span>
-          </div>
-
-          {/* Days remaining */}
-          {daysRemaining > 0 && (
-            <div style={redStyle}>
-              <span
-                className="w-2 h-2 rounded-full flex-shrink-0"
-                style={{ background: "#dc2626" }}
-              />
-              <span>{labels.daysRemaining.replace("{days}", String(daysRemaining))}</span>
-            </div>
-          )}
-
-          {/* Register Now */}
-          <Link
-            href={`/${locale}/events/${eventSlug}?tab=register`}
-            style={blueStyle}
-            className="hover:opacity-85 transition-opacity"
-          >
-            <span
-              className="w-2 h-2 rounded-full flex-shrink-0"
-              style={{ background: "#3b82f6" }}
-            />
-            <span>{labels.registerNow} →</span>
-          </Link>
-        </div>
-
-        {/* Bottom: event title + date/location */}
-        <div className="absolute bottom-0 left-0 right-0 px-8 pb-9">
+        {/* Bottom content: title + meta + badges */}
+        <div className="max-w-3xl">
           <h1
-            className={`font-bold leading-tight mb-3 ${textClass}`}
-            style={{ fontSize: "clamp(1.75rem, 3.5vw, 2.5rem)" }}
+            className="font-playfair font-bold text-white leading-tight mb-4"
+            style={{ fontSize: "clamp(2rem, 5vw, 3.5rem)" }}
           >
             {labels.eventTitle}
           </h1>
-          <p
-            className="font-semibold"
-            style={{ fontSize: "clamp(1rem, 2vw, 1.2rem)", color: textMuted }}
-          >
-            {labels.eventDateLocation}
-          </p>
+
+          {/* Date + Location row */}
+          <div className="flex flex-wrap items-center gap-5 mb-7">
+            {datePart && (
+              <span className="flex items-center gap-2 text-[15px]" style={{ color: "rgba(255,255,255,0.78)" }}>
+                <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={1.6} viewBox="0 0 24 24" style={{ color: "rgba(201,168,76,0.7)" }}>
+                  <path strokeLinecap="round" strokeLinejoin="round"
+                    d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
+                </svg>
+                {datePart.trim()}
+              </span>
+            )}
+            {locationPart && (
+              <span className="flex items-center gap-2 text-[15px]" style={{ color: "rgba(255,255,255,0.78)" }}>
+                <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={1.6} viewBox="0 0 24 24" style={{ color: "rgba(201,168,76,0.7)" }}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round"
+                    d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 0115 0z" />
+                </svg>
+                {locationPart.trim()}
+              </span>
+            )}
+            {!datePart && !locationPart && (
+              <span className="text-[15px]" style={{ color: "rgba(255,255,255,0.78)" }}>
+                {labels.eventDateLocation}
+              </span>
+            )}
+          </div>
+
+          {/* Badges */}
+          <div className="flex flex-wrap gap-3">
+            {/* Registration Open */}
+            <div
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold"
+              style={{
+                border: "1px solid rgba(201,168,76,0.55)",
+                color: "#C9A84C",
+                background: "rgba(201,168,76,0.08)",
+              }}
+            >
+              <span className="w-2 h-2 rounded-full animate-pulse flex-shrink-0" style={{ background: "#C9A84C" }} />
+              {labels.registrationOpen}
+            </div>
+
+            {/* Days remaining */}
+            {daysRemaining > 0 && (
+              <div
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold text-white"
+                style={{
+                  background: "rgba(7,15,26,0.65)",
+                  border: "1px solid rgba(255,255,255,0.15)",
+                  backdropFilter: "blur(6px)",
+                }}
+              >
+                <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24" style={{ color: "rgba(255,255,255,0.55)" }}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                {labels.daysRemaining.replace("{days}", String(daysRemaining))}
+              </div>
+            )}
+
+            {/* Register CTA */}
+            <Link
+              href={`/${locale}/events/${eventSlug}?tab=register`}
+              className="inline-flex items-center gap-2 px-5 py-2 rounded-full text-sm font-semibold transition-all duration-200 hover:opacity-90"
+              style={{ background: "#C9A84C", color: "#070F1A" }}
+            >
+              {labels.registerNow}
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              </svg>
+            </Link>
+          </div>
         </div>
       </div>
     </div>

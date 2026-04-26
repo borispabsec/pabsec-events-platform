@@ -18,7 +18,7 @@ export function Footer() {
   const tNav = useTranslations("nav");
 
   return (
-    <footer style={{ background: "#070F20" }} className="border-t border-white/5 mt-auto">
+    <footer style={{ background: "#040D16", borderTop: "1px solid rgba(201,168,76,0.22)" }} className="mt-auto">
       <div className="max-w-7xl mx-auto px-6 py-16">
 
         {/* Main grid */}
@@ -27,7 +27,7 @@ export function Footer() {
           {/* Column 1: Identity */}
           <div>
             <div className="mb-5">
-              <div className="text-white font-bold text-xl tracking-[0.22em] uppercase leading-none mb-2">
+              <div className="font-playfair font-bold text-xl leading-none mb-2" style={{ color: "#C9A84C" }}>
                 {t("abbr")}
               </div>
               <div
