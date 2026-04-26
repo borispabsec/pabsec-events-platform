@@ -38,12 +38,12 @@ export function HeroCard({
         className="absolute inset-0 w-full h-full object-cover"
       />
 
-      {/* Gradient overlay — light at top, dark only at bottom where text sits */}
+      {/* Gradient overlay — vivid photo at top, text-readable dark at bottom */}
       <div
         className="absolute inset-0"
         style={{
           background:
-            "linear-gradient(to bottom, rgba(7,15,26,0.15) 0%, rgba(7,15,26,0.35) 40%, rgba(7,15,26,0.75) 85%, rgba(7,15,26,0.95) 100%)",
+            "linear-gradient(to bottom, rgba(7,15,26,0.05) 0%, rgba(7,15,26,0.15) 30%, rgba(7,15,26,0.55) 75%, rgba(7,15,26,0.90) 100%)",
         }}
       />
 
@@ -64,7 +64,7 @@ export function HeroCard({
         <div className="max-w-3xl">
           <h1
             className="font-playfair font-bold text-white leading-tight mb-4"
-            style={{ fontSize: "clamp(2rem, 5vw, 3.5rem)", fontVariant: "none", fontVariantNumeric: "normal" }}
+            style={{ fontSize: "clamp(2rem, 5vw, 3.5rem)", fontVariant: "none", fontVariantNumeric: "normal", verticalAlign: "baseline" }}
           >
             {labels.eventTitle}
           </h1>

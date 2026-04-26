@@ -293,7 +293,7 @@ export default async function HomePage({
           {/* Committee meetings */}
           <p
             className="text-[10px] font-semibold uppercase tracking-[0.22em] mb-6"
-            style={{ color: "rgba(184,200,216,0.40)" }}
+            style={{ color: "#8AA0B8" }}
           >
             {tHome("autumn_meetings")}
           </p>
@@ -317,10 +317,7 @@ export default async function HomePage({
                     />
                     <div
                       className="absolute inset-0"
-                      style={{
-                        background:
-                          "linear-gradient(to bottom, rgba(7,15,26,0.30) 0%, rgba(7,15,26,0.78) 60%, rgba(7,15,26,0.96) 100%)",
-                      }}
+                      style={{ background: "rgba(0,0,0,0.40)" }}
                     />
                   </>
                 ) : (
@@ -362,28 +359,31 @@ export default async function HomePage({
                   </div>
 
                   {/* Info */}
-                  <div>
+                  <div style={{ textShadow: "0 2px 8px rgba(0,0,0,0.9)" }}>
                     {m.session && (
                       <p
                         className="text-[9px] font-bold uppercase tracking-widest mb-1.5"
-                        style={{ color: "rgba(184,200,216,0.38)" }}
+                        style={{ color: "#FFFFFF" }}
                       >
                         {m.session}. {tCommittees("meeting")}
                       </p>
                     )}
-                    <h4 className="font-bold text-white text-[13px] leading-snug mb-4">
+                    <h4
+                      className="font-bold leading-snug mb-4"
+                      style={{ color: "#FFFFFF", fontSize: 16, fontWeight: 700 }}
+                    >
                       {m.committee}
                     </h4>
                     <div className="space-y-1.5">
-                      <p className="flex items-center gap-2 text-[12px]" style={{ color: "rgba(184,200,216,0.60)" }}>
-                        <svg className="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24" style={{ color: "rgba(201,168,76,0.6)" }}>
+                      <p className="flex items-center gap-2 text-[12px] font-medium" style={{ color: "#E8C97A" }}>
+                        <svg className="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24" style={{ color: "#E8C97A" }}>
                           <path strokeLinecap="round" strokeLinejoin="round"
                             d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
                         </svg>
                         {m.period}
                       </p>
-                      <p className="flex items-center gap-2 text-[12px]" style={{ color: "rgba(184,200,216,0.60)" }}>
-                        <svg className="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24" style={{ color: "rgba(201,168,76,0.6)" }}>
+                      <p className="flex items-center gap-2 text-[12px] font-medium" style={{ color: "#E8C97A" }}>
+                        <svg className="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24" style={{ color: "#E8C97A" }}>
                           <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
                           <path strokeLinecap="round" strokeLinejoin="round"
                             d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 0115 0z" />

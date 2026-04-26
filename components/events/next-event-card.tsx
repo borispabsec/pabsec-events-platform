@@ -41,10 +41,7 @@ export function NextEventCard({
           />
           <div
             className="absolute inset-0"
-            style={{
-              background:
-                "linear-gradient(to right, rgba(7,15,26,0.90) 0%, rgba(7,15,26,0.65) 60%, rgba(7,15,26,0.40) 100%)",
-            }}
+            style={{ background: "rgba(7,15,26,0.35)" }}
           />
         </>
       ) : (
