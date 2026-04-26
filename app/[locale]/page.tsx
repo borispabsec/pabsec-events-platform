@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import type React from "react";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
@@ -244,12 +243,16 @@ export default async function HomePage({
         }}
       >
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-2 lg:grid-cols-4 divide-x divide-y lg:divide-y-0" style={{ "--tw-divide-opacity": "1" } as React.CSSProperties}>
-            {RESOURCE_CARDS.map((card) => (
+          <div className="grid grid-cols-2 lg:grid-cols-4">
+            {RESOURCE_CARDS.map((card, i) => (
               <a
                 key={card.id}
                 href={card.href}
                 className="group flex items-center gap-4 px-6 py-5 transition-all duration-200 hover:bg-white/[0.03]"
+                style={{
+                  borderRight: i < 3 ? "1px solid rgba(201,168,76,0.15)" : undefined,
+                  borderBottom: i < 2 ? "1px solid rgba(201,168,76,0.15)" : undefined,
+                }}
               >
                 <div
                   className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors duration-200"

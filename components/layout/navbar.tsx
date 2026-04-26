@@ -42,21 +42,46 @@ export function Navbar() {
       : pathname.startsWith(`/${locale}${base}`);
   }
 
+  const LangSwitcher = ({ compact }: { compact?: boolean }) => (
+    <div className="flex items-center">
+      {locales.map((l, i) => (
+        <span key={l} className="flex items-center">
+          {i > 0 && (
+            <span className={compact ? "mx-1 text-[9px]" : "mx-2 text-[10px]"} style={{ color: "rgba(255,255,255,0.18)" }}>
+              |
+            </span>
+          )}
+          <button
+            onClick={() => switchLocale(l)}
+            className="font-bold uppercase tracking-widest transition-colors duration-150 hover:text-white"
+            style={{
+              fontSize: compact ? 10 : 11,
+              color: l === locale ? GOLD : "rgba(255,255,255,0.42)",
+            }}
+          >
+            {l.toUpperCase()}
+          </button>
+        </span>
+      ))}
+    </div>
+  );
+
   return (
     <>
       <header
         className="sticky top-0 z-50"
         style={{ background: BG, borderBottom: `1px solid ${BORDER}` }}
       >
-        <nav className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between gap-6">
+        <nav className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-3">
 
           {/* Logo */}
-          <Link href={`/${locale}`} className="flex-shrink-0 select-none">
-            <div className="font-playfair font-bold text-[1.55rem] leading-none" style={{ color: GOLD }}>
+          <Link href={`/${locale}`} className="flex-shrink-0 select-none min-w-0">
+            <div className="font-playfair font-bold text-[1.4rem] sm:text-[1.55rem] leading-none" style={{ color: GOLD }}>
               {tFooter("abbr")}
             </div>
+            {/* Desktop subtitle */}
             <div
-              className="text-[7px] leading-none mt-[4px] font-medium uppercase tracking-[0.14em] hidden sm:block"
+              className="text-[7px] leading-none mt-[4px] font-medium uppercase tracking-[0.14em] hidden lg:block"
               style={{ color: "rgba(200,210,220,0.85)" }}
             >
               {tFooter("org_name")}
@@ -86,56 +111,43 @@ export function Navbar() {
             })}
           </div>
 
-          {/* Right: auth + language */}
+          {/* Desktop right: auth + language */}
           <div className="hidden lg:flex items-center gap-5 flex-shrink-0">
             <AuthButton />
-            <div className="flex items-center">
-              {locales.map((l, i) => (
-                <span key={l} className="flex items-center">
-                  {i > 0 && (
-                    <span className="mx-2 text-[10px]" style={{ color: "rgba(255,255,255,0.18)" }}>
-                      |
-                    </span>
-                  )}
-                  <button
-                    onClick={() => switchLocale(l)}
-                    className="text-[11px] font-bold uppercase tracking-widest transition-colors duration-150 hover:text-white"
-                    style={{ color: l === locale ? GOLD : "rgba(255,255,255,0.36)" }}
-                  >
-                    {l.toUpperCase()}
-                  </button>
-                </span>
-              ))}
-            </div>
+            <LangSwitcher />
           </div>
 
-          {/* Mobile hamburger */}
-          <button
-            className="lg:hidden flex-shrink-0 w-10 h-10 flex flex-col items-center justify-center gap-[5px]"
-            onClick={() => setMobileOpen(true)}
-            aria-label="Open menu"
-          >
-            <span className="block w-5 h-[1.5px] rounded-full" style={{ background: "rgba(255,255,255,0.7)" }} />
-            <span className="block w-5 h-[1.5px] rounded-full" style={{ background: "rgba(255,255,255,0.7)" }} />
-            <span className="block w-5 h-[1.5px] rounded-full" style={{ background: "rgba(255,255,255,0.7)" }} />
-          </button>
+          {/* Mobile right: lang + auth + hamburger */}
+          <div className="flex lg:hidden items-center gap-2 flex-shrink-0">
+            <LangSwitcher compact />
+            <AuthButton />
+            <button
+              className="w-9 h-9 flex flex-col items-center justify-center gap-[5px] flex-shrink-0"
+              onClick={() => setMobileOpen(true)}
+              aria-label="Open menu"
+            >
+              <span className="block w-5 h-[1.5px] rounded-full" style={{ background: "rgba(255,255,255,0.7)" }} />
+              <span className="block w-5 h-[1.5px] rounded-full" style={{ background: "rgba(255,255,255,0.7)" }} />
+              <span className="block w-5 h-[1.5px] rounded-full" style={{ background: "rgba(255,255,255,0.7)" }} />
+            </button>
+          </div>
         </nav>
       </header>
 
-      {/* Mobile full-screen overlay */}
+      {/* Mobile full-screen overlay — nav links only */}
       {mobileOpen && (
         <div className="fixed inset-0 z-[200] lg:hidden flex flex-col" style={{ background: BG }}>
-          {/* Mobile header */}
+          {/* Overlay header */}
           <div
-            className="flex items-center justify-between px-6 h-16 flex-shrink-0"
+            className="flex items-center justify-between px-5 h-16 flex-shrink-0"
             style={{ borderBottom: `1px solid ${BORDER}` }}
           >
-            <span className="font-playfair font-bold text-[1.55rem]" style={{ color: GOLD }}>
+            <span className="font-playfair font-bold text-[1.4rem]" style={{ color: GOLD }}>
               {tFooter("abbr")}
             </span>
             <button
               onClick={() => setMobileOpen(false)}
-              className="w-10 h-10 flex items-center justify-center"
+              className="w-9 h-9 flex items-center justify-center"
               aria-label="Close menu"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{ color: "rgba(255,255,255,0.65)" }}>
@@ -145,7 +157,7 @@ export function Navbar() {
           </div>
 
           {/* Nav links */}
-          <nav className="flex-1 overflow-y-auto px-6 pt-6">
+          <nav className="flex-1 overflow-y-auto px-6 pt-4">
             {NAV_LINKS.map(({ key, path }) => {
               const active = isActive(path);
               return (
@@ -167,23 +179,6 @@ export function Navbar() {
               );
             })}
           </nav>
-
-          {/* Bottom: language + auth */}
-          <div className="px-6 pb-8 pt-6 flex-shrink-0" style={{ borderTop: `1px solid ${BORDER}` }}>
-            <div className="flex items-center gap-6 mb-6">
-              {locales.map((l) => (
-                <button
-                  key={l}
-                  onClick={() => switchLocale(l)}
-                  className="text-sm font-bold uppercase tracking-widest transition-colors"
-                  style={{ color: l === locale ? GOLD : "rgba(255,255,255,0.35)" }}
-                >
-                  {l.toUpperCase()}
-                </button>
-              ))}
-            </div>
-            <AuthButton />
-          </div>
         </div>
       )}
     </>
