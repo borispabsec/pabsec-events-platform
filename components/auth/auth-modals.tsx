@@ -30,7 +30,8 @@ export function AuthButton() {
       <div className="relative">
         <button
           onClick={() => setMenuOpen((o) => !o)}
-          className="flex items-center gap-2 px-3 py-1.5 rounded-xl border border-gray-200 hover:border-navy/30 hover:bg-gray-50 transition"
+          className="flex items-center gap-2 px-3 py-2 rounded-xl transition-all duration-150 hover:bg-gold/10"
+          style={{ border: "1px solid rgba(201,168,76,0.45)", minWidth: 100 }}
         >
           {user.photoUrl ? (
             <Image
@@ -42,14 +43,14 @@ export function AuthButton() {
               unoptimized
             />
           ) : (
-            <span className="w-6 h-6 rounded-full bg-navy/10 flex items-center justify-center text-[10px] font-bold text-navy flex-shrink-0">
+            <span className="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold flex-shrink-0" style={{ background: "rgba(201,168,76,0.15)", color: "#C9A84C" }}>
               {user.firstName[0]}{user.lastName[0]}
             </span>
           )}
-          <span className="text-[11px] font-semibold text-navy hidden sm:block max-w-[100px] truncate">
+          <span className="text-[11px] font-semibold hidden sm:block max-w-[100px] truncate" style={{ color: "rgba(255,255,255,0.9)" }}>
             {user.firstName}
           </span>
-          <svg className="w-3 h-3 text-navy/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{ color: "rgba(255,255,255,0.45)" }}>
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
           </svg>
         </button>
@@ -80,7 +81,22 @@ export function AuthButton() {
     <>
       <button
         onClick={() => setModal("login")}
-        className="flex-shrink-0 text-[11px] font-semibold uppercase tracking-[0.08em] px-4 py-2 rounded-lg bg-navy text-white hover:bg-navy/90 transition"
+        className="flex-shrink-0 text-[11px] font-semibold uppercase tracking-[0.08em] rounded-lg transition-all duration-150"
+        style={{
+          color: "rgba(255,255,255,0.92)",
+          border: "1px solid rgba(201,168,76,0.45)",
+          background: "transparent",
+          padding: "8px 16px",
+          minWidth: 100,
+        }}
+        onMouseEnter={(e) => {
+          (e.currentTarget as HTMLButtonElement).style.background = "#C9A84C";
+          (e.currentTarget as HTMLButtonElement).style.color = "#070F1A";
+        }}
+        onMouseLeave={(e) => {
+          (e.currentTarget as HTMLButtonElement).style.background = "transparent";
+          (e.currentTarget as HTMLButtonElement).style.color = "rgba(255,255,255,0.92)";
+        }}
       >
         Login
       </button>

@@ -38,12 +38,12 @@ export function HeroCard({
         className="absolute inset-0 w-full h-full object-cover"
       />
 
-      {/* Cinematic dark gradient overlay */}
+      {/* Gradient overlay — light at top, dark only at bottom where text sits */}
       <div
         className="absolute inset-0"
         style={{
           background:
-            "linear-gradient(to bottom, rgba(7,15,26,0.25) 0%, rgba(7,15,26,0.62) 55%, rgba(7,15,26,0.96) 100%)",
+            "linear-gradient(to bottom, rgba(7,15,26,0.15) 0%, rgba(7,15,26,0.35) 40%, rgba(7,15,26,0.75) 85%, rgba(7,15,26,0.95) 100%)",
         }}
       />
 
@@ -64,7 +64,7 @@ export function HeroCard({
         <div className="max-w-3xl">
           <h1
             className="font-playfair font-bold text-white leading-tight mb-4"
-            style={{ fontSize: "clamp(2rem, 5vw, 3.5rem)" }}
+            style={{ fontSize: "clamp(2rem, 5vw, 3.5rem)", fontVariant: "none", fontVariantNumeric: "normal" }}
           >
             {labels.eventTitle}
           </h1>
@@ -129,17 +129,6 @@ export function HeroCard({
               </div>
             )}
 
-            {/* Register CTA */}
-            <Link
-              href={`/${locale}/events/${eventSlug}?tab=register`}
-              className="inline-flex items-center gap-2 px-5 py-2 rounded-full text-sm font-semibold transition-all duration-200 hover:opacity-90"
-              style={{ background: "#C9A84C", color: "#070F1A" }}
-            >
-              {labels.registerNow}
-              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-              </svg>
-            </Link>
           </div>
         </div>
       </div>

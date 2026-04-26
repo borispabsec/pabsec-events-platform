@@ -57,7 +57,7 @@ export function Navbar() {
             </div>
             <div
               className="text-[7px] leading-none mt-[4px] font-medium uppercase tracking-[0.14em] hidden sm:block"
-              style={{ color: "rgba(184,200,216,0.38)" }}
+              style={{ color: "rgba(200,210,220,0.85)" }}
             >
               {tFooter("org_name")}
             </div>
