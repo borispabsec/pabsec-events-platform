@@ -246,16 +246,22 @@ export default async function EventDetailPage({
         {activeTab === "documents" && !isAuthenticated && <AuthGate locale={locale} />}
         {activeTab === "documents" && isAuthenticated && (() => {
           const userRole = session!.role ?? "";
-          const RESTRICTED_ROLES = new Set([
+          const isAdmin = userRole === "admin";
+          const BUREAU_ROLES = new Set([
+            "president", "vice_president", "bureau_member",
+            "secretary_delegation", "secretariat",
+          ]);
+          const COMMITTEE_ROLES = new Set([
             "president", "vice_president", "bureau_member", "standing_committee",
             "secretary_delegation", "secretariat",
           ]);
-          const canSeeRestricted = RESTRICTED_ROLES.has(userRole) || userRole === "admin";
+          const canSeeBureauDocs    = isAdmin || BUREAU_ROLES.has(userRole);
+          const canSeeCommitteeDocs = isAdmin || COMMITTEE_ROLES.has(userRole);
 
           const DOC_SUBTABS = [
             { id: "general_assembly",   label: tPage("doc_cat_general_assembly"),   allowed: true },
-            { id: "standing_committee", label: tPage("doc_cat_standing_committee"), allowed: canSeeRestricted },
-            { id: "bureau",             label: tPage("doc_cat_bureau"),             allowed: canSeeRestricted },
+            { id: "standing_committee", label: tPage("doc_cat_standing_committee"), allowed: canSeeCommitteeDocs },
+            { id: "bureau",             label: tPage("doc_cat_bureau"),             allowed: canSeeBureauDocs },
           ] as const;
 
           const activeDtab = DOC_SUBTABS.find((s) => s.id === rawDtab && s.allowed)?.id ?? "general_assembly";
