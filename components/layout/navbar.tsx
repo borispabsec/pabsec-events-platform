@@ -72,7 +72,7 @@ export function Navbar() {
         className="sticky top-0 z-50"
         style={{ background: BG, borderBottom: `1px solid ${BORDER}` }}
       >
-        <nav className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-3">
+        <nav className="w-full max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-10 h-16 flex items-center justify-between gap-3">
 
           {/* Logo */}
           <Link href={`/${locale}`} className="flex-shrink-0 select-none min-w-0">

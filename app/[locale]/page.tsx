@@ -264,7 +264,7 @@ export default async function HomePage({
           borderBottom: "1px solid rgba(255,255,255,0.05)",
         }}
       >
-        <div className="max-w-7xl mx-auto">
+        <div className="w-full max-w-[1400px] mx-auto">
           <div className="grid grid-cols-2 lg:grid-cols-4">
             {RESOURCE_CARDS.map((card, i) => (
               <a
@@ -302,7 +302,7 @@ export default async function HomePage({
 
       {/* ── 3. UPCOMING EVENTS ──────────────────────────────────────────────── */}
       <section className="py-16" style={{ background: "#0B1729" }}>
-        <div className="max-w-7xl mx-auto px-6">
+        <div className="w-full max-w-[1400px] mx-auto px-6">
 
           {/* Section label */}
           <div className="flex items-center gap-3 mb-3">
@@ -446,7 +446,7 @@ export default async function HomePage({
 
       {/* ── 4. ARCHIVE PREVIEW ──────────────────────────────────────────────── */}
       <section className="py-20" style={{ background: "#070F1A", borderTop: "1px solid rgba(201,168,76,0.08)" }}>
-        <div className="max-w-7xl mx-auto px-6">
+        <div className="w-full max-w-[1400px] mx-auto px-6">
 
           {/* Header */}
           <div className="flex items-end justify-between mb-12">

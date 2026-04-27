@@ -31,11 +31,11 @@ export default async function LocaleLayout({
 
   return (
     <html lang={locale} className={`${inter.variable} ${playfair.variable}`}>
-      <body className="min-h-screen flex flex-col bg-white text-gray-900 antialiased">
+      <body className="min-h-screen flex flex-col bg-white text-gray-900 antialiased overflow-x-hidden" style={{ width: "100%", maxWidth: "100vw" }}>
         <NextIntlClientProvider messages={messages}>
           <AuthProvider>
             <Navbar />
-            <main className="flex-1">{children}</main>
+            <main className="flex-1 w-full">{children}</main>
             <Footer />
           </AuthProvider>
         </NextIntlClientProvider>

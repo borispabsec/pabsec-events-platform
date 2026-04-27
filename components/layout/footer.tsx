@@ -19,7 +19,7 @@ export function Footer() {
 
   return (
     <footer style={{ background: "#040D16", borderTop: "1px solid rgba(201,168,76,0.22)" }} className="mt-auto">
-      <div className="max-w-7xl mx-auto px-6 py-16">
+      <div className="w-full max-w-[1400px] mx-auto px-6 py-16">
 
         {/* Main grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-10">
