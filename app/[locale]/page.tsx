@@ -235,10 +235,10 @@ export default async function HomePage({
   ];
 
   return (
-    <div style={{ background: "#070F1A" }}>
+    <div className="w-full" style={{ background: "#070F1A" }}>
 
       {/* ── 1. HERO ─────────────────────────────────────────────────────────── */}
-      <section>
+      <section className="w-full">
         <HeroCard
           textColorMode={heroEvent?.heroTextColor ?? "auto"}
           daysRemaining={daysRemaining}
@@ -258,6 +258,7 @@ export default async function HomePage({
 
       {/* ── 2. RESOURCE STRIP ───────────────────────────────────────────────── */}
       <section
+        className="w-full"
         style={{
           background: "rgba(7,15,26,0.98)",
           borderTop: "1px solid rgba(201,168,76,0.28)",
@@ -301,7 +302,7 @@ export default async function HomePage({
       </section>
 
       {/* ── 3. UPCOMING EVENTS ──────────────────────────────────────────────── */}
-      <section className="py-16" style={{ background: "#0B1729" }}>
+      <section className="w-full py-16" style={{ background: "#0B1729" }}>
         <div className="w-full max-w-[1400px] mx-auto px-6">
 
           {/* Section label */}
@@ -445,7 +446,7 @@ export default async function HomePage({
       </section>
 
       {/* ── 4. ARCHIVE PREVIEW ──────────────────────────────────────────────── */}
-      <section className="py-20" style={{ background: "#070F1A", borderTop: "1px solid rgba(201,168,76,0.08)" }}>
+      <section className="w-full py-20" style={{ background: "#070F1A", borderTop: "1px solid rgba(201,168,76,0.08)" }}>
         <div className="w-full max-w-[1400px] mx-auto px-6">
 
           {/* Header */}

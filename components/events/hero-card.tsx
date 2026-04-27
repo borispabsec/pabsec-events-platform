@@ -28,8 +28,16 @@ export function HeroCard({
   const [datePart, locationPart] = labels.eventDateLocation.split(" · ");
 
   return (
-    <div className="relative overflow-hidden" style={{ minHeight: "clamp(520px, 70vh, 720px)" }}>
-      {/* Background image */}
+    {/*
+      Outer: establishes the stacking context and the hero height.
+      All children (photo, gradient, content) use absolute inset-0 so they
+      all fill exactly the same rectangle — no h-full / min-height ambiguity.
+    */}
+    <div
+      className="relative w-full overflow-hidden"
+      style={{ height: "clamp(520px, 70vh, 720px)" }}
+    >
+      {/* Photo — fills the container edge-to-edge */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={imageUrl || "/images/Stariy_Tbilisi.jpg"}
@@ -38,7 +46,7 @@ export function HeroCard({
         className="absolute inset-0 w-full h-full object-cover"
       />
 
-      {/* Gradient overlay — vivid photo at top, text-readable dark at bottom */}
+      {/* Gradient — vivid photo at top, text-readable dark at bottom */}
       <div
         className="absolute inset-0"
         style={{
@@ -47,12 +55,16 @@ export function HeroCard({
         }}
       />
 
-      {/* Content — full width overlay, content centered at 1400 px */}
-      <div
-        className="relative z-10 h-full flex flex-col justify-between py-10"
-        style={{ minHeight: "clamp(520px, 70vh, 720px)" }}
-      >
-        {/* Top row: gateway label */}
+      {/*
+        Content overlay — also absolute inset-0 so it covers the exact same
+        area as the photo. flex + justify-between keeps gateway label at the
+        top and title/badges at the bottom.
+        Inner containers are max-w-[1400px] centered so text never stretches
+        beyond 1400 px on ultrawide monitors while the photo stays 100 % wide.
+      */}
+      <div className="absolute inset-0 z-10 flex flex-col justify-between py-10">
+
+        {/* Top: gateway label */}
         <div className="w-full max-w-[1400px] mx-auto px-6 md:px-10 lg:px-16">
           <span
             className="inline-block text-[10px] font-semibold uppercase"
@@ -70,12 +82,17 @@ export function HeroCard({
           </span>
         </div>
 
-        {/* Bottom content: title + meta + badges */}
+        {/* Bottom: title + date/location + badges */}
         <div className="w-full max-w-[1400px] mx-auto px-6 md:px-10 lg:px-16">
           <div className="max-w-3xl">
             <h1
               className="font-playfair font-bold text-white leading-tight mb-4"
-              style={{ fontSize: "clamp(2rem, 5vw, 3.5rem)", fontVariant: "none", fontVariantNumeric: "normal", verticalAlign: "baseline" }}
+              style={{
+                fontSize: "clamp(2rem, 5vw, 3.5rem)",
+                fontVariant: "none",
+                fontVariantNumeric: "normal",
+                verticalAlign: "baseline",
+              }}
             >
               {labels.eventTitle}
             </h1>
@@ -110,7 +127,6 @@ export function HeroCard({
 
             {/* Badges */}
             <div className="flex flex-wrap gap-3">
-              {/* Registration Open */}
               <div
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold"
                 style={{
@@ -123,7 +139,6 @@ export function HeroCard({
                 {labels.registrationOpen}
               </div>
 
-              {/* Days remaining */}
               {daysRemaining > 0 && (
                 <div
                   className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold text-white"
@@ -142,6 +157,7 @@ export function HeroCard({
             </div>
           </div>
         </div>
+
       </div>
     </div>
   );
