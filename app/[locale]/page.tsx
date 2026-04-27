@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { getTranslations, getMessages } from "next-intl/server";
+import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { db } from "@/lib/db";
 import { PAST_ASSEMBLIES } from "@/lib/data/archive";
@@ -23,19 +23,33 @@ export default async function HomePage({
 
   if (!["en", "ru", "tr"].includes(locale)) notFound();
 
-  const [t, tUi, tHome, tCommittees, allMessages] = await Promise.all([
+  const [t, tUi, tHome, tCommittees] = await Promise.all([
     getTranslations({ locale, namespace: "events" }),
     getTranslations({ locale, namespace: "ui" }),
     getTranslations({ locale, namespace: "home_page" }),
     getTranslations({ locale, namespace: "committees" }),
-    getMessages({ locale: locale as "en" | "ru" | "tr" }),
   ]);
 
-  type MsgRecord = Record<string, string>;
-  const locationNamesMap = ((allMessages as Record<string, unknown>).location_names ?? {}) as MsgRecord;
-  const flexibleDatesMap = ((allMessages as Record<string, unknown>).flexible_dates ?? {}) as MsgRecord;
-  const translateLoc = (loc: string): string => locationNamesMap[loc] ?? loc;
-  const translateFlexDate = (date: string): string => flexibleDatesMap[date] ?? date;
+  const LOCATION_NAMES: Record<string, Record<string, string>> = {
+    ru: {
+      "Sofia, Bulgaria": "София, Болгария",
+      "Yerevan, Armenia": "Ереван, Армения",
+      "TBA": "Уточняется",
+      "Athens, Hellenic Republic": "Афины, Греческая Республика",
+    },
+    tr: {
+      "Sofia, Bulgaria": "Sofya, Bulgaristan",
+      "Yerevan, Armenia": "Erivan, Ermenistan",
+      "TBA": "Belirlenecek",
+      "Athens, Hellenic Republic": "Atina, Yunan Cumhuriyeti",
+    },
+  };
+  const FLEXIBLE_DATES: Record<string, Record<string, string>> = {
+    ru: { "September / October 2026": "Сентябрь / Октябрь 2026" },
+    tr: { "September / October 2026": "Eylül / Ekim 2026" },
+  };
+  const translateLoc = (loc: string): string => LOCATION_NAMES[locale]?.[loc] ?? loc;
+  const translateFlexDate = (date: string): string => FLEXIBLE_DATES[locale]?.[date] ?? date;
 
   // ── Hero event ───────────────────────────────────────────────────────────
   const now = new Date();
