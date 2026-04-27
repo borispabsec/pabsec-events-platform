@@ -75,12 +75,41 @@ async function main() {
           {
             locale: "tr",
             title: "68. Genel Kurul",
-            location: "Atina, Yunanistan",
+            location: "Atina, Yunan Cumhuriyeti",
             description:
               "Karadeniz Ekonomik İşbirliği Parlamenter Asamblesi Genel Kurulunun 68. Olağan Oturumu.",
           },
         ],
       },
+    },
+  });
+
+  // Ensure 68th GA translations have correct location values (fixes existing DB records)
+  await prisma.eventTranslation.upsert({
+    where: { eventId_locale: { eventId: ga68.id, locale: "en" } },
+    update: { location: "Athens, Hellenic Republic" },
+    create: {
+      eventId: ga68.id, locale: "en", title: "68th General Assembly",
+      location: "Athens, Hellenic Republic",
+      description: "The 68th Ordinary Session of the General Assembly of the Parliamentary Assembly of the Black Sea Economic Cooperation.",
+    },
+  });
+  await prisma.eventTranslation.upsert({
+    where: { eventId_locale: { eventId: ga68.id, locale: "ru" } },
+    update: { location: "Афины, Греческая Республика" },
+    create: {
+      eventId: ga68.id, locale: "ru", title: "68-я Генеральная Ассамблея",
+      location: "Афины, Греческая Республика",
+      description: "68-я Обычная сессия Генеральной Ассамблеи Парламентской Ассамблеи Черноморского Экономического Сотрудничества.",
+    },
+  });
+  await prisma.eventTranslation.upsert({
+    where: { eventId_locale: { eventId: ga68.id, locale: "tr" } },
+    update: { location: "Atina, Yunan Cumhuriyeti" },
+    create: {
+      eventId: ga68.id, locale: "tr", title: "68. Genel Kurul",
+      location: "Atina, Yunan Cumhuriyeti",
+      description: "Karadeniz Ekonomik İşbirliği Parlamenter Asamblesi Genel Kurulunun 68. Olağan Oturumu.",
     },
   });
 

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, getMessages } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { db } from "@/lib/db";
 import { PAST_ASSEMBLIES } from "@/lib/data/archive";
@@ -23,12 +23,19 @@ export default async function HomePage({
 
   if (!["en", "ru", "tr"].includes(locale)) notFound();
 
-  const [t, tUi, tHome, tCommittees] = await Promise.all([
+  const [t, tUi, tHome, tCommittees, allMessages] = await Promise.all([
     getTranslations({ locale, namespace: "events" }),
     getTranslations({ locale, namespace: "ui" }),
     getTranslations({ locale, namespace: "home_page" }),
     getTranslations({ locale, namespace: "committees" }),
+    getMessages({ locale: locale as "en" | "ru" | "tr" }),
   ]);
+
+  type MsgRecord = Record<string, string>;
+  const locationNamesMap = ((allMessages as Record<string, unknown>).location_names ?? {}) as MsgRecord;
+  const flexibleDatesMap = ((allMessages as Record<string, unknown>).flexible_dates ?? {}) as MsgRecord;
+  const translateLoc = (loc: string): string => locationNamesMap[loc] ?? loc;
+  const translateFlexDate = (date: string): string => flexibleDatesMap[date] ?? date;
 
   // ── Hero event ───────────────────────────────────────────────────────────
   const now = new Date();
@@ -110,7 +117,8 @@ export default async function HomePage({
   } catch { /* use fallback */ }
 
   const nextTitle    = nextEvent?.translations[0]?.title ?? tHome("ga68_title");
-  const nextLocation = nextEvent?.translations[0]?.location ?? nextEvent?.location ?? "Athens, Hellenic Republic";
+  const nextLocation = nextEvent?.translations[0]?.location
+    ?? translateLoc(nextEvent?.location ?? "Athens, Hellenic Republic");
   const nextPeriod   = nextEvent ? formatDateRange(nextEvent.startDate, nextEvent.endDate, locale) : "November 2026";
   const nextImageUrl = nextEvent?.imageUrl ?? null;
   const nextSlug     = nextEvent?.slug ?? "ga68";
@@ -151,11 +159,11 @@ export default async function HomePage({
     session: m.session ?? "",
     committee: m.translations[0]?.title ?? COMMITTEE_CATEGORY_LABELS[m.category] ?? m.category,
     period: m.dateFlexible && m.dateFlexibleText
-      ? m.dateFlexibleText
+      ? translateFlexDate(m.dateFlexibleText)
       : m.startDate
         ? formatDateRange(m.startDate, m.endDate ?? m.startDate, locale)
         : "TBD",
-    location: m.location,
+    location: translateLoc(m.location),
     imageUrl: m.imageUrl,
   }));
 

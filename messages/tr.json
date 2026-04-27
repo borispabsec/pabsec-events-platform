@@ -220,6 +220,15 @@
     "already_have_account": "Zaten hesabınız var mı? Giriş yapın",
     "back_to_sign_in": "Girişe Dön"
   },
+  "location_names": {
+    "Sofia, Bulgaria": "Sofya, Bulgaristan",
+    "Yerevan, Armenia": "Erivan, Ermenistan",
+    "TBA": "Belirlenecek",
+    "Athens, Hellenic Republic": "Atina, Yunan Cumhuriyeti"
+  },
+  "flexible_dates": {
+    "September / October 2026": "Eylül / Ekim 2026"
+  },
   "footer": {
     "abbr": "KEİPA",
     "org_name": "Karadeniz Ekonomik İşbirliği Parlamenter Asamblesi — KEİPA",

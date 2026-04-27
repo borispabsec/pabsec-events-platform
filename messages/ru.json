@@ -220,6 +220,15 @@
     "already_have_account": "Уже есть аккаунт? Войти",
     "back_to_sign_in": "Вернуться ко входу"
   },
+  "location_names": {
+    "Sofia, Bulgaria": "София, Болгария",
+    "Yerevan, Armenia": "Ереван, Армения",
+    "TBA": "Уточняется",
+    "Athens, Hellenic Republic": "Афины, Греческая Республика"
+  },
+  "flexible_dates": {
+    "September / October 2026": "Сентябрь / Октябрь 2026"
+  },
   "footer": {
     "abbr": "ПАЧЭС",
     "org_name": "Парламентская Ассамблея Черноморского Экономического Сотрудничества",

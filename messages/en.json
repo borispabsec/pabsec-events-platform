@@ -220,6 +220,15 @@
     "already_have_account": "Already have an account? Sign in",
     "back_to_sign_in": "Back to Sign In"
   },
+  "location_names": {
+    "Sofia, Bulgaria": "Sofia, Bulgaria",
+    "Yerevan, Armenia": "Yerevan, Armenia",
+    "TBA": "TBA",
+    "Athens, Hellenic Republic": "Athens, Hellenic Republic"
+  },
+  "flexible_dates": {
+    "September / October 2026": "September / October 2026"
+  },
   "footer": {
     "abbr": "PABSEC",
     "org_name": "Parliamentary Assembly of the Black Sea Economic Cooperation",

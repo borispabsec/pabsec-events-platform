@@ -5,12 +5,23 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+const MONTH_NAMES: Record<string, string[]> = {
+  en: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+  ru: ["января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря"],
+  tr: ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"],
+};
+
+function formatSingleDate(date: Date, locale: string): string {
+  const d = date.getUTCDate();
+  const mon = (MONTH_NAMES[locale] ?? MONTH_NAMES.en)[date.getUTCMonth()];
+  const y = date.getUTCFullYear();
+  if (locale === "ru") return `${d} ${mon} ${y} г.`;
+  if (locale === "tr") return `${d} ${mon} ${y}`;
+  return `${mon} ${d}, ${y}`;
+}
+
 export function formatDate(date: Date | string, locale: string): string {
-  return new Intl.DateTimeFormat(locale, {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  }).format(new Date(date));
+  return formatSingleDate(new Date(date), locale);
 }
 
 export function formatDateRange(
@@ -18,12 +29,5 @@ export function formatDateRange(
   end: Date | string,
   locale: string
 ): string {
-  const startDate = new Date(start);
-  const endDate = new Date(end);
-  const formatter = new Intl.DateTimeFormat(locale, {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
-  return `${formatter.format(startDate)} – ${formatter.format(endDate)}`;
+  return `${formatSingleDate(new Date(start), locale)} – ${formatSingleDate(new Date(end), locale)}`;
 }
