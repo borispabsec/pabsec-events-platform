@@ -28,16 +28,10 @@ export function HeroCard({
   const [datePart, locationPart] = labels.eventDateLocation.split(" · ");
 
   return (
-    {/*
-      Outer: establishes the stacking context and the hero height.
-      All children (photo, gradient, content) use absolute inset-0 so they
-      all fill exactly the same rectangle — no h-full / min-height ambiguity.
-    */}
     <div
       className="relative w-full overflow-hidden"
       style={{ height: "clamp(520px, 70vh, 720px)" }}
     >
-      {/* Photo — fills the container edge-to-edge */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={imageUrl || "/images/Stariy_Tbilisi.jpg"}
@@ -46,7 +40,6 @@ export function HeroCard({
         className="absolute inset-0 w-full h-full object-cover"
       />
 
-      {/* Gradient — vivid photo at top, text-readable dark at bottom */}
       <div
         className="absolute inset-0"
         style={{
@@ -55,13 +48,6 @@ export function HeroCard({
         }}
       />
 
-      {/*
-        Content overlay — also absolute inset-0 so it covers the exact same
-        area as the photo. flex + justify-between keeps gateway label at the
-        top and title/badges at the bottom.
-        Inner containers are max-w-[1400px] centered so text never stretches
-        beyond 1400 px on ultrawide monitors while the photo stays 100 % wide.
-      */}
       <div className="absolute inset-0 z-10 flex flex-col justify-between py-10">
 
         {/* Top: gateway label */}
