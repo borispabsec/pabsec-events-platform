@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { db } from "@/lib/db";
 import { AddDocumentForm } from "@/components/admin/add-document-form";
+import { BulkUploadPanel } from "@/components/admin/bulk-upload-panel";
 import path from "path";
 import fs from "fs/promises";
 
@@ -98,6 +99,12 @@ export default async function DocumentsPage({
         <h1 className="text-navy text-2xl font-bold">Documents</h1>
         <p className="text-gray-400 text-sm mt-1">Upload and manage documents per event, category and language.</p>
       </div>
+
+      {/* Bulk upload panel */}
+      <BulkUploadPanel
+        events={events.map((e) => ({ id: e.id, title: e.translations[0]?.title ?? e.slug }))}
+        defaultEventId={selectedEvent?.id}
+      />
 
       {/* Event filter */}
       <div className="flex flex-wrap gap-2 mb-8">
