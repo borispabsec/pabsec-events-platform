@@ -6,7 +6,7 @@ import { db } from "@/lib/db";
 import { PAST_ASSEMBLIES } from "@/lib/data/archive";
 import { HeroCard } from "@/components/events/hero-card";
 import { NextEventCard } from "@/components/events/next-event-card";
-import { formatDateRange } from "@/lib/utils";
+import { formatDateRange, translateFlexibleDate } from "@/lib/utils";
 
 export const metadata: Metadata = {
   title: "PABSEC Events Platform – Official Digital Gateway",
@@ -44,18 +44,8 @@ export default async function HomePage({
       "Athens, Hellenic Republic": "Atina, Yunan Cumhuriyeti",
     },
   };
-  const FLEXIBLE_DATES: Record<string, Record<string, string>> = {
-    ru: {
-      "September / October 2026": "Сентябрь / Октябрь 2026",
-      "November/December 2026": "Ноябрь / Декабрь 2026",
-    },
-    tr: {
-      "September / October 2026": "Eylül / Ekim 2026",
-      "November/December 2026": "Kasım / Aralık 2026",
-    },
-  };
   const translateLoc = (loc: string): string => LOCATION_NAMES[locale]?.[loc] ?? loc;
-  const translateFlexDate = (date: string): string => FLEXIBLE_DATES[locale]?.[date] ?? date;
+  const translateFlexDate = (date: string): string => translateFlexibleDate(date, locale);
 
   // ── Hero event ───────────────────────────────────────────────────────────
   const now = new Date();
