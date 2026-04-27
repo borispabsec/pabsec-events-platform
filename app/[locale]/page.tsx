@@ -45,8 +45,14 @@ export default async function HomePage({
     },
   };
   const FLEXIBLE_DATES: Record<string, Record<string, string>> = {
-    ru: { "September / October 2026": "Сентябрь / Октябрь 2026" },
-    tr: { "September / October 2026": "Eylül / Ekim 2026" },
+    ru: {
+      "September / October 2026": "Сентябрь / Октябрь 2026",
+      "November/December 2026": "Ноябрь / Декабрь 2026",
+    },
+    tr: {
+      "September / October 2026": "Eylül / Ekim 2026",
+      "November/December 2026": "Kasım / Aralık 2026",
+    },
   };
   const translateLoc = (loc: string): string => LOCATION_NAMES[locale]?.[loc] ?? loc;
   const translateFlexDate = (date: string): string => FLEXIBLE_DATES[locale]?.[date] ?? date;
@@ -60,6 +66,8 @@ export default async function HomePage({
     startDate: Date;
     endDate: Date;
     location: string;
+    dateFlexible: boolean;
+    dateFlexibleText: string | null;
     translations: { title: string; location: string | null }[];
   } | null = null;
 
@@ -70,6 +78,7 @@ export default async function HomePage({
       select: {
         slug: true, heroTextColor: true, imageUrl: true,
         startDate: true, endDate: true, location: true,
+        dateFlexible: true, dateFlexibleText: true,
         translations: { where: { locale: locale as "en" | "ru" | "tr" }, select: { title: true, location: true } },
       },
     });
@@ -80,6 +89,7 @@ export default async function HomePage({
         select: {
           slug: true, heroTextColor: true, imageUrl: true,
           startDate: true, endDate: true, location: true,
+          dateFlexible: true, dateFlexibleText: true,
           translations: { where: { locale: locale as "en" | "ru" | "tr" }, select: { title: true, location: true } },
         },
       });
@@ -91,7 +101,11 @@ export default async function HomePage({
   const heroTranslation = heroEvent?.translations[0];
   const heroTitle       = heroTranslation?.title ?? tHome("hero_event_title");
   const heroLocation    = heroTranslation?.location ?? heroEvent?.location ?? "";
-  const heroDates       = heroEvent ? formatDateRange(heroEvent.startDate, heroEvent.endDate, locale) : "";
+  const heroDates       = heroEvent?.dateFlexible && heroEvent?.dateFlexibleText
+    ? translateFlexDate(heroEvent.dateFlexibleText)
+    : heroEvent
+      ? formatDateRange(heroEvent.startDate, heroEvent.endDate, locale)
+      : "";
   const heroDateLocation = heroEvent
     ? `${heroDates} · ${heroLocation}`
     : tHome("hero_event_date_location");
@@ -106,6 +120,8 @@ export default async function HomePage({
     startDate: Date;
     endDate: Date;
     imageUrl: string | null;
+    dateFlexible: boolean;
+    dateFlexibleText: string | null;
     translations: { title: string; location: string | null }[];
   } | null = null;
 
@@ -115,6 +131,7 @@ export default async function HomePage({
       orderBy: { startDate: "asc" },
       select: {
         slug: true, location: true, startDate: true, endDate: true, imageUrl: true,
+        dateFlexible: true, dateFlexibleText: true,
         translations: { where: { locale: locale as "en" | "ru" | "tr" }, select: { title: true, location: true } },
       },
     });
@@ -124,6 +141,7 @@ export default async function HomePage({
         orderBy: { startDate: "asc" },
         select: {
           slug: true, location: true, startDate: true, endDate: true, imageUrl: true,
+          dateFlexible: true, dateFlexibleText: true,
           translations: { where: { locale: locale as "en" | "ru" | "tr" }, select: { title: true, location: true } },
         },
       });
@@ -133,7 +151,11 @@ export default async function HomePage({
   const nextTitle    = nextEvent?.translations[0]?.title ?? tHome("ga68_title");
   const nextLocation = nextEvent?.translations[0]?.location
     ?? translateLoc(nextEvent?.location ?? "Athens, Hellenic Republic");
-  const nextPeriod   = nextEvent ? formatDateRange(nextEvent.startDate, nextEvent.endDate, locale) : "November 2026";
+  const nextPeriod   = nextEvent?.dateFlexible && nextEvent?.dateFlexibleText
+    ? translateFlexDate(nextEvent.dateFlexibleText)
+    : nextEvent
+      ? formatDateRange(nextEvent.startDate, nextEvent.endDate, locale)
+      : "November 2026";
   const nextImageUrl = nextEvent?.imageUrl ?? null;
   const nextSlug     = nextEvent?.slug ?? "ga68";
 

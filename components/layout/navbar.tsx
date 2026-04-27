@@ -69,7 +69,7 @@ export function Navbar() {
   return (
     <>
       <header
-        className="sticky top-0 z-50"
+        className="sticky top-0 z-50 w-full"
         style={{ background: BG, borderBottom: `1px solid ${BORDER}` }}
       >
         <nav className="w-full max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-10 h-16 flex items-center justify-between gap-3">
