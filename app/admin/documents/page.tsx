@@ -12,22 +12,6 @@ async function requireAdmin() {
   if (cookieStore.get("admin_session")?.value !== "1") redirect("/admin");
 }
 
-async function addDocument(formData: FormData) {
-  "use server";
-  await requireAdmin();
-  const eventId  = formData.get("eventId")  as string;
-  const locale   = formData.get("locale")   as string;
-  const category = formData.get("category") as string;
-  const title    = formData.get("title")    as string;
-  const fileUrl  = formData.get("fileUrl")  as string;
-  if (!eventId || !locale || !category || !title || !fileUrl) return;
-  if (!["en", "ru", "tr"].includes(locale)) return;
-  await db.eventDocument.create({
-    data: { eventId, locale: locale as "en" | "ru" | "tr", category, title, fileUrl },
-  });
-  revalidatePath("/admin/documents");
-  redirect("/admin/documents" + (eventId ? `?event=${eventId}` : ""));
-}
 
 async function deleteDocument(formData: FormData) {
   "use server";
@@ -214,8 +198,8 @@ export default async function DocumentsPage({
                       {/* Add document form pre-set to this category */}
                       <div className="px-6 pb-5">
                         <AddDocumentForm
-                          eventId={event.id}
-                          addDocumentAction={addDocument}
+                          defaultEventId={event.id}
+                          events={events.map((e) => ({ id: e.id, title: e.translations[0]?.title ?? e.slug }))}
                           defaultCategory={cat.id}
                         />
                       </div>

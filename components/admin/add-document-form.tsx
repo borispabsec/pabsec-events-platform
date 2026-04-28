@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 const CATEGORIES = [
   { id: "programme",          label: "Programme" },
@@ -12,17 +13,24 @@ const CATEGORIES = [
 
 const ALLOWED_EXTS = ["pdf", "doc", "docx", "ppt", "pptx", "xls", "xlsx"];
 
+interface EventOption {
+  id: string;
+  title: string;
+}
+
 interface Props {
-  eventId: string;
-  addDocumentAction: (formData: FormData) => Promise<void>;
+  defaultEventId: string;
+  events: EventOption[];
   defaultCategory?: string;
 }
 
-export function AddDocumentForm({ eventId, addDocumentAction, defaultCategory }: Props) {
-  const [mode, setMode] = useState<"file" | "url">("file");
-  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
-  const [uploading, setUploading] = useState(false);
-  const [uploadError, setUploadError] = useState("");
+export function AddDocumentForm({ defaultEventId, events, defaultCategory }: Props) {
+  const router = useRouter();
+  const [mode, setMode]                     = useState<"file" | "url">("file");
+  const [selectedEventId, setSelectedEventId] = useState(defaultEventId);
+  const [selectedFiles, setSelectedFiles]   = useState<File[]>([]);
+  const [uploading, setUploading]           = useState(false);
+  const [uploadError, setUploadError]       = useState("");
   const fileRef   = useRef<HTMLInputElement>(null);
   const folderRef = useRef<HTMLInputElement>(null);
   const formRef   = useRef<HTMLFormElement>(null);
@@ -58,18 +66,31 @@ export function AddDocumentForm({ eventId, addDocumentAction, defaultCategory }:
     if (folderRef.current) folderRef.current.value = "";
   }
 
+  async function saveDocument(params: {
+    eventId: string; locale: string; category: string; title: string; fileUrl: string;
+  }) {
+    const res = await fetch("/api/admin/create-document", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ...params, visibility: "public" }),
+    });
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}));
+      throw new Error((data as { error?: string }).error ?? "Save failed");
+    }
+  }
+
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setUploadError("");
 
-    const fd = new FormData(e.currentTarget);
+    const fd       = new FormData(e.currentTarget);
+    const locale   = fd.get("locale") as string;
+    const category = fd.get("category") as string;
+    const baseTitle = (fd.get("title") as string)?.trim();
 
     if (mode === "file") {
       if (selectedFiles.length === 0) { setUploadError("Please select a file."); return; }
-
-      const baseLocale   = fd.get("locale") as string;
-      const baseCategory = fd.get("category") as string;
-      const baseTitle    = (fd.get("title") as string)?.trim();
 
       setUploading(true);
       try {
@@ -78,22 +99,16 @@ export function AddDocumentForm({ eventId, addDocumentAction, defaultCategory }:
           uploadFd.append("file", file);
           const res  = await fetch("/api/admin/upload-document", { method: "POST", body: uploadFd });
           const data = await res.json();
-          if (!res.ok) { setUploadError(data.error ?? "Upload failed"); return; }
+          if (!res.ok) throw new Error(data.error ?? "Upload failed");
 
           const title = selectedFiles.length > 1
             ? file.name.replace(/\.[^.]+$/, "").replace(/[-_]+/g, " ").trim()
             : (baseTitle || file.name.replace(/\.[^.]+$/, "").replace(/[-_]+/g, " ").trim());
 
-          const docFd = new FormData();
-          docFd.set("eventId",  eventId);
-          docFd.set("locale",   baseLocale);
-          docFd.set("category", baseCategory);
-          docFd.set("title",    title);
-          docFd.set("fileUrl",  data.url);
-          await addDocumentAction(docFd);
+          await saveDocument({ eventId: selectedEventId, locale, category, title, fileUrl: data.url });
         }
-      } catch {
-        setUploadError("Upload failed. Please try again.");
+      } catch (err) {
+        setUploadError(err instanceof Error ? err.message : "Upload failed. Please try again.");
         return;
       } finally {
         setUploading(false);
@@ -101,12 +116,23 @@ export function AddDocumentForm({ eventId, addDocumentAction, defaultCategory }:
 
       clearFiles();
       formRef.current?.reset();
+      router.refresh();
       return;
     }
 
-    await addDocumentAction(fd);
-    setMode("file");
+    // URL mode — save directly without file upload
+    const fileUrl = fd.get("fileUrl") as string;
+    setUploading(true);
+    try {
+      await saveDocument({ eventId: selectedEventId, locale, category, title: baseTitle, fileUrl });
+    } catch (err) {
+      setUploadError(err instanceof Error ? err.message : "Save failed.");
+      return;
+    } finally {
+      setUploading(false);
+    }
     formRef.current?.reset();
+    router.refresh();
   }
 
   const hasFiles = selectedFiles.length > 0;
@@ -116,25 +142,25 @@ export function AddDocumentForm({ eventId, addDocumentAction, defaultCategory }:
       <div className="flex items-center justify-between mb-3">
         <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Add Document</p>
         <div className="flex rounded-lg border border-gray-200 overflow-hidden text-[10px] font-semibold">
-          <button
-            type="button"
-            onClick={() => setMode("file")}
-            className={`px-3 py-1.5 transition ${mode === "file" ? "bg-navy text-white" : "text-gray-500 hover:bg-gray-50"}`}
-          >
-            Upload File
-          </button>
-          <button
-            type="button"
-            onClick={() => setMode("url")}
-            className={`px-3 py-1.5 transition ${mode === "url" ? "bg-navy text-white" : "text-gray-500 hover:bg-gray-50"}`}
-          >
-            Enter URL
-          </button>
+          <button type="button" onClick={() => setMode("file")} className={`px-3 py-1.5 transition ${mode === "file" ? "bg-navy text-white" : "text-gray-500 hover:bg-gray-50"}`}>Upload File</button>
+          <button type="button" onClick={() => setMode("url")}  className={`px-3 py-1.5 transition ${mode === "url"  ? "bg-navy text-white" : "text-gray-500 hover:bg-gray-50"}`}>Enter URL</button>
         </div>
       </div>
 
       <form ref={formRef} onSubmit={handleSubmit} className="space-y-3">
-        <input type="hidden" name="eventId" value={eventId} />
+
+        {/* Event selector */}
+        {events.length > 1 && (
+          <select
+            value={selectedEventId}
+            onChange={(e) => setSelectedEventId(e.target.value)}
+            className="w-full px-3 py-2 rounded-lg border border-gray-200 text-xs text-navy focus:outline-none focus:border-gold"
+          >
+            {events.map((ev) => (
+              <option key={ev.id} value={ev.id}>{ev.title}</option>
+            ))}
+          </select>
+        )}
 
         <div className={`grid gap-3 ${defaultCategory ? "grid-cols-1" : "grid-cols-2"}`}>
           <select name="locale" required className="px-3 py-2 rounded-lg border border-gray-200 text-xs text-navy focus:outline-none focus:border-gold">
@@ -163,12 +189,10 @@ export function AddDocumentForm({ eventId, addDocumentAction, defaultCategory }:
 
         {mode === "file" ? (
           <div>
-            {/* Drop / browse area */}
+            {/* Browse area */}
             <div
               className={`relative flex items-center gap-3 px-4 py-3 rounded-xl border-2 border-dashed cursor-pointer transition ${
-                hasFiles
-                  ? "border-green-300 bg-green-50"
-                  : "border-gray-200 hover:border-navy/30 hover:bg-gray-50"
+                hasFiles ? "border-green-300 bg-green-50" : "border-gray-200 hover:border-navy/30 hover:bg-gray-50"
               }`}
               onClick={() => fileRef.current?.click()}
             >
@@ -181,16 +205,13 @@ export function AddDocumentForm({ eventId, addDocumentAction, defaultCategory }:
                   )}
                 </svg>
               </div>
-
               <div className="flex-1 min-w-0">
                 {hasFiles ? (
                   <>
                     {selectedFiles.length === 1 ? (
                       <p className="text-xs font-semibold text-green-700 truncate">{selectedFiles[0].name}</p>
                     ) : (
-                      <p className="text-xs font-semibold text-green-700">
-                        {selectedFiles.length} files selected
-                      </p>
+                      <p className="text-xs font-semibold text-green-700">{selectedFiles.length} files selected</p>
                     )}
                     <p className="text-[10px] text-green-600">{formatSize(totalSize(selectedFiles))}</p>
                   </>
@@ -201,7 +222,6 @@ export function AddDocumentForm({ eventId, addDocumentAction, defaultCategory }:
                   </>
                 )}
               </div>
-
               {hasFiles && (
                 <button
                   type="button"
@@ -215,58 +235,28 @@ export function AddDocumentForm({ eventId, addDocumentAction, defaultCategory }:
               )}
             </div>
 
-            {/* Folder browse link — only when nothing selected */}
             {!hasFiles && (
-              <button
-                type="button"
-                onClick={() => folderRef.current?.click()}
-                className="mt-1.5 text-[10px] font-medium text-navy/50 hover:text-navy transition"
-              >
+              <button type="button" onClick={() => folderRef.current?.click()} className="mt-1.5 text-[10px] font-medium text-navy/50 hover:text-navy transition">
                 Or browse a folder →
               </button>
             )}
 
-            {/* File chips — shown when multiple files selected */}
             {selectedFiles.length > 1 && (
               <div className="mt-2 flex flex-wrap gap-1.5">
                 {selectedFiles.slice(0, 6).map((f, i) => (
-                  <span key={i} className="text-[9px] px-2 py-0.5 rounded-full bg-green-100 text-green-700 font-medium truncate max-w-[180px]">
-                    {f.name}
-                  </span>
+                  <span key={i} className="text-[9px] px-2 py-0.5 rounded-full bg-green-100 text-green-700 font-medium truncate max-w-[180px]">{f.name}</span>
                 ))}
                 {selectedFiles.length > 6 && (
-                  <span className="text-[9px] px-2 py-0.5 rounded-full bg-gray-100 text-gray-500 font-medium">
-                    +{selectedFiles.length - 6} more
-                  </span>
+                  <span className="text-[9px] px-2 py-0.5 rounded-full bg-gray-100 text-gray-500 font-medium">+{selectedFiles.length - 6} more</span>
                 )}
               </div>
             )}
 
-            {/* Hidden file inputs */}
-            <input
-              ref={fileRef}
-              type="file"
-              multiple={true}
-              accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx"
-              className="sr-only"
-              onChange={(e) => { pickFiles(e.target.files); e.target.value = ""; }}
-            />
-            <input
-              ref={folderRef}
-              type="file"
-              multiple={true}
-              className="sr-only"
-              onChange={(e) => { pickFiles(e.target.files); e.target.value = ""; }}
-            />
+            <input ref={fileRef}   type="file" multiple={true} accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx" className="sr-only" onChange={(e) => { pickFiles(e.target.files); e.target.value = ""; }} />
+            <input ref={folderRef} type="file" multiple={true} className="sr-only" onChange={(e) => { pickFiles(e.target.files); e.target.value = ""; }} />
           </div>
         ) : (
-          <input
-            type="url"
-            name="fileUrl"
-            required
-            placeholder="https://pabsec.org/documents/…"
-            className="w-full px-3 py-2 rounded-lg border border-gray-200 text-xs focus:outline-none focus:border-gold placeholder:text-gray-300"
-          />
+          <input type="url" name="fileUrl" required placeholder="https://pabsec.org/documents/…" className="w-full px-3 py-2 rounded-lg border border-gray-200 text-xs focus:outline-none focus:border-gold placeholder:text-gray-300" />
         )}
 
         {uploadError && (
