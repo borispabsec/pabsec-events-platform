@@ -56,6 +56,7 @@ export async function POST(req: NextRequest) {
     }
 
     const turnstileToken = typeof fields.turnstileToken === "string" ? fields.turnstileToken : "";
+    console.log("[register] turnstile token length:", turnstileToken.length);
     if (!await verifyTurnstileToken(turnstileToken)) {
       return NextResponse.json({ error: "Bot verification failed. Please try again." }, { status: 403 });
     }

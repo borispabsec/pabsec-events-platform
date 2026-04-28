@@ -21,6 +21,7 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
 
     const turnstileToken = typeof body.turnstileToken === "string" ? body.turnstileToken : "";
+    console.log("[login] turnstile token length:", turnstileToken.length);
     if (!await verifyTurnstileToken(turnstileToken)) {
       return NextResponse.json({ error: "Bot verification failed. Please try again." }, { status: 403 });
     }
