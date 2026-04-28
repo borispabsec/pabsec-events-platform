@@ -62,9 +62,16 @@ function parseDate(s?: string): Date | undefined {
   return isNaN(d.getTime()) ? undefined : d;
 }
 
+const BETA_TESTERS = ["borispabsec", "kolisboris", "Gleb"];
+
 export async function POST(req: NextRequest) {
   try {
     const session = await getSession();
+
+    if (!session || !BETA_TESTERS.includes(session.username)) {
+      return NextResponse.json({ error: "Registration is not yet available" }, { status: 403 });
+    }
+
     const formData = await req.formData();
 
     const fields: Record<string, string> = {};
