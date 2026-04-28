@@ -21,10 +21,15 @@ model Event {
   createdAt        DateTime    @default(now())
   updatedAt        DateTime    @updatedAt
 
-  translations  EventTranslation[]
-  registrations Registration[]
-  media         EventMedia[]
-  documents     EventDocument[]
+  translations        EventTranslation[]
+  registrations       Registration[]
+  media               EventMedia[]
+  documents           EventDocument[]
+  eventRegistrations  EventRegistration[]
+
+  registrationDeadline DateTime?
+  requirePassport      Boolean   @default(false)
+  requirePhoto         Boolean   @default(false)
 
   @@map("events")
 }
@@ -213,4 +218,58 @@ enum UserStatus {
   PENDING
   APPROVED
   REJECTED
+}
+
+model EventRegistration {
+  id                  String    @id @default(cuid())
+  eventId             String
+  event               Event     @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  firstName           String
+  lastName            String
+  title               String?
+  position            String?
+  institution         String?
+  country             String
+  email               String
+  phone               String?
+  passportNationality String?
+  participantRole     String
+  isHeadOfDelegation  Boolean   @default(false)
+  participationDates  String?
+  committeeMeetings   String?
+  arrivalDate         DateTime?
+  arrivalAirport      String?
+  arrivalFlight       String?
+  arrivalRoute        String?
+  arrivalTime         String?
+  needsTransfer       Boolean   @default(false)
+  viaIstanbul         Boolean   @default(false)
+  istanbulVipLounge   Boolean   @default(false)
+  departureDate       DateTime?
+  departureAirport    String?
+  departureFlight     String?
+  departureRoute      String?
+  departureTime       String?
+  needsHotel          Boolean   @default(false)
+  hotelCheckIn        DateTime?
+  hotelCheckOut       DateTime?
+  roomType            String?
+  sharingRoom         Boolean   @default(false)
+  hotelName           String?
+  hotelAssigned       String?
+  dietaryRestrictions String?
+  accessibilityNeeds  String?
+  securityNote        String?
+  specialRequests     String?
+  passportUrl         String?
+  photoUrl            String?
+  registeredBy        String?
+  delegationGroupId   String?
+  status              String    @default("pending")
+  adminNotes          String?
+  isVip               Boolean   @default(false)
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+
+  @@map("event_registrations")
 }

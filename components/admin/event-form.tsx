@@ -66,6 +66,8 @@ export function EventForm({ mode, event, createAction, updateAction }: Props) {
   const [submitError, setSubmitError] = useState("");
   const [dateFlexible, setDateFlexible] = useState(event?.dateFlexible ?? false);
   const [locationTba, setLocationTba] = useState(event?.location === "TBA");
+  const [requirePassport, setRequirePassport] = useState((event as EventData & { requirePassport?: boolean })?.requirePassport ?? false);
+  const [requirePhoto, setRequirePhoto] = useState((event as EventData & { requirePhoto?: boolean })?.requirePhoto ?? false);
   const imageRef = useRef<HTMLInputElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -96,9 +98,9 @@ export function EventForm({ mode, event, createAction, updateAction }: Props) {
     setSubmitError("");
     const fd = new FormData(e.currentTarget);
     fd.set("imageUrl", imageUrl);
-    // Explicit boolean fields (checkboxes omit themselves when unchecked)
     fd.set("dateFlexible", dateFlexible ? "on" : "");
-    // Location override
+    fd.set("requirePassport", requirePassport ? "on" : "");
+    fd.set("requirePhoto", requirePhoto ? "on" : "");
     if (locationTba) fd.set("location", "TBA");
     try {
       if (isEdit) {
@@ -380,6 +382,47 @@ export function EventForm({ mode, event, createAction, updateAction }: Props) {
             </div>
           </div>
         ))}
+      </div>
+
+      {/* Registration Settings */}
+      <div className="bg-white rounded-2xl border border-gray-100 p-6" style={{ boxShadow: "0 1px 4px rgba(0,0,0,0.04)" }}>
+        <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-4">Registration Settings</p>
+        <div className="space-y-4">
+          <div>
+            <label className="block text-xs font-semibold text-navy mb-1.5">Registration Deadline</label>
+            <input
+              type="datetime-local"
+              name="registrationDeadline"
+              defaultValue={(event as EventData & { registrationDeadline?: Date })?.registrationDeadline
+                ? new Date((event as EventData & { registrationDeadline?: Date }).registrationDeadline!).toISOString().slice(0, 16)
+                : ""}
+              className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm text-navy focus:outline-none focus:border-gold max-w-xs"
+            />
+            <p className="text-[10px] text-gray-400 mt-1">Leave empty to allow registration indefinitely.</p>
+          </div>
+          <div className="flex flex-wrap gap-6">
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="checkbox"
+                name="requirePassport"
+                checked={requirePassport}
+                onChange={(e) => setRequirePassport(e.target.checked)}
+                className="w-4 h-4 accent-gold"
+              />
+              <span className="text-xs font-semibold text-navy">Require passport upload</span>
+            </label>
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="checkbox"
+                name="requirePhoto"
+                checked={requirePhoto}
+                onChange={(e) => setRequirePhoto(e.target.checked)}
+                className="w-4 h-4 accent-gold"
+              />
+              <span className="text-xs font-semibold text-navy">Require photo upload</span>
+            </label>
+          </div>
+        </div>
       </div>
 
       {/* Submit */}

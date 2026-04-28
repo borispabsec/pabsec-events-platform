@@ -56,6 +56,10 @@ export async function createEvent(formData: FormData) {
   const imageUrl = (formData.get("imageUrl") as string) || null;
   const dateFlexible = formData.get("dateFlexible") === "on";
   const dateFlexibleText = dateFlexible ? ((formData.get("dateFlexibleText") as string).trim() || null) : null;
+  const registrationDeadlineStr = (formData.get("registrationDeadline") as string) || "";
+  const registrationDeadline = registrationDeadlineStr ? new Date(registrationDeadlineStr) : null;
+  const requirePassport = formData.get("requirePassport") === "on";
+  const requirePhoto = formData.get("requirePhoto") === "on";
 
   await db.event.create({
     data: {
@@ -68,6 +72,9 @@ export async function createEvent(formData: FormData) {
       imageUrl,
       dateFlexible,
       dateFlexibleText,
+      registrationDeadline,
+      requirePassport,
+      requirePhoto,
       translations: {
         create: (["en", "ru", "tr"] as const).map((locale) => ({
           locale,
@@ -98,6 +105,10 @@ export async function updateEvent(formData: FormData) {
   const imageUrl = (formData.get("imageUrl") as string) || null;
   const dateFlexible = formData.get("dateFlexible") === "on";
   const dateFlexibleText = dateFlexible ? ((formData.get("dateFlexibleText") as string).trim() || null) : null;
+  const registrationDeadlineStr = (formData.get("registrationDeadline") as string) || "";
+  const registrationDeadline = registrationDeadlineStr ? new Date(registrationDeadlineStr) : null;
+  const requirePassport = formData.get("requirePassport") === "on";
+  const requirePhoto = formData.get("requirePhoto") === "on";
 
   // If image was replaced, delete the old file
   const existing = await db.event.findUnique({ where: { id }, select: { imageUrl: true } });
@@ -116,6 +127,9 @@ export async function updateEvent(formData: FormData) {
       imageUrl,
       dateFlexible,
       dateFlexibleText,
+      registrationDeadline,
+      requirePassport,
+      requirePhoto,
     },
   });
 

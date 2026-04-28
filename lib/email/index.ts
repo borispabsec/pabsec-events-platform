@@ -118,6 +118,75 @@ export async function sendRegistrationRejected(opts: {
   });
 }
 
+export async function sendEventRegistrationReceived(opts: {
+  to: string;
+  firstName: string;
+  lastName: string;
+  referenceNumber: string;
+  eventTitle: string;
+}) {
+  await send({
+    from: FROM,
+    to: opts.to,
+    subject: `Registration received – ${opts.eventTitle}`,
+    html: `
+      <p>Dear ${opts.firstName} ${opts.lastName},</p>
+      <p>Your registration for <strong>${opts.eventTitle}</strong> has been received and is under review.</p>
+      <p>Your reference number is: <strong>${opts.referenceNumber}</strong></p>
+      <p>Please keep this for your records. You will receive a confirmation email once your registration is processed.</p>
+      <br/>
+      <p>Best regards,<br/>PABSEC International Secretariat</p>
+    `,
+  });
+}
+
+export async function sendEventRegistrationApproved(opts: {
+  to: string;
+  firstName: string;
+  lastName: string;
+  referenceNumber: string;
+  eventTitle: string;
+  hotelInfo?: string;
+}) {
+  await send({
+    from: FROM,
+    to: opts.to,
+    subject: `Registration confirmed – ${opts.eventTitle}`,
+    html: `
+      <p>Dear ${opts.firstName} ${opts.lastName},</p>
+      <p>Your registration for <strong>${opts.eventTitle}</strong> has been <strong>confirmed</strong>.</p>
+      <p>Reference number: <strong>${opts.referenceNumber}</strong></p>
+      ${opts.hotelInfo ? `<p><strong>Hotel:</strong> ${opts.hotelInfo}</p>` : ""}
+      <p>Please contact the PABSEC Secretariat if you have any questions.</p>
+      <br/>
+      <p>Best regards,<br/>PABSEC International Secretariat</p>
+    `,
+  });
+}
+
+export async function sendEventRegistrationChangesRequested(opts: {
+  to: string;
+  firstName: string;
+  lastName: string;
+  referenceNumber: string;
+  eventTitle: string;
+  notes: string;
+}) {
+  await send({
+    from: FROM,
+    to: opts.to,
+    subject: `Registration update required – ${opts.eventTitle}`,
+    html: `
+      <p>Dear ${opts.firstName} ${opts.lastName},</p>
+      <p>Regarding your registration for <strong>${opts.eventTitle}</strong> (Ref: ${opts.referenceNumber}), the Secretariat has requested the following changes or clarifications:</p>
+      <blockquote style="border-left:3px solid #C9A84C;padding-left:12px;color:#555">${opts.notes}</blockquote>
+      <p>Please reply to this email or contact the PABSEC Secretariat directly.</p>
+      <br/>
+      <p>Best regards,<br/>PABSEC International Secretariat</p>
+    `,
+  });
+}
+
 export async function sendPasswordReset(opts: {
   to: string;
   firstName: string;
