@@ -14,7 +14,7 @@ const PABSEC_ROLES = [
   "President of PABSEC",
   "Vice-President of PABSEC",
   "Member of PABSEC Bureau",
-  "Member of Standing Committee",
+  "Head of National Delegation",
   "Member of PABSEC",
   "Secretary of National Delegation",
   "Member of International Secretariat",

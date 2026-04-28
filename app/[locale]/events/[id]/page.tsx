@@ -165,7 +165,8 @@ export default async function EventDetailPage({
       <div className="max-w-5xl mx-auto px-6 py-12">
 
         {/* PROGRAMME */}
-        {activeTab === "programme" && (() => {
+        {activeTab === "programme" && !isAuthenticated && <AuthGate locale={locale} />}
+        {activeTab === "programme" && isAuthenticated && (() => {
           const programmeDocs = (event.documents ?? []).filter((d) => d.category === "programme");
           return (
           <div>
@@ -248,12 +249,19 @@ export default async function EventDetailPage({
           const userRole = session!.role ?? "";
           const isAdmin = userRole === "admin";
           const BUREAU_ROLES = new Set([
-            "president", "vice_president", "bureau_member",
-            "secretary_delegation", "secretariat",
+            "President of PABSEC",
+            "Vice-President of PABSEC",
+            "Member of PABSEC Bureau",
+            "Secretary of National Delegation",
+            "Member of International Secretariat",
           ]);
           const COMMITTEE_ROLES = new Set([
-            "president", "vice_president", "bureau_member", "standing_committee",
-            "secretary_delegation", "secretariat",
+            "President of PABSEC",
+            "Vice-President of PABSEC",
+            "Member of PABSEC Bureau",
+            "Head of National Delegation",
+            "Secretary of National Delegation",
+            "Member of International Secretariat",
           ]);
           const canSeeBureauDocs    = isAdmin || BUREAU_ROLES.has(userRole);
           const canSeeCommitteeDocs = isAdmin || COMMITTEE_ROLES.has(userRole);

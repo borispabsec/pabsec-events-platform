@@ -9,7 +9,7 @@ const PABSEC_ROLES = [
   { value: "President of PABSEC",                en: "President of PABSEC",              ru: "Президент ПАЧЭС",                     tr: "PABSEC Başkanı" },
   { value: "Vice-President of PABSEC",           en: "Vice-President of PABSEC",         ru: "Вице-президент ПАЧЭС",                tr: "PABSEC Başkan Yardımcısı" },
   { value: "Member of PABSEC Bureau",            en: "Member of PABSEC Bureau",          ru: "Член Бюро ПАЧЭС",                    tr: "PABSEC Büro Üyesi" },
-  { value: "Member of Standing Committee",       en: "Member of Standing Committee",     ru: "Член Стендинг Комитети",              tr: "Daimi Komite Üyesi" },
+  { value: "Head of National Delegation",         en: "Head of National Delegation",       ru: "Руководитель национальной делегации", tr: "Ulusal Delegasyon Başkanı" },
   { value: "Member of PABSEC",                   en: "Member of PABSEC",                 ru: "Член ПАЧЭС",                         tr: "PABSEC Üyesi" },
   { value: "Secretary of National Delegation",   en: "Secretary of National Delegation", ru: "Секретарь делегации",                 tr: "Delegasyon Sekreteri" },
   { value: "Member of International Secretariat",en: "Member of International Secretariat", ru: "Член Международного секретариата",tr: "Uluslararası Sekreterya Üyesi" },
