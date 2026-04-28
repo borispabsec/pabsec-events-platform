@@ -439,8 +439,8 @@ export default async function EventDetailPage({
         {/* REGISTRATION */}
         {activeTab === "register" && !isAuthenticated && <AuthGate locale={locale} />}
         {activeTab === "register" && isAuthenticated && (() => {
-          const BETA_TESTERS = ["borispabsec", "kolisboris", "Gleb"];
-          const isBetaTester = BETA_TESTERS.includes(session!.username);
+          const BETA_TESTERS = ["pabsec", "kolisboris", "Gleb"];
+          const isBetaTester = BETA_TESTERS.some((u) => u.toLowerCase() === session!.username.toLowerCase());
           return (
             <div>
               <div className="flex items-center gap-3 mb-8">

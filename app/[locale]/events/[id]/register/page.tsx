@@ -4,7 +4,7 @@ import { db } from "@/lib/db";
 import { getSession } from "@/lib/auth/session";
 import { EventRegistrationForm } from "@/components/events/event-registration-form";
 
-const BETA_TESTERS = ["borispabsec", "kolisboris", "Gleb"];
+const BETA_TESTERS = ["pabsec", "kolisboris", "Gleb"];
 
 async function getEvent(id: string) {
   try {
@@ -108,7 +108,7 @@ export default async function RegisterPage({
               Log in
             </Link>
           </div>
-        ) : !BETA_TESTERS.includes(session.username) ? (
+        ) : !BETA_TESTERS.some((u) => u.toLowerCase() === session.username.toLowerCase()) ? (
           <div className="rounded-2xl p-10 text-center border border-gray-100" style={{ background: "rgba(11,30,61,0.02)" }}>
             <div className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4" style={{ background: "rgba(11,30,61,0.06)" }}>
               <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={1.6} viewBox="0 0 24 24" style={{ color: "#0B1E3D" }}>
