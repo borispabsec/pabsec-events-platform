@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useParams } from "next/navigation";
 import { ModalShell } from "./login-modal";
+import { TurnstileWidget } from "./turnstile-widget";
 
 const PABSEC_ROLES = [
   { value: "president",             en: "President of PABSEC",              ru: "Президент ПАЧЭС",                          tr: "PABSEC Başkanı" },
@@ -34,6 +35,7 @@ export function RegisterModal({ onClose, onOpenLogin }: Props) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [fieldErrors, setFieldErrors] = useState<Record<string, string[]>>({});
+  const [turnstileToken, setTurnstileToken] = useState("");
 
   const [form, setForm] = useState({
     firstName: "",
@@ -67,6 +69,10 @@ export function RegisterModal({ onClose, onOpenLogin }: Props) {
       return;
     }
 
+    if (!turnstileToken) {
+      setError("Please complete the security check.");
+      return;
+    }
     setLoading(true);
     try {
       const fd = new FormData();
@@ -77,6 +83,7 @@ export function RegisterModal({ onClose, onOpenLogin }: Props) {
       fd.append("password", form.password);
       fd.append("country", form.country);
       fd.append("role", form.role);
+      fd.append("turnstileToken", turnstileToken);
       if (photo) fd.append("photo", photo);
 
       const res = await fetch("/api/auth/register", { method: "POST", body: fd });
@@ -203,6 +210,11 @@ export function RegisterModal({ onClose, onOpenLogin }: Props) {
           <p className="text-gray-400 text-[11px]">
             Names must be in English. All other fields support your preferred language.
           </p>
+
+          <TurnstileWidget
+            onVerify={setTurnstileToken}
+            onExpire={() => setTurnstileToken("")}
+          />
 
           {error && (
             <p className="text-red-600 text-xs rounded-lg bg-red-50 px-3 py-2">{error}</p>

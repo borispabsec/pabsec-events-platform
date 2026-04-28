@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useAuth } from "./auth-provider";
+import { TurnstileWidget } from "./turnstile-widget";
 
 interface Props {
   onClose: () => void;
@@ -14,16 +15,21 @@ export function LoginModal({ onClose, onOpenRegister, onOpenForgot }: Props) {
   const [form, setForm] = useState({ usernameOrEmail: "", password: "" });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState("");
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
+    if (!turnstileToken) {
+      setError("Please complete the security check.");
+      return;
+    }
     setLoading(true);
     try {
       const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ ...form, turnstileToken }),
       });
       const data = await res.json();
       if (!res.ok) {
@@ -67,6 +73,11 @@ export function LoginModal({ onClose, onOpenRegister, onOpenForgot }: Props) {
             className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-navy/20 focus:border-navy transition"
           />
         </div>
+
+        <TurnstileWidget
+          onVerify={setTurnstileToken}
+          onExpire={() => setTurnstileToken("")}
+        />
 
         {error && (
           <p className="text-red-600 text-xs rounded-lg bg-red-50 px-3 py-2">{error}</p>

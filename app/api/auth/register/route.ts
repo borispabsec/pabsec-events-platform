@@ -8,6 +8,7 @@ import {
   sendRegistrationReceived,
   sendAdminNewRequest,
 } from "@/lib/email";
+import { verifyTurnstileToken } from "@/lib/auth/turnstile";
 
 const PABSEC_ROLES = [
   "President of PABSEC",
@@ -52,6 +53,11 @@ export async function POST(req: NextRequest) {
       }
     } else {
       fields = await req.json();
+    }
+
+    const turnstileToken = typeof fields.turnstileToken === "string" ? fields.turnstileToken : "";
+    if (!await verifyTurnstileToken(turnstileToken)) {
+      return NextResponse.json({ error: "Bot verification failed. Please try again." }, { status: 403 });
     }
 
     const parsed = schema.safeParse(fields);

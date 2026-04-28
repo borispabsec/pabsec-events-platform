@@ -6,6 +6,7 @@ import { signSession } from "@/lib/auth/jwt";
 import { SESSION_COOKIE, cookieOptions } from "@/lib/auth/session";
 import { sendPasswordReset } from "@/lib/email";
 import { generateToken } from "@/lib/auth/password";
+import { verifyTurnstileToken } from "@/lib/auth/turnstile";
 
 const MAX_ATTEMPTS = 5;
 const LOCK_MINUTES = 30;
@@ -18,6 +19,12 @@ const schema = z.object({
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
+
+    const turnstileToken = typeof body.turnstileToken === "string" ? body.turnstileToken : "";
+    if (!await verifyTurnstileToken(turnstileToken)) {
+      return NextResponse.json({ error: "Bot verification failed. Please try again." }, { status: 403 });
+    }
+
     const parsed = schema.safeParse(body);
     if (!parsed.success) {
       return NextResponse.json({ error: "Invalid input" }, { status: 400 });
