@@ -6,13 +6,13 @@ import { ModalShell } from "./login-modal";
 import { TurnstileWidget } from "./turnstile-widget";
 
 const PABSEC_ROLES = [
-  { value: "president",             en: "President of PABSEC",              ru: "Президент ПАЧЭС",                          tr: "PABSEC Başkanı" },
-  { value: "vice_president",        en: "Vice-President of PABSEC",         ru: "Вице-президент ПАЧЭС",                      tr: "PABSEC Başkan Yardımcısı" },
-  { value: "bureau_member",         en: "Member of PABSEC Bureau",          ru: "Член Бюро ПАЧЭС",                          tr: "PABSEC Büro Üyesi" },
-  { value: "standing_committee",    en: "Member of Standing Committee",     ru: "Член Стендинг Комитети",                   tr: "Daimi Komite Üyesi" },
-  { value: "member",                en: "Member of PABSEC",                 ru: "Член ПАЧЭС",                               tr: "PABSEC Üyesi" },
-  { value: "secretary_delegation",  en: "Secretary of National Delegation", ru: "Секретарь делегации",                      tr: "Delegasyon Sekreteri" },
-  { value: "secretariat",           en: "Member of International Secretariat", ru: "Член Международного секретариата",      tr: "Uluslararası Sekreterya Üyesi" },
+  { value: "President of PABSEC",                en: "President of PABSEC",              ru: "Президент ПАЧЭС",                     tr: "PABSEC Başkanı" },
+  { value: "Vice-President of PABSEC",           en: "Vice-President of PABSEC",         ru: "Вице-президент ПАЧЭС",                tr: "PABSEC Başkan Yardımcısı" },
+  { value: "Member of PABSEC Bureau",            en: "Member of PABSEC Bureau",          ru: "Член Бюро ПАЧЭС",                    tr: "PABSEC Büro Üyesi" },
+  { value: "Member of Standing Committee",       en: "Member of Standing Committee",     ru: "Член Стендинг Комитети",              tr: "Daimi Komite Üyesi" },
+  { value: "Member of PABSEC",                   en: "Member of PABSEC",                 ru: "Член ПАЧЭС",                         tr: "PABSEC Üyesi" },
+  { value: "Secretary of National Delegation",   en: "Secretary of National Delegation", ru: "Секретарь делегации",                 tr: "Delegasyon Sekreteri" },
+  { value: "Member of International Secretariat",en: "Member of International Secretariat", ru: "Член Международного секретариата",tr: "Uluslararası Sekreterya Üyesi" },
 ] as const;
 
 const PABSEC_COUNTRIES = [
