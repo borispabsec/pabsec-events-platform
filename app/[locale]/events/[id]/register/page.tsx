@@ -46,7 +46,8 @@ export default async function RegisterPage({
 
   const isSecretary   = session?.role === "Secretary of National Delegation";
   const isSecretariat = session?.role === "Member of International Secretariat";
-  const hasAccess     = isSecretary || isSecretariat;
+  const isPabsec      = session?.username?.toLowerCase() === "pabsec";
+  const hasAccess     = isSecretary || isSecretariat || isPabsec;
 
   let userDetails: { firstName: string; lastName: string; email: string; country: string } | null = null;
   if (session && hasAccess) {
@@ -128,6 +129,7 @@ export default async function RegisterPage({
       eventImageUrl={event.imageUrl ?? null}
       locale={locale}
       isSecretariat={isSecretariat}
+      isPabsec={isPabsec}
       secretaryName={userDetails ? `${userDetails.firstName} ${userDetails.lastName}` : (session.firstName + " " + session.lastName)}
       secretaryCountry={userDetails?.country ?? ""}
       secretaryEmail={userDetails?.email ?? ""}
