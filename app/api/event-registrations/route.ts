@@ -62,14 +62,14 @@ function parseDate(s?: string): Date | undefined {
   return isNaN(d.getTime()) ? undefined : d;
 }
 
-const BETA_TESTERS = ["pabsec", "kolisboris", "Gleb"];
+const ALLOWED_ROLES = ["Secretary of National Delegation", "Member of International Secretariat"];
 
 export async function POST(req: NextRequest) {
   try {
     const session = await getSession();
 
-    if (!session || !BETA_TESTERS.some((u) => u.toLowerCase() === session.username.toLowerCase())) {
-      return NextResponse.json({ error: "Registration is not yet available" }, { status: 403 });
+    if (!session || !ALLOWED_ROLES.includes(session.role)) {
+      return NextResponse.json({ error: "Registration is not available for your account role" }, { status: 403 });
     }
 
     const formData = await req.formData();
